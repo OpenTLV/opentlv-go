@@ -45,4 +45,23 @@ PR/Fast, Main and manually dispatched/reusable Full CI run Go-owned checks again
 the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,
 required quality gate, evidence and migration-specific limits.
 
+## Repository layout
+
+| Path | Responsibility |
+| --- | --- |
+| `*.go`, `go.mod` | Public `opentlv` package and canonical module identity |
+| `*_test.go` | Public consumer tests (`opentlv_test`) and package-internal tests (`opentlv`) |
+| `internal/capi/` | Private cgo bridge, native calls and bridge tests |
+| `examples/<name>/` | Runnable `main` packages using the public API |
+| `scripts/`, `tests/` | Build/CI/packaging helpers and their Python tests |
+| `docs/` | Go-owned guides, implementation, packaging and CI policy |
+| `.github/workflows/` | Standalone PR/Fast, Main and Full workflows |
+| `migration/`, `MIGRATION.md` | Immutable source identities and documented adaptations |
+| `build/` | Ignored generated output, isolated by its own module boundary |
+
+Run commands from the repository root. Public tests run with `go test .`;
+`go test ./...` also includes the private bridge and example packages. Use
+`scripts/go.py --` before these commands to supply the selected native Core.
+See [layout migration deviations](MIGRATION.md#standalone-layout-and-migration-deviations-5).
+
 Licensed under the [MIT License](LICENSE).

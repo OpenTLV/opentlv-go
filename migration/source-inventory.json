@@ -7,8 +7,8 @@
       "source": "bindings/go/README.md",
       "destination": "docs/implementation.md",
       "sha256": "97fa2fd09724002289e8f6661b4200977a65bf2ba1d17585c57c64e7bbb8f092",
-      "adapted_sha256": "e215440e0d13513f67601a0bdb73c776e1ba04c7c07b6d2fed14852f4d18c3f6",
-      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity."
+      "adapted_sha256": "8d196e9328f87c6000a5a0163af6c079dd90a4d5deea3e2519d653618a0402e7",
+      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5)."
     },
     {
       "source": "bindings/go/codec.go",
@@ -243,101 +243,101 @@
     },
     {
       "source": "bindings/go/tests/architecture_test.go",
-      "destination": "tests/architecture_test.go",
+      "destination": "architecture_test.go",
       "sha256": "9d471c86c740c46dbedd27e81fc2404e7010ad2388030e1a5761f3f1d9ea22d3",
-      "adapted_sha256": "9603361ae255c6813952af56dd278f0bf7da0fae412ee40f8fecb295a2562f4d",
-      "adaptation": "Exclude managed build output and Git metadata from the source-boundary walk. Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "024863e8b72ff7c1075ad4739eac8253377491458a65190420c8289820553c2a",
+      "adaptation": "Exclude managed build output and Git metadata from the source-boundary walk. Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions. Walk from the root and enforce standalone source locations and public-only imports in external tests."
     },
     {
       "source": "bindings/go/tests/diagnostic_test.go",
-      "destination": "tests/diagnostic_test.go",
+      "destination": "diagnostic_test.go",
       "sha256": "5d9c9b83d752d6655263cabce59276076880139b0fa0e4c06f09e4f1d68c40bf",
-      "adapted_sha256": "09e26442fbee9a5bc32580f1d5f8117d8adb4317226299ee155183976bfae559",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "378ccac7ec527c67eb955480225d9ca6c2ba7391b52893740389948b1383edbc",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/diagnostic_vocabulary_test.go",
-      "destination": "tests/diagnostic_vocabulary_test.go",
+      "destination": "diagnostic_vocabulary_test.go",
       "sha256": "fc96a19c062d558f5dd9a7b5e0d57e33ef725137e520aa5101bbb398c126f8c3",
-      "adapted_sha256": "5f700e517e0c07ac56c146aef8fb91a0461a7518d2ae12b728dde0347cad6f59",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "8522e008ea0fd6f4091860696811e82578e1c898ba0c5f7f26cabecb9a0ee720",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/document_test.go",
-      "destination": "tests/document_test.go",
+      "destination": "document_test.go",
       "sha256": "298e710161b0861fc308102e177606d5f2784ce5b3a66a3b1d79d23d5d351734",
-      "adapted_sha256": "f9a815a796a9d321f01712f7a9fd48ccd590f1415b35d11074e0c1f283b939ad",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "80235f30c5908005062a5a256ab8c1676dc11eda7c67dc70c34821eeb6058619",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/errors_test.go",
-      "destination": "tests/errors_test.go",
+      "destination": "errors_test.go",
       "sha256": "8563b1969f2d1a6bf44da00a9bdf5c694bc9bf1cb47a9bcfc5ed1cf91428a5fc",
-      "adapted_sha256": "4c5adf811ee1e4e746b1c5c4a7db7822656e1ee06586bb786f4cf1719959c310",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "f674f36e8edb114229389922847b2eb76f19a4afdc9c4ab27895e12455a29a3e",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/model_test.go",
-      "destination": "tests/model_test.go",
+      "destination": "model_test.go",
       "sha256": "d9b93f142799c344926ad7e5d1e1377f1c657dbc2d76918c88120a5526bd1c0c",
-      "adapted_sha256": "ffd715d38be5ffdae245edd9b4f12ee98972afbc945d1ce6a5fb1deafb0f38da",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "ff495e5fcefa8fc5e784aa072b010ce0334287ec15fa8b308742c8c9145dc382",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/program_test.go",
-      "destination": "tests/program_test.go",
+      "destination": "program_test.go",
       "sha256": "b9c9d4df4e032bf2efaa365a4958cb8371ad7f5aeaca8a9d8644a035d424036b",
-      "adapted_sha256": "78e2d3373b6ae6d07073dfd1c8f6c7d22848c86fd50fbfb516a62e9d7b5838de",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "cdcc1b233d6d8265b523cba1a8d2c039b3a6c1f536772b44f11f1f8a23ad2736",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/quality_test.go",
-      "destination": "tests/quality_test.go",
+      "destination": "quality_test.go",
       "sha256": "d0ddeea136ecf3a034d039666552ee57605ac8dca4e1fdbd6df172b5a7e37369",
-      "adapted_sha256": "a28b27ceaf849e1aaa4169292bd5f60b90cdf3048311fcc5dde2d997d5a5817e",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "7c2951014bf6fa6eb90ea042c3bfbf99566f13b65c4c9d6b76a785b3ad3f636d",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/query_codec_test.go",
-      "destination": "tests/query_codec_test.go",
+      "destination": "query_codec_test.go",
       "sha256": "2222c604b8585ee43714ae26c2f169f9f88e6f90eeeb37e636019077256f433c",
-      "adapted_sha256": "29d8cb7cc194773f854eed5f0dca5765d20d1fae6d2fe9e29a3750786790e99a",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "e05e79494c5e25817f3cd73c02a00a80e5dec475d85f0e31aefcf209c36a7e0c",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/query_extensions_test.go",
-      "destination": "tests/query_extensions_test.go",
+      "destination": "query_extensions_test.go",
       "sha256": "73c38f00977f4eadf574e4f9ac8dd9168665fd2ecddc06ef086d00caacf0d359",
-      "adapted_sha256": "f5ee37ba4f04c26f20af37fa268e4a085708825a883b83388f0536732821ef6d",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "539eec296d7dc29a382a66b85fb2da576d4d10bc076a2d4f0a0d1a80da8c4d7f",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/query_v1_test.go",
-      "destination": "tests/query_v1_test.go",
+      "destination": "query_v1_test.go",
       "sha256": "3611c9490f5252e809fd7eac39304965777e9f4bd1d356b2fb8bf038247af5af",
-      "adapted_sha256": "4d7e79e2bd7915a824a36c928bbe6b9630d6935dc96638b27ff4af93eadc7150",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "0aa228a2d4c689edec7c177dc3149f177e55e4a48e1fcca2acc8ec2bdc21bf26",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/reader_test.go",
-      "destination": "tests/reader_test.go",
+      "destination": "reader_test.go",
       "sha256": "57c374e50c6aef1d49a3e37c42c3c25015e9cfd4729bec374f3a10e4a50f58dc",
-      "adapted_sha256": "a0c487219d980f47d84ffa36903ae722b5ae5fcb8b124047e52df9b8ea0cf5cc",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "9d7336260726e878da0d6ba6a8b585342c227ba0f3fd92cb19e8f90272aa1aa7",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/smoke_test.go",
-      "destination": "tests/smoke_test.go",
+      "destination": "smoke_test.go",
       "sha256": "5ffd92eaa35739a92f0e769a37aa19d6e6ec81b3ae37ecd524da3f7c2772832e",
-      "adapted_sha256": "8913347d05e6214bf80828aa0405935e3a363bd8e9de00f3fbf02c4fb211e1fa",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "322a78c1998d08db143f3a7c5ac1ece37880e41e47334619aa822f5e62df602a",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/tests/writer_test.go",
-      "destination": "tests/writer_test.go",
+      "destination": "writer_test.go",
       "sha256": "c897c96dcf614639fc79393ddb2e786eef752077032090481b1d168053d72944",
-      "adapted_sha256": "a6cbf56dd3274c63dd4fcc95ee186fa71709ed3709e772039ce390da20e8370b",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "bfac4e6bde3ff432795aadc2bcb4e06cd9dbf206239990abac9988139067b942",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Move public consumer tests to the module root as package opentlv_test (Go #5); preserve behavioral assertions."
     },
     {
       "source": "bindings/go/writer.go",
@@ -357,8 +357,8 @@
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "8896bd0b2c8396df406b64cc48dcf1c2955ba9977db8d4f30910ffd3c0c6f787",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity."
+      "adapted_sha256": "e42b7f36b0c481c8db0dd92b097d63cab218c8c83c4c09c8b30b8a5c34996767",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5)."
     }
   ]
 }

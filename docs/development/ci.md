@@ -1,7 +1,8 @@
 # Go continuous integration
 
-Go owns public facade tests in `tests/*.go`, package tests and private bridge tests
-in `internal/capi`. Examples use the public facade. Python tests cover build/CI
+Go owns public facade tests in root `*_test.go` files (`package opentlv_test`),
+package-internal tests (`package opentlv`) and private bridge tests in
+`internal/capi`. Examples use the public facade. Python tests in `tests/` cover build/CI
 orchestration and evidence validation, not duplicate implementations of Go APIs.
 Core owns native semantics, native tests and the shared Query corpus/oracle.
 
