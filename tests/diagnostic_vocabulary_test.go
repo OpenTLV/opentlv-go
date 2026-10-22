@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	tlv "github.com/marekcingel/OpenTLV/bindings/go"
+	tlv "github.com/OpenTLV/opentlv-go"
 )
 
 func TestDiagnosticVocabularyMatchesNative(t *testing.T) {

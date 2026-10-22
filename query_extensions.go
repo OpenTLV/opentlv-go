@@ -5,7 +5,7 @@ package opentlv
 import (
 	"bytes"
 	"errors"
-	"github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+	"github.com/OpenTLV/opentlv-go/internal/capi"
 )
 
 // QueryTagAdapter supplies semantic Tag capabilities with a nonzero stable image

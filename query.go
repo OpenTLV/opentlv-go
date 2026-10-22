@@ -3,7 +3,7 @@
 
 package opentlv
 
-import "github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+import "github.com/OpenTLV/opentlv-go/internal/capi"
 
 // QueryError preserves the native Query status, the optional byte offset in the
 // query text and the common diagnostic of the C Document traversal.

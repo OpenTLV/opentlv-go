@@ -142,11 +142,14 @@ def main(argv=None):
     parser.add_argument("--shared", action="store_true")
     parser.add_argument("--minimal", action="store_true")
     parser.add_argument("--jobs", type=int, default=2)
+    parser.add_argument("--working-dir", type=Path, default=ROOT,
+                        help="Go command directory (for an external consumer module)")
     parser.add_argument("command", nargs=argparse.REMAINDER, help="-- build ./... (or another Go command)")
     args = parser.parse_args(argv)
     command = args.command[1:] if args.command[:1] == ["--"] else args.command
-    require(command and command[0] in ("build", "test", "run", "vet", "env"),
-            "Supply -- followed by go build, test, run, vet or env arguments")
+    require(command and (command[0] in ("build", "test", "run", "vet", "env")
+                         or command == ["package-check"]),
+            "Supply -- followed by go build, test, run, vet, env or package-check")
     require(args.jobs > 0, "--jobs must be positive")
     lock = load_lock()
     build = args.build_dir.resolve()
@@ -195,12 +198,17 @@ def main(argv=None):
     cache_key = hashlib.sha256((before + native_hash).encode()).hexdigest()
     env["GOCACHE"] = str(build / "go-cache" / cache_key)
     Path(env["GOCACHE"]).mkdir(parents=True, exist_ok=True)
-    run(["go", *command], cwd=ROOT, env=env)
+    if command == ["package-check"]:
+        from package_check import check_consumer
+        check_consumer(env)
+    else:
+        run(["go", *command], cwd=args.working_dir.resolve(), env=env)
     require(core_digest(source) == before and native_digest(native) == native_hash and identity(source) == {
         key: selected[key] for key in ("source_dir", "repository", "commit", "dirty")},
         "Core inputs changed during the build")
     selected.update(schema=1, input_sha256=before, native_sha256=native_hash, build_dir=str(native),
-                    shared=args.shared, minimal=args.minimal, command=command, status="passed")
+                    shared=args.shared, minimal=args.minimal, command=command,
+                    working_dir=str(args.working_dir.resolve()), status="passed")
     receipt.write_text(json.dumps(selected, indent=2) + "\n", encoding="utf-8")
 
 

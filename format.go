@@ -3,7 +3,7 @@
 
 package opentlv
 
-import "github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+import "github.com/OpenTLV/opentlv-go/internal/capi"
 
 // ByteOrder determines the wire byte order of fixed numeric fields.
 type ByteOrder int

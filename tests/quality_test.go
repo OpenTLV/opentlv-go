@@ -9,7 +9,7 @@ import (
 	"sync"
 	"testing"
 
-	opentlv "github.com/marekcingel/OpenTLV/bindings/go"
+	opentlv "github.com/OpenTLV/opentlv-go"
 )
 
 // Immutable Formats and Codecs may be shared; each consumer owns its cursors

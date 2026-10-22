@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Marek Cingel
 package opentlv
 
-import "github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+import "github.com/OpenTLV/opentlv-go/internal/capi"
 
 // Query owns a bounded V1 exact Tag path. Copies are immutable and may be shared
 // concurrently; they remain independent of the parsed string and returned Tags.

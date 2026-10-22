@@ -6,7 +6,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	opentlv "github.com/marekcingel/OpenTLV/bindings/go"
+	opentlv "github.com/OpenTLV/opentlv-go"
 	"testing"
 )
 

@@ -5,7 +5,7 @@ package opentlv
 
 import (
 	"bytes"
-	"github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+	"github.com/OpenTLV/opentlv-go/internal/capi"
 )
 
 // Range describes an optional wire region relative to the start of an element.

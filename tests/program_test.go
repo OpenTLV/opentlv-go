@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"testing"
 
-	tlv "github.com/marekcingel/OpenTLV/bindings/go"
+	tlv "github.com/OpenTLV/opentlv-go"
 )
 
 func compiled(t *testing.T, text string, variables map[string]tlv.QueryType) *tlv.QueryProgram {

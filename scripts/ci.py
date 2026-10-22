@@ -51,7 +51,7 @@ def matrix(tier):
 
 
 def definition_hashes():
-    files = [ROOT / name for name in ("go.mod", "core-source.json", "migration/source-inventory.json")]
+    files = [ROOT / name for name in ("go.mod", "opentlv.go", "LICENSE", "core-source.json", "migration/source-inventory.json")]
     files += sorted((ROOT / "scripts").glob("*.py"))
     files += sorted((ROOT / "tests").glob("test_*.py"))
     files += sorted((ROOT / ".github/workflows").glob("*.yml"))
@@ -78,7 +78,8 @@ def identity():
 
 def stages(tier, config):
     result = [("migration", None), ("infrastructure", None), ("format", None),
-              ("vet", ["vet", "./..."]), ("test", ["test", "-count=1", "-v", "./..."])]
+              ("vet", ["vet", "./..."]), ("test", ["test", "-count=1", "-v", "./..."]),
+              ("package", ["package-check"])]
     if tier == "full" and config["id"] in ("linux-default", "linux-minimal"):
         result += [("race", ["test", "-race", "-count=1", "./..."]),
                    ("cgocheck2", ["test", "-count=1", "./..."])]
