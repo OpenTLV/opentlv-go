@@ -3,7 +3,7 @@
 
 package opentlv
 
-import "github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+import "github.com/OpenTLV/opentlv-go/internal/capi"
 
 // Reader reads sequential elements through the canonical C Reader. Input and
 // returned views are borrowed; keep their bytes unchanged while in use. Reader

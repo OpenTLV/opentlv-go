@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	tlv "github.com/marekcingel/OpenTLV/bindings/go"
+	tlv "github.com/OpenTLV/opentlv-go"
 )
 
 func fail(err error) {

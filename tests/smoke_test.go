@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/marekcingel/OpenTLV/bindings/go"
+	"github.com/OpenTLV/opentlv-go"
 )
 
 func TestLinkedLibraryVersion(t *testing.T) {

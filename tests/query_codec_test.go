@@ -6,7 +6,7 @@ package tests
 import (
 	"bytes"
 	"errors"
-	opentlv "github.com/marekcingel/OpenTLV/bindings/go"
+	opentlv "github.com/OpenTLV/opentlv-go"
 	"reflect"
 	"testing"
 )

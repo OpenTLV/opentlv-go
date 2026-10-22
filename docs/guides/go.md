@@ -6,12 +6,16 @@ studying native C implementation contracts.
 
 The experimental `opentlv` package exposes the canonical C engine through Go
 types, slices and errors. Application code imports
-`github.com/marekcingel/OpenTLV/bindings/go`; cgo and native handles stay inside
+`github.com/OpenTLV/opentlv-go`; cgo and native handles stay inside
 the binding. See the [binding capability reference](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/concepts/bindings.md)
 for current parity, and the [multi-language quick start](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/getting-started/README.md#quick-start)
 for a complete runnable program.
 
 ## Install and integrate
+
+For external projects, see [module packaging](../packaging.md#external-consumption).
+`opentlv.BindingVersion` identifies the binding source; `opentlv.Version()` reports
+the linked Core library. The binding is currently unreleased.
 
 Use Go 1.22 or newer, cgo enabled, a C compiler supported by cgo, and matching
 OpenTLV headers and a compiled library. Build or install the C library separately;

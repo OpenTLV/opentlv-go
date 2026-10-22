@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"log"
 
-	opentlv "github.com/marekcingel/OpenTLV/bindings/go"
+	opentlv "github.com/OpenTLV/opentlv-go"
 )
 
 func run() error {

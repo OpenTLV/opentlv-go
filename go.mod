@@ -1,3 +1,3 @@
-module github.com/marekcingel/OpenTLV/bindings/go
+module github.com/OpenTLV/opentlv-go
 
 go 1.22

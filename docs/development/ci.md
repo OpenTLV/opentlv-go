@@ -22,7 +22,10 @@ the same matrix/stage definitions in `scripts/ci.py`.
 | macOS arm64, default static, Clang | stable | No | No | Yes |
 
 Every configuration checks migration hashes, Python infrastructure regressions,
-`gofmt`, `go vet`, all Go tests with `-count=1`, and the version/quick-start examples.
+`gofmt`, `go vet`, all Go tests with `-count=1`, external module ZIP consumption
+(`package-check`), and the version/quick-start examples. The package check runs
+without `replace` or workspace access using a fresh module cache and local file
+proxy; it validates module/version/license metadata and a native round trip.
 Full adds `go test -race` and `GOEXPERIMENT=cgocheck2` on both original Linux static
 configurations, and runs the reader/writer/errors/codec examples everywhere.
 Default configurations also run document/query examples and shared Query

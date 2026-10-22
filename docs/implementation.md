@@ -11,7 +11,7 @@ Writer (#476), owned Document (#477), and idiomatic errors with owned diagnostic
 snapshots (#478), Document Query and typed generic Value codecs (#479).
 Development checks, public consumer tests and CI cover these APIs (#480).
 
-The module path is `github.com/marekcingel/OpenTLV/bindings/go`; its package
+The module path is `github.com/OpenTLV/opentlv-go`; its package
 name is `opentlv`. It requires Go 1.22 or newer, cgo and a compatible C compiler.
 Run Go commands from this directory, which contains its own `go.mod`.
 

@@ -31,10 +31,11 @@ with the Go target; an MSVC library cannot be used by this cgo setup. See the
 examples and checks, the [user guide](docs/guides/go.md) for public API usage, and
 [implementation details](docs/implementation.md) for native ownership boundaries.
 
-The module still uses `github.com/marekcingel/OpenTLV/bindings/go` while source
-migration is validated. Go #4 owns the canonical standalone module path,
-independent package versioning and release tags. No public module release is
-claimed. `Version()` continues to report Core, preserving baseline behavior.
+Import `github.com/OpenTLV/opentlv-go` as package `opentlv`. The binding has its own
+source version, `opentlv.BindingVersion` (`0.1.0-dev`); `opentlv.Version()` continues
+to report the linked Core version. No public module release is claimed.
+See [packaging and versioning](docs/packaging.md) for external consumption,
+independent tags, native requirements and migration deviations.
 
 [MIGRATION.md](MIGRATION.md) records the exact source baseline, imported-file
 checksums and scoped adaptations. Core owns native semantics and shared Query

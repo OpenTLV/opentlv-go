@@ -12,6 +12,7 @@ by cgo. The root contains the Go module; run commands from this repository.
 ```sh
 python3 scripts/go.py -- build ./...
 python3 scripts/go.py -- test -count=1 ./...
+python3 scripts/go.py -- package-check
 python3 scripts/go.py -- run ./examples/quick_start
 ```
 
@@ -25,6 +26,12 @@ Successful commands write `build/go/core-selection.json`: source repository,
 locked and effective commit, dirty state, input digest, configuration and executed
 Go command. This proves source selection and local execution, not signed binary
 provenance or release readiness. Failed commands remove stale success evidence.
+
+The [packaging policy](../packaging.md) defines canonical imports, independent
+binding versions, Core compatibility and external application setup. Use
+`--working-dir /path/to/app` to run a Go command in an external module with this
+checkout's selected Core. `package-check` validates a separate consumer of a
+local module ZIP with a fresh cache and no replacement or workspace.
 
 The helper disables ambient Go workspaces and persistent Go settings, replaces
 external cgo flags with matching native include/library paths, and partitions its

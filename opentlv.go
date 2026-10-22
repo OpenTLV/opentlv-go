@@ -12,7 +12,11 @@
 // build configuration. There is no pure-Go processing fallback.
 package opentlv
 
-import "github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+import "github.com/OpenTLV/opentlv-go/internal/capi"
+
+// BindingVersion identifies this Go binding's source version, independently of Core.
+// Development snapshots may resolve to a Go pseudo-version; see docs/packaging.md.
+const BindingVersion = "0.1.0-dev"
 
 // Version returns the version string of the linked OpenTLV C library.
 // The returned string is owned by Go and remains valid independently of C storage.

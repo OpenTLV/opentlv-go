@@ -3,7 +3,7 @@
 
 package opentlv
 
-import "github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+import "github.com/OpenTLV/opentlv-go/internal/capi"
 
 // CodecError retains a shared OpenTLV status and conversion evidence.
 type CodecError struct {

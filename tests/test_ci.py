@@ -166,6 +166,17 @@ class GateTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             ci.matrix("release")
 
+    def test_external_package_is_required_in_every_tier_and_configuration(self):
+        for tier in ci.TIERS:
+            for config in ci.matrix(tier):
+                self.assertEqual(dict(ci.stages(tier, config))["package"], ["package-check"])
+        paths = self.records("pr")
+        record = ci.read(paths[0])
+        record["checks"] = [check for check in record["checks"] if check["name"] != "package"]
+        ci.write(paths[0], record)
+        with self.assertRaisesRegex(ValueError, "Missing/reordered/extra checks"):
+            self.validate("pr", paths)
+
 
 if __name__ == "__main__":
     unittest.main()

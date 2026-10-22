@@ -5,7 +5,7 @@ package opentlv
 
 import (
 	"bytes"
-	"github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+	"github.com/OpenTLV/opentlv-go/internal/capi"
 )
 
 // Document owns a mutable native TLV tree. Call Close when finished.

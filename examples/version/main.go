@@ -6,9 +6,10 @@ package main
 import (
 	"fmt"
 
-	"github.com/marekcingel/OpenTLV/bindings/go"
+	"github.com/OpenTLV/opentlv-go"
 )
 
 func main() {
-	fmt.Println(opentlv.Version())
+	fmt.Println("Go binding:", opentlv.BindingVersion)
+	fmt.Println("Linked Core:", opentlv.Version())
 }

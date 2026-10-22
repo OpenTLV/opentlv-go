@@ -4,7 +4,7 @@ package opentlv
 
 import (
 	"bytes"
-	"github.com/marekcingel/OpenTLV/bindings/go/internal/capi"
+	"github.com/OpenTLV/opentlv-go/internal/capi"
 	"testing"
 )
 
