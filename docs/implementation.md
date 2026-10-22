@@ -13,15 +13,17 @@ Development checks, public consumer tests and CI cover these APIs (#480).
 
 The module path is `github.com/OpenTLV/opentlv-go`; its package
 name is `opentlv`. It requires Go 1.22 or newer, cgo and a compatible C compiler.
-Run Go commands from this directory, which contains its own `go.mod`.
+Run Go commands from the repository root, which contains `go.mod`.
 
 ## Package boundary
 
 - The root `opentlv` package owns the public, idiomatic Go API.
 - `internal/capi` exclusively owns cgo imports, C types, native calls and any
   unsafe pointer conversions. Its Go-facing signatures use Go types.
-- `tests/` exercises the public package as a consumer and guards the native
-  import boundary.
+- Root `*_test.go` files in `package opentlv_test` exercise the public package as
+  consumers and guard the native import boundary. Tests that require private
+  facade state use `package opentlv`; bridge tests stay beside `internal/capi`.
+- `tests/` contains Python tests for the build, CI and packaging helpers.
 - `examples/` contains runnable consumer programs.
 
 The internal bridge validates Fixed configuration and selects available native
@@ -65,7 +67,7 @@ Document owns native allocations and provides explicit cleanup.
 
 Start with the [Go user guide](guides/go.md) for normal application
 usage and the [capability matrix](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/concepts/bindings.md) for parity.
-This README records native integration and binding development details;
+This guide records native integration and binding development details;
 the [Go development guide](development/go.md) links the CI checks.
 
 ## Build and run
@@ -78,9 +80,9 @@ Use the [standalone build guide](development/go.md) for pinned Core builds,
 explicit local overrides, static/shared linking, tests and examples. The native
 bridge still links `-ltlv`; it does not compile a second C implementation.
 
-The source module path is retained during this migration. Canonical module
-identity, independent versioning and release tags belong to Go #4. No Go release
-or module download is established by the source transfer.
+The canonical module is `github.com/OpenTLV/opentlv-go`. See the
+[packaging policy](packaging.md) for independent binding versions, root release
+tags and external consumption. No public Go release is claimed by this migration.
 
 ## Format and Element
 

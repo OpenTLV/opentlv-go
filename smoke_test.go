@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Marek Cingel
 
-package tests
+package opentlv_test
 
 import (
 	"regexp"

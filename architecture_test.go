@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2026 Marek Cingel
 
-package tests
+package opentlv_test
 
 import (
 	"go/parser"
@@ -15,7 +15,7 @@ import (
 
 // Guard the package boundary as additional APIs are introduced.
 func TestCAPIImportsStayInternal(t *testing.T) {
-	err := filepath.WalkDir("..", func(path string, entry fs.DirEntry, err error) error {
+	err := filepath.WalkDir(".", func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
@@ -25,7 +25,7 @@ func TestCAPIImportsStayInternal(t *testing.T) {
 		if entry.IsDir() || !strings.HasSuffix(path, ".go") {
 			return nil
 		}
-		rel, err := filepath.Rel("..", path)
+		rel, err := filepath.Rel(".", path)
 		if err != nil {
 			return err
 		}
@@ -36,6 +36,14 @@ func TestCAPIImportsStayInternal(t *testing.T) {
 		if err != nil {
 			return err
 		}
+		if filepath.Dir(rel) == "." {
+			if file.Name.Name != "opentlv" &&
+				!(strings.HasSuffix(rel, "_test.go") && file.Name.Name == "opentlv_test") {
+				t.Errorf("%s is outside the root opentlv package/test boundary", rel)
+			}
+		} else if !strings.HasPrefix(filepath.ToSlash(rel), "examples/") {
+			t.Errorf("%s is outside the standalone Go source layout", rel)
+		}
 		for _, spec := range file.Imports {
 			name, err := strconv.Unquote(spec.Path.Value)
 			if err != nil {
@@ -44,7 +52,7 @@ func TestCAPIImportsStayInternal(t *testing.T) {
 			if name == "C" || name == "unsafe" {
 				t.Errorf("%s imports %q outside internal/capi", rel, name)
 			}
-			if strings.HasPrefix(filepath.ToSlash(rel), "examples/") &&
+			if (file.Name.Name == "opentlv_test" || strings.HasPrefix(filepath.ToSlash(rel), "examples/")) &&
 				strings.HasPrefix(name, "github.com/OpenTLV/opentlv-go/") {
 				t.Errorf("%s imports %q instead of the public opentlv package", rel, name)
 			}

@@ -135,7 +135,7 @@ Common `Diagnostic` evidence survives failures without a Reader cause; when
 `Expression` is the related expression span, with `LocationUnknown` kind when
 the primary `Location` already is that span, and `SourceOffset()` projects a
 primary input location. `CodecDetail.Reported` is the raw provider result.
-See [consumer tests](../../tests/program_test.go).
+See [consumer tests](../../program_test.go).
 
 `ProgramOptions.Providers` maps `QueryNum`, `QueryBCD`, `QueryText` and `QueryDate`
 to `QueryProvider` values. Each owns a stable nonzero ID and a `Decode` callback

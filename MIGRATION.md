@@ -36,7 +36,7 @@ adapted hashes and reasons. Run `python scripts/verify_migration.py` to verify a
 adapt setup and links to standalone ownership; the architecture test excludes
 managed build output and Git metadata from its source-boundary walk. No import
 path, public API, cgo bridge or behavioral assertion was changed at that stage.
-The subsequent #4 module-path and version adaptations are recorded below.
+The subsequent #4 module-path/version and #5 test-layout adaptations are recorded below.
 The three Go guides (binding README, Core user guide and development guide) are
 Go-owned; portal integration follows in Go #6. The public C implementation,
 shared Query corpus/oracle, diagnostic enum/name sources and native tests remain
@@ -125,3 +125,35 @@ Core configuration. This proves local external consumption, not public proxy
 availability. The synthetic candidate version/time and disabled checksum database
 are limited to that temporary test proxy. Core remains a pinned source dependency;
 no verified release-binary consumption, tag or publication is introduced.
+
+## Standalone layout and migration deviations (#5)
+
+The standalone root already replaced `bindings/go/` during #1/#2, and #4 established
+`github.com/OpenTLV/opentlv-go`. The public facade remains at the module root;
+`internal/capi` retains all cgo/C/unsafe implementation and its private tests.
+Runnable consumers stay under `examples/`, guides under `docs/`, helpers under
+`scripts/`, and standalone workflows under `.github/workflows/`. No `pkg/`, `cmd/`
+or additional public package is introduced. The [layout table](README.md#repository-layout)
+records these responsibilities.
+
+The fourteen public/architecture Go test files move from `tests/` to the module
+root and change from `package tests` to the conventional external test package
+`opentlv_test`. Their public imports and behavioral assertions are unchanged.
+`element_test.go` keeps `package opentlv` because it exercises private facade
+state; `internal/capi/bridge_test.go` stays with the bridge. Consequently,
+`go test .` now exercises the public consumer suite, while `go test ./...` still
+includes bridge tests and examples. `tests/` retains only Python infrastructure
+tests, so Python discovery and existing workflow commands remain valid.
+
+The architecture test now walks from the root, checks the standalone Go source
+locations, and prevents external tests as well as examples from importing private
+subpackages. Managed `build/` output and Git metadata remain excluded. The source
+inventory updates destinations, adapted hashes and reasons while preserving every
+original source path and SHA-256. Generated diagnostic vocabulary files remain
+imported snapshots: canonical enum/name sources and their generator are Core-owned.
+
+Documentation links follow the moved tests and describe the completed module
+identity. Historical `bindings/go` references in baseline provenance are retained.
+There are no public import, exported API, native bridge, version, dependency-lock
+or runtime behavior changes. Core cleanup, portal integration, final parity and
+release publication remain separate work.
