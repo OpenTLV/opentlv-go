@@ -22,14 +22,20 @@ The companion Core change for #685 records `docs/development/go-migration/`:
 its README describes contracts/configurations, `inventory.json` lists original
 Git blobs and SHA-256 digests, and `results.json` records local baseline checks.
 Use that historical record when transferring sources. The baseline commit above
-predates those newly prepared records. No standalone test results are claimed.
+predates those newly prepared records. Standalone validation is recorded separately
+from that original baseline; it does not rewrite the original evidence.
 
 ## Source transfer contract
 
-Go #1 transfers all original public package files, `internal/capi`, tests and
-nine examples from the pinned baseline. Preserve API behavior, native ownership,
-error identity, existing test expectations and all source copyright/SPDX notices.
-Record any path/import adjustment separately from unchanged imported blobs.
+This transfer imports all original public package files, `internal/capi`, tests
+and nine examples from the pinned baseline. API behavior, native ownership,
+error identity, existing test expectations and source notices are preserved.
+`migration/source-inventory.json` records the original hashes, standalone paths,
+adapted hashes and reasons. Run `python scripts/verify_migration.py` to verify all
+55 imported files. Of these, 51 retain their exact original bytes. Three guides
+adapt setup and links to standalone ownership; the architecture test excludes
+managed build output and Git metadata from its source-boundary walk. No import
+path, public API, cgo bridge or behavioral assertion is changed.
 The three Go guides (binding README, Core user guide and development guide) are
 Go-owned; portal integration follows in Go #6. The public C implementation,
 shared Query corpus/oracle, diagnostic enum/name sources and native tests remain
@@ -49,11 +55,20 @@ Existing Core Go CI covers Linux amd64 default/minimal static builds; documented
 Windows GCC/MinGW and shared-library modes have distinct validation coverage in
 the Core baseline record. No pure-Go fallback is introduced.
 
-Go #2 establishes pinned/verified Core integration; Go #3 owns Fast/Full CI;
+`core-source.json` pins the same baseline Core for standalone source builds.
+`scripts/go.py` builds it and supplies matching cgo flags without a workspace.
+Its explicit `--core-source` option records local Core identity and dirty state;
+default selection never discovers a sibling. Static/shared and default/minimal
+builds retain the native feature contract. The successful selection receipt is
+source-build evidence, not an attested binary or release authorization.
+
+Go #3 owns Fast/Full CI;
 Go #4 determines canonical standalone module path, independent versioning and tag
 policy; Go #5 normalizes layout; Go #6 owns documentation integration. Workspace issue #40 integrates this checkout. Core #686 removes the old implementation after its
 replacement is ready; Go #7 verifies final cross-repository parity.
 
-This bootstrap changes repository metadata and provenance only. It does not move
-sources, rename the module, change cgo behavior, create a release, or establish
-standalone build/release readiness.
+This implementation supplies the source-transfer/build prerequisites of workspace
+issue #40. The module path and `Version()` behavior remain unchanged pending Go #4;
+Core cleanup, portal source registration and release publication remain separate.
+Commit and merge the Go prerequisite before selecting its immutable revision in
+the workspace manifest. Local validation cannot establish that later hosted pin.

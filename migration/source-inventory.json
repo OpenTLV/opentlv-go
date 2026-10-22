@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "repository": "https://github.com/OpenTLV/opentlv",
+  "commit": "cb3caed5b09706ce11ecfae839397fd4f99d0025",
+  "files": [
+    {
+      "source": "bindings/go/README.md",
+      "destination": "docs/implementation.md",
+      "sha256": "97fa2fd09724002289e8f6661b4200977a65bf2ba1d17585c57c64e7bbb8f092",
+      "adapted_sha256": "e032f2be00162b50a41b62ff9e12030cfb943b2999e39112d9796d9b21e453ae",
+      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions."
+    },
+    {
+      "source": "bindings/go/codec.go",
+      "destination": "codec.go",
+      "sha256": "890ed82d287df434107945fbb9897f0f27c7396105e85bc0f6b30a83d111bfb8"
+    },
+    {
+      "source": "bindings/go/diagnostic_kind.go",
+      "destination": "diagnostic_kind.go",
+      "sha256": "42bcfb8d290ffa1b4eddc616cb7a92bdf734fbfeef26b01d8545860505daa046"
+    },
+    {
+      "source": "bindings/go/document.go",
+      "destination": "document.go",
+      "sha256": "489ebdc7a2c4eaaee29c9ec2c06e5772dace94e09675eef524f320f9345e648f"
+    },
+    {
+      "source": "bindings/go/element.go",
+      "destination": "element.go",
+      "sha256": "9a2942495f1e8ba601224490a7d601ea5873a79cd5875a364423105898d39c20"
+    },
+    {
+      "source": "bindings/go/element_test.go",
+      "destination": "element_test.go",
+      "sha256": "5686e3044782931acb1cc549548ce617d8a02b4b2ec41632992d1bcc56429e3b"
+    },
+    {
+      "source": "bindings/go/errors.go",
+      "destination": "errors.go",
+      "sha256": "894eb103fe24d6422522d2a60266934cb8b5c61e34e5befa586f4a0a85400997"
+    },
+    {
+      "source": "bindings/go/examples/codec/main.go",
+      "destination": "examples/codec/main.go",
+      "sha256": "c7aea4753143a97d4d51ec15187053607eb26e0907a6dde075dd75b6fd5ceadc"
+    },
+    {
+      "source": "bindings/go/examples/document/main.go",
+      "destination": "examples/document/main.go",
+      "sha256": "2ae469972b649639abbaf448cf73fac3c9c8277f83bfc86917bc678c286aae4a"
+    },
+    {
+      "source": "bindings/go/examples/errors/main.go",
+      "destination": "examples/errors/main.go",
+      "sha256": "32f4b7c56ee2e8208b413238267be178f9bad564f6ac72eea829d92e82d4925a"
+    },
+    {
+      "source": "bindings/go/examples/query/main.go",
+      "destination": "examples/query/main.go",
+      "sha256": "edf0cf80ab1984336b4d320ffae12290a19bb2a475c2c15a4506b83366b9d981"
+    },
+    {
+      "source": "bindings/go/examples/query_conformance/main.go",
+      "destination": "examples/query_conformance/main.go",
+      "sha256": "d9d596a343fb35b00a1188f6a7d29d0df8e3961d3a5607bb3ac1167c7ba86f0f"
+    },
+    {
+      "source": "bindings/go/examples/quick_start/main.go",
+      "destination": "examples/quick_start/main.go",
+      "sha256": "77f8d78b79a845eaa392d5dca70f2836df4c0148c8336de088d701a15937eefe"
+    },
+    {
+      "source": "bindings/go/examples/reader/main.go",
+      "destination": "examples/reader/main.go",
+      "sha256": "0fb1464a184ae2884b6b4c97b7d78ca5614554b01249e588718b2e960a538e1c"
+    },
+    {
+      "source": "bindings/go/examples/version/main.go",
+      "destination": "examples/version/main.go",
+      "sha256": "d1199f12d50772adfbf89ba018c8daf02da1cffcfc58580f53f01417dd462d11"
+    },
+    {
+      "source": "bindings/go/examples/writer/main.go",
+      "destination": "examples/writer/main.go",
+      "sha256": "c5da4403268a9ea34c5201923fe6c7c077da9e1b9ef06e7a79f21cf9a927ba7c"
+    },
+    {
+      "source": "bindings/go/format.go",
+      "destination": "format.go",
+      "sha256": "65fa48d9e9179d05fb751e1901f4be03950951484ace0e014c48fd2cc0b7f7f3"
+    },
+    {
+      "source": "bindings/go/go.mod",
+      "destination": "go.mod",
+      "sha256": "20ab2e5a3154aac4865f38be0a082a639aeaede92c8743ad7553f72e47bc5bc4"
+    },
+    {
+      "source": "bindings/go/internal/capi/bridge.c",
+      "destination": "internal/capi/bridge.c",
+      "sha256": "f76387f491945973cb944591b1b3e7c2dc81e97211891bac29f9b66ba979c532"
+    },
+    {
+      "source": "bindings/go/internal/capi/bridge.go",
+      "destination": "internal/capi/bridge.go",
+      "sha256": "58a3e2c1c4707a6bddbf1c42af670872466be832bfd346cec1b3e93e5dc8f1ff"
+    },
+    {
+      "source": "bindings/go/internal/capi/bridge.h",
+      "destination": "internal/capi/bridge.h",
+      "sha256": "6f04c436ccbdb1fcde184fa05d81908b34fabb1cb016d7c42f2c3154341ba101"
+    },
+    {
+      "source": "bindings/go/internal/capi/bridge_test.go",
+      "destination": "internal/capi/bridge_test.go",
+      "sha256": "d42c5a282cec1ffb0eb10d360b57f68b5fa107a89a8ec6f46866c1261592ad4b"
+    },
+    {
+      "source": "bindings/go/internal/capi/capi.go",
+      "destination": "internal/capi/capi.go",
+      "sha256": "51b88efc0d7afcebfcd9f95aa8f612292441e0c00de1c12b0fac702642331a16"
+    },
+    {
+      "source": "bindings/go/internal/capi/codec.go",
+      "destination": "internal/capi/codec.go",
+      "sha256": "68497be9d5288bcc338c85e329c3d2bd137aea9119eacde4fa472bff91e7981e"
+    },
+    {
+      "source": "bindings/go/internal/capi/codec_diagnostic.go",
+      "destination": "internal/capi/codec_diagnostic.go",
+      "sha256": "bbb1734343283f9cc829b9b4a4061577dd06b3f84650a09283fbd7c640395848"
+    },
+    {
+      "source": "bindings/go/internal/capi/diagnostic_strings.go",
+      "destination": "internal/capi/diagnostic_strings.go",
+      "sha256": "49966157e3f7ac4baaa4d928f88c07f8f3c64526ac3374c8b8c1c2d4af367560"
+    },
+    {
+      "source": "bindings/go/internal/capi/document.go",
+      "destination": "internal/capi/document.go",
+      "sha256": "668d713afe9663a10fac7d3ee18a709ce66f2af1beba748150d2afb071be99ca"
+    },
+    {
+      "source": "bindings/go/internal/capi/program.go",
+      "destination": "internal/capi/program.go",
+      "sha256": "959f0e56a0dbc87f2fcfb03631a33c3a8ee1caf20ab77b405af3e2b7a6f3f124"
+    },
+    {
+      "source": "bindings/go/internal/capi/query.go",
+      "destination": "internal/capi/query.go",
+      "sha256": "1650c4e2016cf0d789609b94a7427786d2b22592c9b61b3f23c836edd43e3155"
+    },
+    {
+      "source": "bindings/go/internal/capi/query_extensions.go",
+      "destination": "internal/capi/query_extensions.go",
+      "sha256": "21c2da8bfac6d277f92875692ad5a1718ab1caf3bbb1b20987f4a94648d7cdf1"
+    },
+    {
+      "source": "bindings/go/internal/capi/query_v1.go",
+      "destination": "internal/capi/query_v1.go",
+      "sha256": "51a245f9808d8fe0ba20a30095a7c7cf7786a8d126b21af970001eeb9de98e43"
+    },
+    {
+      "source": "bindings/go/internal/capi/tree.go",
+      "destination": "internal/capi/tree.go",
+      "sha256": "6e922c194d5206250faea424cfb5aaccb97f00e3117daa5bb86d54798d1775b0"
+    },
+    {
+      "source": "bindings/go/opentlv.go",
+      "destination": "opentlv.go",
+      "sha256": "3bd80a66dad05c064865cd417f7c19abdace4f1d08b715c1db8283c134af2e23"
+    },
+    {
+      "source": "bindings/go/program.go",
+      "destination": "program.go",
+      "sha256": "a73bb6d42d194b30b4c2d29c260bdddbb42021e64a0917bf6f912328ebd4f203"
+    },
+    {
+      "source": "bindings/go/query.go",
+      "destination": "query.go",
+      "sha256": "f4dae347dc4de832093160ea4e6fdc69884d629b6178f61cf34f1ce09f4d1fde"
+    },
+    {
+      "source": "bindings/go/query_extensions.go",
+      "destination": "query_extensions.go",
+      "sha256": "66e446d629eba60c5a713c4aa8d585fda09c28c02a6d9d9f0ba16c2a0fc477ac"
+    },
+    {
+      "source": "bindings/go/query_v1.go",
+      "destination": "query_v1.go",
+      "sha256": "7129011683ef8241b69441897e3debde8259e67736739b33b1e3896d847f38f9"
+    },
+    {
+      "source": "bindings/go/reader.go",
+      "destination": "reader.go",
+      "sha256": "2e4beae14d478f54046ad1b11b11b9311a9657be10704e6ade50706882e3774c"
+    },
+    {
+      "source": "bindings/go/tests/architecture_test.go",
+      "destination": "tests/architecture_test.go",
+      "sha256": "9d471c86c740c46dbedd27e81fc2404e7010ad2388030e1a5761f3f1d9ea22d3",
+      "adapted_sha256": "f746c2c69de4abd7aa3c7d53be6d777f5b8ca53952b3d100603f8a9a7bdc6868",
+      "adaptation": "Exclude managed build output and Git metadata from the source-boundary walk."
+    },
+    {
+      "source": "bindings/go/tests/diagnostic_test.go",
+      "destination": "tests/diagnostic_test.go",
+      "sha256": "5d9c9b83d752d6655263cabce59276076880139b0fa0e4c06f09e4f1d68c40bf"
+    },
+    {
+      "source": "bindings/go/tests/diagnostic_vocabulary_test.go",
+      "destination": "tests/diagnostic_vocabulary_test.go",
+      "sha256": "fc96a19c062d558f5dd9a7b5e0d57e33ef725137e520aa5101bbb398c126f8c3"
+    },
+    {
+      "source": "bindings/go/tests/document_test.go",
+      "destination": "tests/document_test.go",
+      "sha256": "298e710161b0861fc308102e177606d5f2784ce5b3a66a3b1d79d23d5d351734"
+    },
+    {
+      "source": "bindings/go/tests/errors_test.go",
+      "destination": "tests/errors_test.go",
+      "sha256": "8563b1969f2d1a6bf44da00a9bdf5c694bc9bf1cb47a9bcfc5ed1cf91428a5fc"
+    },
+    {
+      "source": "bindings/go/tests/model_test.go",
+      "destination": "tests/model_test.go",
+      "sha256": "d9b93f142799c344926ad7e5d1e1377f1c657dbc2d76918c88120a5526bd1c0c"
+    },
+    {
+      "source": "bindings/go/tests/program_test.go",
+      "destination": "tests/program_test.go",
+      "sha256": "b9c9d4df4e032bf2efaa365a4958cb8371ad7f5aeaca8a9d8644a035d424036b"
+    },
+    {
+      "source": "bindings/go/tests/quality_test.go",
+      "destination": "tests/quality_test.go",
+      "sha256": "d0ddeea136ecf3a034d039666552ee57605ac8dca4e1fdbd6df172b5a7e37369"
+    },
+    {
+      "source": "bindings/go/tests/query_codec_test.go",
+      "destination": "tests/query_codec_test.go",
+      "sha256": "2222c604b8585ee43714ae26c2f169f9f88e6f90eeeb37e636019077256f433c"
+    },
+    {
+      "source": "bindings/go/tests/query_extensions_test.go",
+      "destination": "tests/query_extensions_test.go",
+      "sha256": "73c38f00977f4eadf574e4f9ac8dd9168665fd2ecddc06ef086d00caacf0d359"
+    },
+    {
+      "source": "bindings/go/tests/query_v1_test.go",
+      "destination": "tests/query_v1_test.go",
+      "sha256": "3611c9490f5252e809fd7eac39304965777e9f4bd1d356b2fb8bf038247af5af"
+    },
+    {
+      "source": "bindings/go/tests/reader_test.go",
+      "destination": "tests/reader_test.go",
+      "sha256": "57c374e50c6aef1d49a3e37c42c3c25015e9cfd4729bec374f3a10e4a50f58dc"
+    },
+    {
+      "source": "bindings/go/tests/smoke_test.go",
+      "destination": "tests/smoke_test.go",
+      "sha256": "5ffd92eaa35739a92f0e769a37aa19d6e6ec81b3ae37ecd524da3f7c2772832e"
+    },
+    {
+      "source": "bindings/go/tests/writer_test.go",
+      "destination": "tests/writer_test.go",
+      "sha256": "c897c96dcf614639fc79393ddb2e786eef752077032090481b1d168053d72944"
+    },
+    {
+      "source": "bindings/go/writer.go",
+      "destination": "writer.go",
+      "sha256": "6c46cf6e3a86b81465558eca80dc527924161e37503be04d3b1304162f39afdf"
+    },
+    {
+      "source": "docs/development/go.md",
+      "destination": "docs/development/go.md",
+      "sha256": "c203d6366b1ea02a6428d2bac7dbb93261268353884f14569793c9ee258d73ce",
+      "adapted_sha256": "dd03a6e451a931c3c8bafb92371e5cad0a5d15d0714943ca22ace8a989294215",
+      "adaptation": "Replace monorepo build/CI instructions with standalone Core selection, tests and migration handoff."
+    },
+    {
+      "source": "docs/guides/go.md",
+      "destination": "docs/guides/go.md",
+      "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
+      "adapted_sha256": "c63a5775ab199b22d4312550a4829cb6d80bcd6b191df7fbf69634d8f3612449",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup."
+    }
+  ]
+}
