@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Marek Cingel
+name: Go Main CI
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: go-main-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  checks:
+    uses: ./.github/workflows/go-checks.yml
+    with:
+      tier: main

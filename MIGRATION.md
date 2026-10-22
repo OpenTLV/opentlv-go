@@ -62,7 +62,7 @@ default selection never discovers a sibling. Static/shared and default/minimal
 builds retain the native feature contract. The successful selection receipt is
 source-build evidence, not an attested binary or release authorization.
 
-Go #3 owns Fast/Full CI;
+Go #3 establishes Fast/Full CI (see the policy and deviations below);
 Go #4 determines canonical standalone module path, independent versioning and tag
 policy; Go #5 normalizes layout; Go #6 owns documentation integration. Workspace issue #40 integrates this checkout. Core #686 removes the old implementation after its
 replacement is ready; Go #7 verifies final cross-repository parity.
@@ -72,3 +72,32 @@ issue #40. The module path and `Version()` behavior remain unchanged pending Go 
 Core cleanup, portal source registration and release publication remain separate.
 Commit and merge the Go prerequisite before selecting its immutable revision in
 the workspace manifest. Local validation cannot establish that later hosted pin.
+
+## Standalone CI and migration deviations (#3)
+
+The [CI policy](docs/development/ci.md) assigns public Go tests and private cgo
+integration to this repository. Full retains the original Linux default/minimal
+static test, race, `cgocheck2`, vet and example checks and consumes the shared
+Query corpus/oracle directly from the locked Core revision. No comprehensive Core
+test suite or shared fixture is copied here. PR/Fast and Main run a smaller subset;
+Full adds current Go, Linux shared linking, Windows amd64 GCC/UCRT and macOS arm64.
+The standalone helper adds a nested module boundary for build output so Go package
+discovery cannot collect generated cgo files from another local configuration.
+
+CI builds the immutable Core **source** lock. It does not claim verified binary
+consumption, attestations, release readiness or a published Go module. The minimum
+Go 1.22 lane preserves the baseline compatibility claim; additional lanes use the
+current stable Go selected by setup-go and record its exact version. Race/cgo
+instrumentation remains on the two Linux static baseline configurations. Native
+sanitizers and the complete native behavioral suite remain Core-owned.
+
+The original module path and Core-reporting `Version()` remain unchanged for #4.
+Core's old Go workflow remains until the separate #686 cleanup. The only additional
+imported content change here is the development guide's link to standalone CI.
+The implementation/user guides' adapted hashes are corrected from pre-commit CRLF
+bytes to the LF bytes committed under `.gitattributes`; their content is unchanged.
+Reasons and adapted hashes are recorded without replacing original source hashes.
+
+Local records are explicitly marked local and cannot pass the hosted quality gate.
+Hosted PR/Main/Full acceptance requires successful runs for the committed revision;
+adding workflows and passing local checks alone does not establish that evidence.

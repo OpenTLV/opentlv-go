@@ -13,6 +13,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY = "https://github.com/OpenTLV/opentlv.git"
@@ -92,6 +93,27 @@ def native_digest(native):
     return digest.hexdigest()
 
 
+def isolate_build_output(build, root=ROOT):
+    # Git ignores do not affect Go's ./... traversal. Keep temporary cgo files,
+    # cached toolchains and parallel configurations outside the public module.
+    boundary = root / "build" if build.is_relative_to(root / "build") else build
+    marker = boundary / "go.mod"
+    content = "module opentlv.local/build-output\n\ngo 1.22\n"
+    if marker.exists():
+        require(marker.read_text(encoding="utf-8") == content,
+                "Unexpected Go module in build output; use a dedicated build directory")
+    else:
+        # Publish a complete file: parallel helpers must never observe an empty
+        # marker between creation and writing. All helpers publish the same text.
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=boundary, delete=False) as stream:
+            stream.write(content)
+            temporary = Path(stream.name)
+        try:
+            temporary.replace(marker)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+
 def go_environment(build, source, native, shared, digest, base=None):
     env = {key: value for key, value in (os.environ if base is None else base).items()
            if not key.startswith(("CGO_", "OPENTLV_", "CMAKE_", "FETCHCONTENT_"))
@@ -134,6 +156,7 @@ def main(argv=None):
     # Remove stale success evidence before any operation that may fail.
     receipt = build / "core-selection.json"
     receipt.unlink(missing_ok=True)
+    isolate_build_output(build)
     source, selected = select_core(build, args.core_source, lock)
     require(not build.is_relative_to(source), "Build output must be outside the selected Core checkout")
     native = build / "native"

@@ -3,7 +3,10 @@
 
 import importlib.util
 import json
+import os
 from pathlib import Path
+import shutil
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -95,6 +98,36 @@ class BuildTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "invalid source"):
                 build.main(["--build-dir", str(self.root), "--", "build", "./..."])
         self.assertFalse(receipt.exists())
+
+    def test_build_boundary_covers_all_parallel_configurations_and_is_repeatable(self):
+        work = self.root / "build/ci/first"
+        work.mkdir(parents=True)
+        build.isolate_build_output(work, self.root)
+        build.isolate_build_output(work, self.root)
+        self.assertTrue((self.root / "build/go.mod").is_file())
+        self.assertFalse((work / "go.mod").exists())
+
+    def test_build_boundary_never_replaces_an_existing_module(self):
+        marker = self.root / "go.mod"
+        marker.write_text("module user.example/project\n")
+        with self.assertRaisesRegex(ValueError, "Unexpected Go module"):
+            build.isolate_build_output(self.root, self.root / "unrelated")
+        self.assertEqual(marker.read_text(), "module user.example/project\n")
+
+    @unittest.skipUnless(shutil.which("go"), "Go required for real package discovery")
+    def test_go_discovery_excludes_other_builds_generated_cgo_and_toolchain_sources(self):
+        (self.root / "go.mod").write_text("module example.test/facade\n\ngo 1.22\n")
+        (self.root / "facade.go").write_text("package facade\n")
+        generated = self.root / "build/other/go-tmp"
+        generated.mkdir(parents=True)
+        (generated / "broken.go").write_text("package generated\nimport _ \"internal/runtime/sys\"\n")
+        current = self.root / "build/current"
+        current.mkdir()
+        build.isolate_build_output(current, self.root)
+        env = dict(os.environ, GOWORK="off", GOENV="off", GOFLAGS="", GOTOOLCHAIN="local")
+        result = subprocess.run(["go", "list", "./..."], cwd=self.root, env=env,
+                                capture_output=True, text=True, check=True)
+        self.assertEqual(result.stdout.strip(), "example.test/facade")
 
 
 if __name__ == "__main__":

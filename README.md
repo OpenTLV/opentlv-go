@@ -40,4 +40,8 @@ claimed. `Version()` continues to report Core, preserving baseline behavior.
 checksums and scoped adaptations. Core owns native semantics and shared Query
 fixtures; Go owns its public API, bridge, tests and examples.
 
+PR/Fast, Main and manually dispatched/reusable Full CI run Go-owned checks against
+the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,
+required quality gate, evidence and migration-specific limits.
+
 Licensed under the [MIT License](LICENSE).

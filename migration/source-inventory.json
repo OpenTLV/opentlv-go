@@ -7,8 +7,8 @@
       "source": "bindings/go/README.md",
       "destination": "docs/implementation.md",
       "sha256": "97fa2fd09724002289e8f6661b4200977a65bf2ba1d17585c57c64e7bbb8f092",
-      "adapted_sha256": "e032f2be00162b50a41b62ff9e12030cfb943b2999e39112d9796d9b21e453ae",
-      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions."
+      "adapted_sha256": "39d00f76ed2e14db631732fbd3bc3be83aaec4fa2fe2cf9f50b5be962eecdfea",
+      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change."
     },
     {
       "source": "bindings/go/codec.go",
@@ -276,15 +276,15 @@
       "source": "docs/development/go.md",
       "destination": "docs/development/go.md",
       "sha256": "c203d6366b1ea02a6428d2bac7dbb93261268353884f14569793c9ee258d73ce",
-      "adapted_sha256": "dd03a6e451a931c3c8bafb92371e5cad0a5d15d0714943ca22ace8a989294215",
-      "adaptation": "Replace monorepo build/CI instructions with standalone Core selection, tests and migration handoff."
+      "adapted_sha256": "e9cf0aedca25cb5fcff18274b9c0deb627878318b8077b7c9b9d23229dab8c77",
+      "adaptation": "Replace monorepo build/CI instructions with standalone Core selection, tests and migration handoff. Link the standalone Fast/Full CI policy and test ownership for Go issue #3."
     },
     {
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "c63a5775ab199b22d4312550a4829cb6d80bcd6b191df7fbf69634d8f3612449",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup."
+      "adapted_sha256": "2fa6eb299c9bbb8a00e52337c2ade50a4addfa4c11e87fac52254368de8d599d",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change."
     }
   ]
 }
