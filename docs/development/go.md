@@ -95,5 +95,6 @@ python3 build/go/core/tests/query/run.py --native build/go-query-conformance --p
 
 Keep the shared corpus and Python oracle in the selected Core source. The helper
 does not copy native C sources, shared fixtures or release workflows into Go.
-Go #3 owns the standalone Fast/Full CI policy; current validation is recorded in
+The [standalone CI policy](ci.md) defines PR/Fast, Main and Full coverage, test
+ownership and required evidence. Migration-specific deviations are recorded in
 [migration provenance](../../MIGRATION.md).

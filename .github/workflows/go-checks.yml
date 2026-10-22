@@ -1,0 +1,113 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Marek Cingel
+name: Go checks
+on:
+  workflow_call:
+    inputs:
+      tier:
+        type: string
+        required: true
+permissions:
+  contents: read
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.matrix.outputs.value }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - id: matrix
+        env:
+          TIER: ${{ inputs.tier }}
+        run: echo "value=$(python3 -B scripts/ci.py matrix --tier "$TIER")" >> "$GITHUB_OUTPUT"
+  build:
+    needs: plan
+    name: Go / ${{ matrix.id }}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go }}
+          architecture: ${{ matrix.architecture }}
+          cache: false
+      - name: Install CMake and Ninja
+        run: python -m pip install cmake ninja
+      - name: Install native Windows GCC
+        id: msys2
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+      - name: Select Windows GCC for native Python and Go
+        if: runner.os == 'Windows'
+        shell: pwsh
+        env:
+          MSYS2_ROOT: ${{ steps.msys2.outputs.msys2-location }}
+        run: 'Join-Path $env:MSYS2_ROOT "ucrt64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append'
+      - name: Run Go checks
+        shell: bash
+        env:
+          TIER: ${{ inputs.tier }}
+          CONFIGURATION: ${{ matrix.id }}
+        run: python -B scripts/ci.py build --tier "$TIER" --configuration "$CONFIGURATION"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: go-build-${{ inputs.tier }}-${{ matrix.id }}-${{ github.run_attempt }}
+          path: build/ci/evidence/${{ matrix.id }}/
+          if-no-files-found: error
+  quality:
+    name: Workflow validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          cache: false
+      - name: Validate workflow expressions and shell commands
+        run: |
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+          "$(go env GOPATH)/bin/actionlint"
+  gate:
+    name: Go quality gate
+    if: always()
+    needs: [plan, build, quality]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: go-build-${{ inputs.tier }}-*-${{ github.run_attempt }}
+          path: build/evidence
+      - name: Require complete evidence for this commit and attempt
+        env:
+          CHECK_RESULTS: ${{ toJSON(needs) }}
+          TIER: ${{ inputs.tier }}
+        run: python3 -B scripts/ci.py gate --tier "$TIER" --evidence build/evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-quality-${{ inputs.tier }}-${{ github.run_attempt }}
+          path: build/quality.json
+          if-no-files-found: error
