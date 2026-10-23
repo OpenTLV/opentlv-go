@@ -45,6 +45,12 @@ PR/Fast, Main and manually dispatched/reusable Full CI run Go-owned checks again
 the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,
 required quality gate, evidence and migration-specific limits.
 
+The central [Go documentation entry point](https://opentlv.github.io/opentlv-docs/latest/languages/go/)
+selects an immutable Go documentation revision. Go owns usage, API comments,
+build instructions and examples; the portal owns assembly and publication.
+See [documentation updates](docs/development/ci.md#documentation-updates) for
+Main notifications, version alignment and publication limits.
+
 ## Repository layout
 
 | Path | Responsibility |

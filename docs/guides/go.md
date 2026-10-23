@@ -1,14 +1,14 @@
 # Using OpenTLV from Go
 
-Start with setup below, then run the [Go quick start](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/getting-started/README.md#quick-start)
+Start with setup below, then run the [Go quick start](#quick-start)
 for input, expected output and the public API. You can use this guide without
 studying native C implementation contracts.
 
 The experimental `opentlv` package exposes the canonical C engine through Go
 types, slices and errors. Application code imports
 `github.com/OpenTLV/opentlv-go`; cgo and native handles stay inside
-the binding. See the [binding capability reference](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/concepts/bindings.md)
-for current parity, and the [multi-language quick start](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/getting-started/README.md#quick-start)
+the binding. See the [binding capability reference](https://github.com/OpenTLV/opentlv/blob/main/docs/concepts/bindings.md)
+for current parity, and the [standalone quick-start source](../../examples/quick_start/main.go)
 for a complete runnable program.
 
 ## Install and integrate
@@ -34,6 +34,50 @@ static/shared linking and PowerShell commands. The helper leaves the public cgo
 link contract unchanged. Direct Go commands remain usable with matching manually
 supplied headers/library; the helper avoids stale native inputs with a dedicated
 Go cache. No workspace repository or sibling checkout is required.
+
+## Quick start
+
+From the standalone repository root:
+
+```sh
+python3 scripts/go.py -- run ./examples/quick_start
+```
+
+Expected output:
+
+```text
+Hello, world!
+```
+
+The [complete program](../../examples/quick_start/main.go) imports
+`github.com/OpenTLV/opentlv-go`, constructs a one-byte Tag/Length Format, writes
+Tag `01` and the UTF-8 Value `Hello, world!`, then reads the encoded bytes.
+It checks construction, write and Reader errors. Elements borrow the Writer
+output, which remains unchanged until reading completes.
+
+## API reference and runnable examples
+
+This guide documents public contracts and limitations. For the selected checkout's
+exported API comments, run `go doc .` or `go doc . NewReader` from the module root.
+The [public package sources](../../opentlv.go) and tests belong to this repository;
+Core's generated C/C++ reference is not the Go API reference.
+
+Run examples with `python3 scripts/go.py -- run ./examples/<name>`:
+
+| Example | Purpose |
+| --- | --- |
+| [version](../../examples/version/main.go) | Independent binding and linked Core identities |
+| [quick_start](../../examples/quick_start/main.go) | Fixed-format write/read round trip |
+| [reader](../../examples/reader/main.go) | Reader and borrowed input |
+| [writer](../../examples/writer/main.go) | Writer output and sizing |
+| [errors](../../examples/errors/main.go) | Status and diagnostic handling |
+| [codec](../../examples/codec/main.go) | Typed Value conversion |
+| [document](../../examples/document/main.go) | Owned Document editing; requires Document support |
+| [query](../../examples/query/main.go) | Document queries; requires Document support |
+
+The [query_conformance adapter](../../examples/query_conformance/main.go) is a test
+driver for Core's shared corpus, not an interactive tutorial. Its build and runner
+commands are in [Examples and shared tests](../development/go.md#examples-and-shared-tests).
 
 ## Format and Element
 
@@ -205,10 +249,10 @@ custom Format callback adapter, borrowed Query or resumable Document Builder.
 Writer has staged nesting, not the full public event-based Tree Writer facade.
 Go's copied Node snapshots, owned diagnostics and explicit Close are intentional
 ergonomic differences; missing operations remain capability gaps. The
-[binding matrix](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/concepts/bindings.md#capability-implementation-matrix)
+[binding matrix](https://github.com/OpenTLV/opentlv/blob/main/docs/concepts/bindings.md#capability-implementation-matrix)
 distinguishes these from disabled native components.
 
 ## Next step
 
-Use [the basic model](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/concepts/learning-model.md) to choose borrowed processing
-or owned editing, then [processing choices](https://github.com/OpenTLV/opentlv/blob/cb3caed5b09706ce11ecfae839397fd4f99d0025/docs/guides/processing.md) for your next task.
+Use [the basic model](https://github.com/OpenTLV/opentlv/blob/main/docs/concepts/learning-model.md) to choose borrowed processing
+or owned editing, then [processing choices](https://github.com/OpenTLV/opentlv/blob/main/docs/guides/processing.md) for your next task.
