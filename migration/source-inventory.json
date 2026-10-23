@@ -350,8 +350,8 @@
       "source": "docs/development/go.md",
       "destination": "docs/development/go.md",
       "sha256": "c203d6366b1ea02a6428d2bac7dbb93261268353884f14569793c9ee258d73ce",
-      "adapted_sha256": "159717c64b9269f5a201ef297de76b2b423bab51b8ceda162d944816ab1a773e",
-      "adaptation": "Replace monorepo build/CI instructions with standalone Core selection, tests and migration handoff. Link the standalone Fast/Full CI policy and test ownership for Go issue #3. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity."
+      "adapted_sha256": "a6a3db827f7fd502d9b1a5788df0898b765ce129c789ffc9a4b8367b8cef80c5",
+      "adaptation": "Replace monorepo build/CI instructions with standalone Core selection, tests and migration handoff. Link the standalone Fast/Full CI policy and test ownership for Go issue #3. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity.; document Go-owned diagnostic generation after Core #686 cleanup"
     },
     {
       "source": "docs/guides/go.md",

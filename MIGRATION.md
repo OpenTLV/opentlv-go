@@ -186,3 +186,39 @@ version is not a Go package version, and its selected Core may differ from Go's
 native source lock. Example availability is not evidence of compatibility with
 that Core revision. Hosted Main/notifier, portal CI, Pages deployment and live
 URL validation must be recorded separately; no tags or releases are introduced.
+
+## Core ownership cleanup (#686)
+
+Core removes its old Go source tree, workflow, manuals, baseline files and
+reproduction script. The original records remain available at the immutable
+[Core baseline-record commit](https://github.com/OpenTLV/opentlv/tree/ec077a7eee7f59110c7b768acbb50015d86ab9df/docs/development/go-migration).
+The [original reproduction script](https://github.com/OpenTLV/opentlv/blob/ec077a7eee7f59110c7b768acbb50015d86ab9df/scripts/go_migration_baseline.py)
+must be run from that historical Core checkout; current Core no longer supplies
+these files. This repository's original source hashes and imported snapshots
+remain unchanged.
+
+Go now owns `scripts/generate_diagnostic_vocabulary.py`. It reads canonical enum
+and name metadata through the explicitly selected Core checkout's reader, then
+generates only the two Go snapshots in this repository. `--check` is read-only.
+The rendered snapshots are byte-identical to the existing standalone files;
+no runtime/API change, Core lock update, new forwarding module or publication
+is introduced. Run snapshot maintenance from this repository using the
+standalone command in the development guide.
+
+The portal must support source sets both before and after the old Core records
+disappear. Adopt its compatibility change before advancing its Core pin.
+Local checks against modified Core are not hosted Full or release evidence.
+Final cross-repository parity remains tracked by Go #7.
+
+The prerequisite hosted evidence reviewed for this cleanup is:
+
+| Check | Recorded evidence | Limit |
+| --- | --- | --- |
+| Go Main and external package consumption | [run 39967471049](https://github.com/OpenTLV/opentlv-go/actions/runs/39967471049), `a4d72386a4392f02b133d9fcf6703bab52c749b6` | Uses the original Core lock |
+| Go Full, all six lanes | [run 39856632068](https://github.com/OpenTLV/opentlv-go/actions/runs/39856632068) | Predates module packaging, layout and documentation changes; current-candidate Full remains required |
+| Workspace Main and Go integration | [run 39853011741](https://github.com/OpenTLV/opentlv-workspace/actions/runs/39853011741) | Predates the Core cleanup candidate |
+| Portal Main with standalone Go source selection | [run 39968006266](https://github.com/OpenTLV/opentlv-docs/actions/runs/39968006266), `b0c1adb` | Selects Go `a4d72386a4392f02b133d9fcf6703bab52c749b6`; does not validate this Core cleanup |
+
+Local cleanup validation covers Core CTest, standalone Go default/minimal/shared
+builds, external module consumption, examples and Query conformance. Those local
+checks do not replace current-candidate hosted Core, Go Full or workspace checks.

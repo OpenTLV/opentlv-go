@@ -105,3 +105,21 @@ does not copy native C sources, shared fixtures or release workflows into Go.
 The [standalone CI policy](ci.md) defines PR/Fast, Main and Full coverage, test
 ownership and required evidence. Migration-specific deviations are recorded in
 [migration provenance](../../MIGRATION.md).
+
+## Diagnostic vocabulary maintenance
+
+The Go repository owns the generator and generated snapshots. Core owns the C
+enums, name tables and their canonical reader. Select the Core checkout explicitly
+from this repository root:
+
+```sh
+python3 scripts/generate_diagnostic_vocabulary.py --core-source ../opentlv --check
+python3 scripts/generate_diagnostic_vocabulary.py --core-source ../opentlv
+```
+
+The first command detects missing or changed snapshots without writing; the
+second refreshes `diagnostic_kind.go` and `diagnostic_vocabulary_test.go` here.
+Neither command writes into Core, discovers a sibling implicitly or changes
+`core-source.json`. Review generated changes with the selected Core revision and
+run the binding tests against the same native library. The reader is available
+in both the original Core lock and the Core checkout after extraction.
