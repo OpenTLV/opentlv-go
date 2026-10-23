@@ -157,3 +157,32 @@ identity. Historical `bindings/go` references in baseline provenance are retaine
 There are no public import, exported API, native bridge, version, dependency-lock
 or runtime behavior changes. Core cleanup, portal integration, final parity and
 release publication remain separate work.
+
+## Documentation portal integration and migration deviations (#6)
+
+Usage, build, API contracts, examples and CI instructions are canonical in this
+repository. The usage guide now owns its standalone quick start and example
+index; exported Go comments remain the local `go doc` reference. Core owns
+native semantics, generated C/C++ references, shared Query inputs and the frozen
+migration baseline. No native or Go runtime implementation changes are needed.
+
+The portal selects Go separately in `docs-sources.json`, mounts `docs/` at `go/`
+and routes public manuals under Languages and CI/implementation under Development.
+Superseded Core Go manuals remain historical records with their original source
+links and anchors. New technical content is maintained here rather than copied
+into Core or the portal. Original inventory identities/hashes are retained;
+adapted hashes record only the changed imported usage guide.
+
+`docs-examples.json` exposes the existing quick-start source with the independent
+`BindingVersion`. Main documentation notifications propose exact source-pin
+updates through the existing portal event model; they do not publish a release.
+The initial portal integration can consume the already merged layout baseline.
+The new guide and catalog become available in a locked portal build only after
+this Go change is merged and its exact SHA is selected there. Local preview
+validation is kept separate from that later immutable source set.
+
+Go has no release workflow or independent documentation snapshots yet. The portal
+version is not a Go package version, and its selected Core may differ from Go's
+native source lock. Example availability is not evidence of compatibility with
+that Core revision. Hosted Main/notifier, portal CI, Pages deployment and live
+URL validation must be recorded separately; no tags or releases are introduced.

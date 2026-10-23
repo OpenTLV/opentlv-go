@@ -357,8 +357,8 @@
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "e42b7f36b0c481c8db0dd92b097d63cab218c8c83c4c09c8b30b8a5c34996767",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5)."
+      "adapted_sha256": "ec6ba528bdfc3808b86cc7aa25d03e367de2f8b36ba5f7d75271aabbd90240a8",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly."
     }
   ]
 }

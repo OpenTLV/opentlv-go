@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "component_version": "0.1.0-dev",
+  "examples": [
+    {
+      "feature": "fixed.roundtrip",
+      "language": "go",
+      "status": "supported",
+      "path": "examples/quick_start/main.go"
+    }
+  ]
+}

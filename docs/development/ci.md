@@ -71,6 +71,39 @@ digests. `go-quality-<tier>-<attempt>` contains the successful aggregate summary
 Setup failures may have no record; that missing evidence still fails the gate.
 These are CI execution records, not signed release attestations.
 
+## Documentation updates
+
+After successful Main checks, `go-main.yml` records whether documentation,
+examples or their version/dependency metadata changed since the previous
+successful Main push. Failed or cancelled intervening pushes remain included.
+The `docs-notification-<attempt>` artifact identifies the exact commit and run.
+
+`docs-notify.yml` runs only after successful official Main pushes. It reads that
+attempt's JSON without checking out or executing producer code, validates its
+identity and sends `component-docs-updated` to `OpenTLV/opentlv-docs`. Configure
+`OPENTLV_DOCS_DISPATCH_TOKEN` with access to dispatch to that repository; the
+credential is available only to the final notification step. No token is needed
+when there are no relevant changes. A missing token or failed dispatch fails the
+notifier and can be retried without rerunning native tests.
+
+The portal's documentation update policy validates the successful Main run and
+opens or updates a reviewed pin proposal on `automation/component-go`. Replays
+are idempotent; stale or divergent revisions are rejected. A notification does
+not deploy Pages, invoke Docs Full, or establish a Go release.
+
+The portal mounts this repository's `docs/` independently of Core and preserves
+Go-owned source/edit links and example links at the selected Go commit. Its
+version selector describes the portal snapshot, not `BindingVersion` or the
+linked Core version. `docs-examples.json` supplies the Go quick-start tab from
+the same checkout; its version must match `BindingVersion`. No runtime
+compatibility result for the portal-selected Core is implied by that catalog.
+
+Go currently has no release workflow or independent versioned documentation
+snapshot. Merge Go changes first, then review and merge the exact Go SHA into
+the portal manifest and validate the locked build. Local preview permits dirty
+sources but cannot authorize publication. Hosted notification, portal CI,
+Pages deployment and published URL checks remain separate evidence.
+
 ## Local reproduction
 
 Install the prerequisites from the [development guide](go.md), using a compiler
