@@ -129,4 +129,9 @@ changes, are marked `local`, and cannot satisfy the hosted gate.
 
 Public API/bridge behavior and the original migration assertions are unchanged.
 See [migration deviations](../../MIGRATION.md#standalone-ci-and-migration-deviations-3)
-for source-build provenance limits and the remaining extraction work.
+for source-build provenance limits and stage-specific adaptations.
+
+The [final cross-repository review](../../MIGRATION.md#final-cross-repository-review-7)
+records the reviewed revisions, hosted attempts, source parity and epic acceptance
+matrix. Historical Full results, local checks and Workspace Main are not evidence
+of final hosted Go/workspace Full or release authorization.

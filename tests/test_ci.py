@@ -7,6 +7,7 @@ import copy
 import importlib.util
 import json
 from pathlib import Path, PurePosixPath, PureWindowsPath
+import subprocess
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -27,6 +28,30 @@ class GateTests(unittest.TestCase):
                              workflow="Go Full CI", workflow_ref="OpenTLV/opentlv-go/.github/workflows/go-full.yml@refs/heads/main")
         self.definitions = {"scripts/ci.py": "b" * 64}
         self.lock = ci.read(ROOT / "core-source.json")
+
+    def test_definition_bytes_survive_windows_autocrlf_checkout(self):
+        source = self.root / "source"
+        source.mkdir()
+        files = ci.definition_hashes()
+        for name in files:
+            target = source / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes((ROOT / name).read_bytes().replace(b"\r\n", b"\n"))
+
+        def git(*args):
+            return subprocess.check_output(["git", "-C", str(source), *args],
+                                           stderr=subprocess.STDOUT)
+
+        git("init")
+        git("config", "core.autocrlf", "false")
+        git("add", ".")
+        git("-c", "user.name=CI fixture", "-c", "user.email=ci@example.invalid",
+            "-c", "commit.gpgsign=false", "commit", "-m", "Definition fixture")
+        checkout = self.root / "windows"
+        git("clone", "--no-local", "-c", "core.autocrlf=true", str(source), str(checkout))
+        for name in files:
+            with self.subTest(path=name):
+                self.assertEqual((checkout / name).read_bytes(), git("show", "HEAD:" + name))
 
     def records(self, tier):
         paths = []

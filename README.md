@@ -41,6 +41,11 @@ independent tags, native requirements and migration deviations.
 checksums and scoped adaptations. Core owns native semantics and shared Query
 fixtures; Go owns its public API, bridge, tests and examples.
 
+The [final migration review](MIGRATION.md#final-cross-repository-review-7)
+maps every epic acceptance criterion to source and execution evidence, records
+compatibility deviations, and records successful Go Full validation alongside
+the remaining workspace integration and release-process handoff.
+
 PR/Fast, Main and manually dispatched/reusable Full CI run Go-owned checks against
 the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,
 required quality gate, evidence and migration-specific limits.
