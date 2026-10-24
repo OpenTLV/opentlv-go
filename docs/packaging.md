@@ -110,3 +110,18 @@ it is not an official release artifact. Public proxy retrieval, a published tag,
 checksum database registration and release readiness remain unclaimed. Publishing
 requires a separate approved release with successful hosted validation of the
 exact revision. This migration creates no tag or release.
+
+## Release process handoff
+
+The independently dispatched `go-full.yml` workflow is the technical release
+quality gate. Before authorizing a module tag, select the exact committed binding
+version and Core source lock, run Full on that commit, and require all six native
+configurations plus the attempt-matched Go quality gate. Each configuration
+includes the external-consumer package check. Retain the commit, run, attempt
+and artifact digests with the release decision; PR/Main or historical Full
+results cannot replace that candidate's Full evidence.
+
+The current `0.1.0-dev` metadata supports migration development and validation.
+A release owner separately approves a publishable version, changelog, tag and
+publication. Migration completion establishes that this process can be followed;
+it does not grant publication permission or claim public proxy availability.

@@ -355,6 +355,25 @@ The artifact metadata and gate log are the inspected hosted evidence; this
 review does not claim independent replay of the downloaded hosted gate.
 Artifacts can expire; retain the run, attempt, commit and digests together.
 
+### Follow-up validation and gate repair
+
+[Go Full 40071215912, attempt 1](https://github.com/OpenTLV/opentlv-go/actions/runs/40071215912)
+ran on the published review candidate
+`2a52389b7ee9dfbd895841a1840153d9cd8a41f4`. All six native configurations and
+workflow validation passed, but the aggregate job
+[120805281841](https://github.com/OpenTLV/opentlv-go/actions/runs/40071215912/job/120805281841)
+failed. This run is not successful Full evidence.
+
+The downloaded Linux and Windows records have identical execution identities.
+The only differing CI definition is `LICENSE`: Windows checked it out with CRLF
+because its extensionless path had no explicit LF rule. Linux recorded SHA-256
+`9d1139c42bde151af259ca7196c9da2f19d85fbd3b8771a3d3f0e1e5f6490c9c`,
+Windows `715fdd19baa98d5687210d1b2e141c5ecf313deec8ece76d79b53f232df5ba52`.
+The repair declares LF for `LICENSE` and `.gitattributes`, binds the attributes
+policy into CI definition hashes, and checks actual Git checkout bytes with
+`core.autocrlf=true`. No evidence comparison is relaxed. A fresh complete Full
+run on the committed repair is required.
+
 ### Local reproduction
 
 Local runs use Linux amd64 under WSL/Ubuntu 24.04, GCC 13.3.0, CMake 3.28.3,
@@ -451,7 +470,7 @@ it does not convert local results into hosted or release approval.
 | Old Core implementation/integration removed | Verified in Core `a9a6f94`; original evidence remains immutable |
 | No unrelated functionality or redesign | Verified by the source comparison; #7 changes review documentation only |
 | Cross-repository validation passes | Partial: Go/Core and Docs alignment verified; final workspace pins and hosted Full remain pending |
-| Coordinated release readiness | Pending: exact-candidate Full/integration evidence and independently enforced release authorization are still required |
+| Coordinated release readiness | Pending: repaired Go Full and final workspace integration evidence; the existing independent Full gate is the technical release prerequisite, while publication authorization remains outside migration |
 
 ### Deviations and completion handoff
 
@@ -477,11 +496,14 @@ reviewed candidate, preserving this review as a dated snapshot:
 3. **Docs owner:** consume the merged Go review revision through the existing
    notification/pin workflow and validate the locked source set. Record a
    successful publication separately if claiming that source set is live.
-4. **Release owners:** select the exact binding/Core versions and approved
-   dependency mode, establish an independently enforceable release gate, and
-   bind any release artifacts/provenance to the successful candidate checks.
-   Go currently has no release workflow; CI receipts and the synthetic local
-   module ZIP are not signed release attestations or public proxy evidence.
+4. **Release readiness:** use the independently callable Go Full quality gate
+   as the required technical gate for the exact future release candidate.
+   The module/version contract and external-consumer checks are already part
+   of each configuration. A release owner must separately select the binding
+   version, approve the pinned-source dependency mode and authorize a tag.
+   A publishing workflow, signed binary attestations, public proxy registration
+   and an actual release are outside this migration. Their absence does not
+   itself prevent migration acceptance; CI receipts do not claim any of them.
 
 Keeping the original Core source pin is intentional and does not block source
 migration by itself. A newer Core pin, verified release-binary consumption,

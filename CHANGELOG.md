@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- Keep license and CI definition bytes identical in Windows and Unix checkouts so the Full quality gate can verify all six native configurations without weakening hash checks. (#7)
+
 ### Added
 
 - Record the final Go migration review with source parity, exact cross-repository CI evidence, all epic acceptance criteria, documented deviations and outstanding release-readiness requirements. (#7)
