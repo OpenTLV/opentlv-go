@@ -43,8 +43,8 @@ fixtures; Go owns its public API, bridge, tests and examples.
 
 The [final migration review](MIGRATION.md#final-cross-repository-review-7)
 maps every epic acceptance criterion to source and execution evidence, records
-compatibility deviations, and identifies the remaining Full/workspace and
-release-readiness requirements.
+compatibility deviations, and records successful Go Full validation alongside
+the remaining workspace integration and release-process handoff.
 
 PR/Fast, Main and manually dispatched/reusable Full CI run Go-owned checks against
 the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,

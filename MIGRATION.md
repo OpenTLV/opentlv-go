@@ -228,16 +228,18 @@ checks do not replace current-candidate hosted Core, Go Full or workspace checks
 Reviewed on **2026-10-24** for [Go #7](https://github.com/OpenTLV/opentlv-go/issues/7)
 and [Core epic #684](https://github.com/OpenTLV/opentlv/issues/684).
 The source migration is implemented and the reviewed behavioral changes are
-limited to the adaptations below. **Final migration acceptance and coordinated
-release readiness remain pending**: the latest hosted Full predates packaging
-and layout changes, and the workspace has no Full result containing Go.
-This review does not close either issue or authorize a release.
+limited to the adaptations below. **Go candidate PR and Full validation passed**
+on `c6af85d2c11cfc6c98897398b2ec3b6e5335a491`, including all six native
+configurations and the aggregate quality gate. **Final cross-repository acceptance
+remains pending workspace validation** as detailed in the follow-up evidence below.
+The closing Go PR must satisfy that prerequisite before merge; no release is
+authorized by this review.
 
-### Reviewed identities
+### Initial reviewed identities
 
 These are immutable review inputs, not moving references to the latest branches.
-The documentation-only #7 change is based on the Go commit below; its future
-PR/Main results must be recorded separately.
+The initial documentation review was based on the Go commit below. Later repair
+and workspace revisions are recorded separately in the follow-up evidence.
 
 | Input | Exact revision |
 | --- | --- |
@@ -256,8 +258,8 @@ and Core `a9a6f9470c2b285744738b40196bef9d0341fead`. The Go native lock remains
 at the original baseline intentionally. Portal source selection is not a native
 compatibility claim; a lock update is a separate reviewed dependency change.
 The [workspace manifest](https://github.com/OpenTLV/opentlv-workspace/blob/721c7876ba1fa3ea7aae3f24b7677ab3ec3b81df/integration.json)
-still selects its older component set in remote mode, so a green run on that
-set cannot establish final migration alignment.
+selected the older component set in remote mode. It is retained here as historical
+evidence and cannot establish final migration alignment.
 
 ### Source and ownership parity
 
@@ -371,8 +373,41 @@ because its extensionless path had no explicit LF rule. Linux recorded SHA-256
 Windows `715fdd19baa98d5687210d1b2e141c5ecf313deec8ece76d79b53f232df5ba52`.
 The repair declares LF for `LICENSE` and `.gitattributes`, binds the attributes
 policy into CI definition hashes, and checks actual Git checkout bytes with
-`core.autocrlf=true`. No evidence comparison is relaxed. A fresh complete Full
-run on the committed repair is required.
+`core.autocrlf=true`. No evidence comparison is relaxed.
+
+The committed repair `c6af85d2c11cfc6c98897398b2ec3b6e5335a491` passed:
+
+| Evidence (attempt 1) | Result |
+| --- | --- |
+| [Go PR 40071831858](https://github.com/OpenTLV/opentlv-go/actions/runs/40071831858) | Successful PR checks for the repair head; the PR workflow tests its merge checkout |
+| [Go Full 40072168513](https://github.com/OpenTLV/opentlv-go/actions/runs/40072168513) | All six native configurations, plan and workflow validation passed |
+| [Go quality gate 120808284936](https://github.com/OpenTLV/opentlv-go/actions/runs/40072168513/job/120808284936) | Downloaded all six same-attempt artifacts and passed strict record, source-definition and log verification |
+
+The gate published `go-quality-full-1`, artifact `12551283098`, ZIP SHA-256
+`ea17e4b7a75ce2a00eed9345b5dfcf69b5e093edfc6ee9815047e05926d5eb69`.
+Run/job metadata, artifact metadata and the successful gate log were inspected;
+this is hosted validation, not a claim of independent local artifact replay.
+The repaired candidate now has current Windows, macOS and Linux Full evidence.
+
+Workspace [PR #43](https://github.com/OpenTLV/opentlv-workspace/pull/43) merged as
+`df2b648bd691c0e970b1f8270934db992790ca42` and passed
+[Main 40072116788](https://github.com/OpenTLV/opentlv-workspace/actions/runs/40072116788),
+attempt 1. Main validates configuration/bootstrap and does not execute Full.
+The merged manifest still selects Go `2a52389b7ee9dfbd895841a1840153d9cd8a41f4`
+and Lua `c463066ca24f524d3ae9c7dff949796629367d03`. The local sibling portal
+smoke on these pins failed because `lua/quality-gates.md` was missing.
+[Workspace Full 40072566623](https://github.com/OpenTLV/opentlv-workspace/actions/runs/40072566623)
+ran on that merged workspace revision, attempt 1. Remote integration passed,
+but [sibling job 120808990315](https://github.com/OpenTLV/opentlv-workspace/actions/runs/40072566623/job/120808990315)
+failed with `Portal navigation references missing documentation: lua/quality-gates.md`.
+This confirms the local failure and does not satisfy cross-repository acceptance.
+The prepared workspace correction selects Lua
+`25d8783f1ef0def6c8790c7060a756fab635d3e4` (the portal's Lua source) and Go
+`c6af85d2c11cfc6c98897398b2ec3b6e5335a491`. A successful complete Full on that
+committed combination is the remaining migration validation prerequisite. The
+corrected local sibling portal assembly/navigation passed on clean isolated
+checkouts with all six sources; this verifies the documentation repair, not
+hosted native integration.
 
 ### Local reproduction
 
@@ -462,15 +497,15 @@ it does not convert local results into hosted or release approval.
 | Standalone build reproducible | Verified for the pinned source/configurations: explicit dependency selection and per-stage receipts; no claim of bit-identical release binaries |
 | Core identity and provenance verified | Verified for source builds: full Git commit plus input/native hashes; no attested binary consumption |
 | Local workspace development supported | Verified by explicit Core override and the bounded Go smoke above; whole-workspace final acceptance remains pending |
-| Fast CI passes | Verified at the recorded cleanup PR and merged Go Main; #7 candidate CI is still required |
-| Full CI passes | Pending for the reviewed final Go revision; the historical six-lane Full is insufficient |
+| Fast CI passes | Verified: repair candidate PR 40071831858 passed; historical Go Main remains recorded separately |
+| Full CI passes | Verified: Full 40072168513 on repair c6af85d passed all six native configurations and aggregate gate, attempt 1 |
 | Independent module/versioning | Verified: canonical module, Go 1.22 minimum, `BindingVersion`, root tag policy and external-consumer package checks |
 | Agreed layout | Verified: root facade/tests, private `internal/capi`, public examples and infrastructure tests |
 | Docs ownership/publication integrated | Verified for ownership, hosted notification/receiver and locked portal build; publication of this final source set is not established by Main |
 | Old Core implementation/integration removed | Verified in Core `a9a6f94`; original evidence remains immutable |
-| No unrelated functionality or redesign | Verified by the source comparison; #7 changes review documentation only |
+| No unrelated functionality or redesign | Verified: #7 adds migration documentation and the discovered CI checkout-hash repair; runtime sources and native ownership are unchanged |
 | Cross-repository validation passes | Partial: Go/Core and Docs alignment verified; final workspace pins and hosted Full remain pending |
-| Coordinated release readiness | Pending: repaired Go Full and final workspace integration evidence; the existing independent Full gate is the technical release prerequisite, while publication authorization remains outside migration |
+| Coordinated release readiness | Pending: final workspace integration evidence; repaired Go Full is verified and the existing independent Full gate is the technical release prerequisite, while publication authorization remains outside migration |
 
 ### Deviations and completion handoff
 
@@ -485,10 +520,11 @@ implementation. The original Linux default/minimal checks remain present.
 To complete #7 and the epic, record the following evidence against the actual
 reviewed candidate, preserving this review as a dated snapshot:
 
-1. **Go owner:** run hosted Full on the final committed Go revision and retain
-   all six configurations, per-check records and the attempt-matched quality
-   artifact. Run PR/Main for the review change as usual. An older green Full
-   or a local Linux run cannot cover current Windows/macOS/package checks.
+1. **Go owner:** completed candidate PR/Full validation at repair `c6af85d`
+   as recorded above. The final documentation update records those immutable
+   results; it does not claim they ran on a later documentation commit. Run
+   normal PR checks for the final update and Main after merge. Executable,
+   dependency or CI changes require fresh candidate Full evidence.
 2. **Workspace owner:** review and advance the relevant integration pins to
    the agreed final component set, then run Full in both sibling and remote
    modes with Go enabled. Retain the resolved Go and Core identities and
