@@ -35,8 +35,25 @@ presets return an unsupported status; the bridge contains no wire parser.
 
 ### Ownership and lifetime
 
-- Byte slices are borrowed only during a synchronous cgo call. C never retains
-  Go pointers across calls. `runtime.KeepAlive` covers conversion of native
+Prepared structural schemas (#19) copy the complete definition graph into C
+allocations before `tlv_schema_prepare`. Table identities are resolved iteratively,
+including cycles/shared children. A shared owner serializes validation and Close;
+the graph is freed once without recursive traversal. Both single and bounded
+multi-finding validation use checked native APIs. Go copies every diagnostic before
+report/input/graph storage can expire, translating native definition owner pointers
+to stable table indices. The facade never implements structural validation rules.
+
+Document subtree operations retain the checked owner during C access. Optional
+source locations are scalar snapshots, and Encode returns owned output. Document
+Query visitors use the native Document visitor through a scoped cgo handle and
+guard execution reentry and Document mutation/Close while running the Go callback.
+Panics return visitor failure to C before propagating; deferred guards restore
+state and the native execution remains invalid until Reset.
+
+- Byte slices are borrowed during synchronous bridge operations. Transient schema
+  reports pin their input until diagnostic snapshots are copied and native report
+  storage is freed; no Go input pointer remains in C after the API returns.
+  `runtime.KeepAlive` covers conversion of native
   results after the call. Nil and empty slices are supported without indexing
   their first byte; a non-nil empty slice remains distinct where relevant.
 - Reader/Writer calls build their descriptor and cursor on the C stack. Fixed

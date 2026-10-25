@@ -220,6 +220,7 @@ void* go_document_node(go_document* d, void* n, int operation) {
         case 1: return tlv_node_first_child(n);
         case 2: return tlv_node_next(n);
         case 3: return tlv_node_parent(n);
+        case 4: return tlv_node_next_same_tag(n);
     }
 #else
     (void)d;
@@ -295,6 +296,56 @@ tlv_result_t go_format_check(go_format config) {
     tlv_format_t       format;
     tlv_fixed_format_t fixed;
     return resolve(config, &format, &fixed);
+}
+
+void* go_document_find(go_document* d, void* parent, const uint8_t* tag, size_t size) {
+#if OPENTLV_DOCUMENT
+    return tlv_document_find(d->document, parent, tlv_tag(tag, size));
+#else
+    (void)d; (void)parent; (void)tag; (void)size;
+    return NULL;
+#endif
+}
+
+void go_node_location(void* node, size_t* offset, size_t* header, int* has_offset, int* has_header) {
+#if OPENTLV_DOCUMENT
+    tlv_document_source_location_t source = tlv_node_source_location(node);
+    *offset = source.offset; *header = source.header_size;
+    *has_offset = source.has_offset; *has_header = source.has_header_size;
+#else
+    (void)node; *offset = *header = 0; *has_offset = *has_header = 0;
+#endif
+}
+
+go_write_result go_node_encode(void* node, go_format config, uint8_t* data, size_t capacity, int measure) {
+    go_write_result r = {0};
+#if OPENTLV_DOCUMENT
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    r.code = resolve(config, &format, &fixed);
+    if (r.code == TLV_OK)
+        r.code = measure ? tlv_node_encoded_size_as(node, &format, &r.size)
+                         : tlv_node_encode_as(node, &format, data, capacity, &r.size);
+#else
+    (void)node; (void)config; (void)data; (void)capacity; (void)measure;
+    r.code = TLV_ERR_UNSUPPORTED;
+#endif
+    return r;
+}
+
+tlv_result_t go_structure_validate(const tlv_schema_checked_t* checked, go_format config,
+                                   const uint8_t* data, size_t size, size_t depth, size_t elements,
+                                   int unknown, tlv_schema_diagnostic_report_t* report,
+                                   tlv_schema_diagnostic_t* diagnostic) {
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    tlv_schema_diagnostic_init(diagnostic);
+    tlv_result_t code = resolve(config, &format, &fixed);
+    if (code != TLV_OK) return code;
+    if (report)
+        return tlv_schema_validate_all_checked(checked, data, size, &format, depth, elements,
+                                               (tlv_schema_unknown_policy_t)unknown, report, diagnostic);
+    return tlv_schema_validate_checked(checked, data, size, &format, depth, elements, diagnostic);
 }
 
 int go_format_inspect(go_format config, int operation, const uint8_t* tag, size_t size) {
@@ -1028,6 +1079,23 @@ tlv_result_t go_query_document(go_query_execution* q, const go_document* documen
     (void)context;
     (void)capacity;
     (void)diagnostic;
+    return TLV_ERR_UNSUPPORTED;
+#endif
+}
+
+#if OPENTLV_DOCUMENT
+extern int goDocumentVisitHandle(uintptr_t, void*);
+static tlv_visit_result_t visit_document_handle(tlv_node_t* node, void* context) {
+    return (tlv_visit_result_t)goDocumentVisitHandle(*(uintptr_t*)context, node);
+}
+#endif
+
+tlv_result_t go_query_document_visit(go_query_execution* q, uintptr_t handle,
+                                     tlv_query_diagnostic_t* diagnostic) {
+#if OPENTLV_DOCUMENT
+    return tlv_document_query_program_visit(q->exec, visit_document_handle, &handle, diagnostic);
+#else
+    (void)q; (void)handle; (void)diagnostic;
     return TLV_ERR_UNSUPPORTED;
 #endif
 }

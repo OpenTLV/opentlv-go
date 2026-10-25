@@ -24,7 +24,7 @@ the same matrix/stage definitions in `scripts/ci.py`.
 
 Every configuration checks migration hashes, Python infrastructure regressions,
 `gofmt`, `go vet`, all Go tests with `-count=1`, external module ZIP consumption
-(`package-check`), and the version, quick-start, generic format and streaming examples.
+(`package-check`), and the version, quick-start, generic format, streaming and schema examples.
 The package check runs
 without `replace` or workspace access using a fresh module cache and local file
 proxy; it validates module/version/license metadata and a native round trip.
@@ -207,6 +207,49 @@ reentrancy, malformed event streams, exact source preservation, output aliasing,
 fixed-buffer retries and native Format restrictions. Core retains wire behavior
 tests. The generic streaming example runs in all tiers and configurations.
 
+### Document, Query and Schema inventory (#19)
+
+Before coding #19, Go `e22fbb9c1996744b756d4c27c224fb690ec6f221` was inventoried
+against Core `cb3caed5b09706ce11ecfae839397fd4f99d0025`: 144 referenced, 60 missing
+and 93 ignored generic symbols. The inventory included public reachability,
+ownership, mutation guards, diagnostics and resource limits, not only references.
+
+| Pinned header | Before: referenced / missing / ignored | Result of review |
+| --- | --- | --- |
+| `document/document.h` | 24 / 17 / 0 | Add direct Find/sibling navigation, source coordinates, document sizing and subtree encoding/sizing; existing edits and builder-backed Parse remain |
+| `query/query.h` | 8 / 2 / 0 | Existing exact-path parsing/formatting/matcher plus compiled visitors cover selection; native callback variants intentionally excluded |
+| `query/program.h` | 27 / 4 / 0 | Existing compilation/images, typed bindings, streaming/retained execution, scalar results, Document evaluation/editing; reduced wrappers/storage reset intentionally excluded |
+| `query/adapters.h` | 2 / 1 / 0 | Existing Go providers and codecs cover conversion; native adapter callback intentionally excluded |
+| `query/plan.h` | 0 / 2 / 0 | Existing copied LoadQuery/Info; borrowed raw instruction plans and frontend-disabled builds intentionally excluded |
+| `schema/query.h` | 3 / 0 / 0 | Existing buffer/Document Query assertions, names, rule diagnostics and bounded workspace; no duplicate API added |
+| `schema/schema.h` | 1 / 9 / 0 | Add prepared copied structural graphs, explicit traversal limits, first/all validation, unknown policy and bounded owned reports; length validation included |
+| `schema/detail.h` | 2 / 0 / 0 | Preserve typed details, add definition table identity without exposing native pointers |
+| `schema/constraint.h`, `schema/number.h` | 0 / 5 / 0 | Value constraints and schema-number conversion belong to the generic codec review (#20), not structural validation |
+
+After #19, generic Core has **155/180 (86.1%) referenced**, **25 missing** and
+**117 ignored** out of 297 symbols. Builtins remains **12/291 (4.1%) referenced**,
+279 missing, no exclusions. There are no stale patterns. All symbols in the
+Document, Query and structural-schema headers above are referenced or explicitly
+excluded. This does not assert complete generic API parity: the remaining codec,
+generator, copy/definition and diagnostic symbols remain visible for #20/#21.
+
+The 24 new exclusions document equivalent Go operations or deliberate ownership
+boundaries: default-format wrappers, empty Parse plus Insert, first-result path
+selection, generation-checked Nodes, canonical snapshot sizing,
+explicit-length compilation, owned plan loading, and once-prepared schemas.
+`VisitDocument` adds native stop/resume, callback diagnostics and execution
+invalidation after callback failure, with Go lifetime/reentrancy guards. Native
+allocator callbacks, incremental Document-builder storage and borrowed plan/schema
+memory are not promised. Preparation owns allocation; limits bound traversal and
+report capacity bounds stored findings, not all process memory.
+
+Binding tests cover graph copies/cycles/shared references, optional source
+coordinates, subtree output ownership, stale/foreign Nodes, callback reentry and
+panic unwind, diagnostic lifetime/discriminants, definition indices, bounded report
+counts, zero limits, unknown policy, concurrent Close and minimal-build support.
+Core remains responsible for semantic behavior suites. The schema example runs
+in every CI tier/configuration; official feature selection and the pin are unchanged.
+
 The current generic per-header counts follow. JSON and Step Summary list every
 missing symbol as well as the separate Builtins headers. Original baseline totals
 above remain historical; regenerate this table when implementation changes.
@@ -224,7 +267,7 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/copy.h` | 0 | 3 | 0 |
 | `tlv/definition.h` | 0 | 1 | 0 |
 | `tlv/diagnostic.h` | 3 | 11 | 0 |
-| `tlv/document/document.h` | 24 | 17 | 0 |
+| `tlv/document/document.h` | 30 | 0 | 11 |
 | `tlv/endian.h` | 0 | 0 | 15 |
 | `tlv/field/escaped.h` | 2 | 0 | 0 |
 | `tlv/field/fixed.h` | 4 | 0 | 0 |
@@ -237,10 +280,10 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/formats/packed.h` | 4 | 0 | 0 |
 | `tlv/formats/variable.h` | 2 | 0 | 4 |
 | `tlv/generator.h` | 0 | 2 | 0 |
-| `tlv/query/adapters.h` | 2 | 1 | 0 |
-| `tlv/query/plan.h` | 0 | 2 | 0 |
-| `tlv/query/program.h` | 27 | 4 | 0 |
-| `tlv/query/query.h` | 8 | 2 | 0 |
+| `tlv/query/adapters.h` | 2 | 0 | 1 |
+| `tlv/query/plan.h` | 0 | 0 | 2 |
+| `tlv/query/program.h` | 27 | 0 | 4 |
+| `tlv/query/query.h` | 8 | 0 | 2 |
 | `tlv/reader/diagnostic.h` | 1 | 0 | 0 |
 | `tlv/reader/reader.h` | 5 | 0 | 8 |
 | `tlv/reader/tree.h` | 9 | 0 | 2 |
@@ -250,7 +293,7 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/schema/detail.h` | 2 | 0 | 0 |
 | `tlv/schema/number.h` | 0 | 2 | 0 |
 | `tlv/schema/query.h` | 3 | 0 | 0 |
-| `tlv/schema/schema.h` | 1 | 9 | 0 |
+| `tlv/schema/schema.h` | 6 | 0 | 4 |
 | `tlv/size.h` | 0 | 0 | 4 |
 | `tlv/tag.h` | 0 | 0 | 5 |
 | `tlv/value.h` | 0 | 0 | 7 |
