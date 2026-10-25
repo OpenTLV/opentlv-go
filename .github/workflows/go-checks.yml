@@ -87,6 +87,34 @@ jobs:
         run: |
           go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
           "$(go env GOPATH)/bin/actionlint"
+  api_coverage:
+    name: Core API coverage
+    if: inputs.tier != 'main'
+    # Informational under #15/#16; deliberately not a quality-gate prerequisite.
+    continue-on-error: true
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # Read the PR base lock from its immutable binding revision.
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Report pinned Core API coverage
+        shell: bash
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          coverage_command=(python3 -B scripts/api_coverage.py --output build/api-coverage.json
+            --summary "$GITHUB_STEP_SUMMARY")
+          if [[ -n "$BASE_SHA" ]]; then coverage_command+=(--base "$BASE_SHA"); fi
+          "${coverage_command[@]}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-api-coverage-${{ inputs.tier }}-${{ github.run_attempt }}
+          path: build/api-coverage.json
+          if-no-files-found: error
   gate:
     name: Go quality gate
     if: always()

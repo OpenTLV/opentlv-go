@@ -54,6 +54,7 @@ def definition_hashes():
     files = [ROOT / name for name in (".gitattributes", "go.mod", "opentlv.go", "LICENSE", "core-source.json", "migration/source-inventory.json")]
     files += sorted((ROOT / "scripts").glob("*.py"))
     files += sorted((ROOT / "tests").glob("test_*.py"))
+    files += sorted((ROOT / "ci").glob("*.json"))
     files += sorted((ROOT / ".github/workflows").glob("*.yml"))
     return {path.relative_to(ROOT).as_posix(): digest(path) for path in files}
 
