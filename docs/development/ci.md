@@ -24,7 +24,8 @@ the same matrix/stage definitions in `scripts/ci.py`.
 
 Every configuration checks migration hashes, Python infrastructure regressions,
 `gofmt`, `go vet`, all Go tests with `-count=1`, external module ZIP consumption
-(`package-check`), and the version/quick-start examples. The package check runs
+(`package-check`), and the version, quick-start and generic format examples.
+The package check runs
 without `replace` or workspace access using a fresh module cache and local file
 proxy; it validates module/version/license metadata and a native round trip.
 Full adds `go test -race` and `GOEXPERIMENT=cgocheck2` on both original Linux static
@@ -102,7 +103,7 @@ HEAD need not equal the lock. `--summary PATH` appends Markdown, `--base-commit 
 selects a previous Core revision directly, and `--commit SHA` is an explicit
 exploratory override, not pinned-build evidence. Use `python` on Windows.
 
-### Initial baseline and public surface
+### Initial baseline
 
 The pre-change implementation at Go `6edf392293eb039986f0ca2aaa6936f8bc51607e`
 was inventoried before implementation against Core
@@ -115,19 +116,60 @@ percentage of supported Go functionality, and must be regenerated after changes.
 
 | Existing public Go surface | Remaining review work |
 | --- | --- |
-| `NewFixed`, `Builtin`, immutable `Format` and slice-backed `Element` | General field/format composition and format inspection (#17) |
+| `NewFixed`, `Builtin`, immutable `Format` and slice-backed `Element` | General field/format composition and format inspection (completed in #17 below) |
 | `Reader`, incremental input, `Writer` and staged constructed writes | Reader/Writer/tree streaming and visitor gaps (#18) |
 | Owned `Document`, navigation, edits and encoding; parsed/compiled Query, matchers, execution and Query Schema validation | Remaining Document/Query/Schema operations (#19) |
 | Typed scalar, bytes, text, digits, IPv4 and numeric codecs | Generic structure codecs and wire generation (#20) |
 | Structured diagnostic snapshots and Go errors | Remaining generic API and final evidence/exclusion review (#21) |
 
-This reporting change adds no public Go operations, changes no ownership/error
-contracts, and does not modify migration baselines or Core build settings.
+The initial #16 reporting change added no public Go operations, changed no
+ownership/error contracts, and did not modify migration baselines or Core build settings.
 Official builds retain all supported Core components and Builtins; the existing
 minimal Full lane is compatibility testing, not a reduced official distribution.
 
-The initial generic per-header counts follow. JSON and Step Summary list every
-missing symbol as well as the separate Builtins headers.
+### Generic Format and field inventory (#17)
+
+Before coding #17, Go `04bbbb8` was inventoried against the same exact Core pin.
+It matched the baseline above: 107 referenced, 146 missing and 44 ignored generic
+symbols, with no stale exclusions. Inspection included the public types and
+callback/lifetime contracts excluded from the lexical `TLV_API` metric.
+
+| Pinned header family | Before #17 | Public operation after #17 |
+| --- | --- | --- |
+| `field/fixed.h` | No field operations | `NewFixedIdentifier`, `NewFixedLength`; `Read`, `Measure`, `Write` |
+| `field/variable.h` | No field operations or policies | `NewVariableIdentifier`, `NewVariableLength`; copied identifier/count policies |
+| `field/escaped.h` | No escaped count operation | `NewEscapedLength`; same field operations |
+| `field/packed.h` | No bit-field operation | `PackedField.Read`/`Write`, preserving unrelated bits |
+| `formats/compose.h` | `NewFixed` only | `NewComposed`, mixed encodings, TLV/LTV, count scope, tag-only tables |
+| `formats/escaped.h` | Missing | `NewEscaped`, copied tag-only tables |
+| `formats/variable.h` | Missing | `NewVariable`, copied policies and constructed predicate |
+| `formats/packed.h` | Missing | `NewPacked`, copied canonical Tag table and owned decoded Tags |
+| `format.h` | Reader/Writer already decode/measure/encode | `CanRead`, `CanWrite`, `IsConstructed`, `Preserve` for exact original framing |
+
+The updated generic report is **134/234 (57.3%) referenced**, 100 missing and
+63 ignored out of 297 symbols. Builtins remains **12/291 (4.1%) referenced**,
+279 missing and zero exclusions. All field/format header symbols are now either
+referenced or justified exclusions; unrelated gaps remain visible for #18-#21.
+These numbers remain source-reference evidence, not a functional coverage ratio.
+
+The 19 additional exclusions cover constructor-installed composition callbacks,
+the redundant tagged-binary path represented by fixed encodings in `NewComposed`,
+and raw format measurement/encoding already served by diagnostic Writer wrappers.
+`Format.Preserve` uses Core decode/source-preservation APIs to preserve original
+framing. Builtins-specific expansion, arbitrary Go wire callbacks,
+custom terminated-value resolvers and direct calls to low-level format callbacks
+are intentionally outside this declarative API. No Core wire logic is reimplemented.
+
+Public contract tests cover configuration snapshots, borrowing/copying, invalid
+and narrowed inputs, field capacity failures, composition combinations, constructed
+consumers, source preservation, GC and concurrency. Private bridge tests release
+the Go owner's reference explicitly to verify independent native Document/Query
+retention and failure-path cleanup. The generic formats example runs in every CI
+tier, including the existing minimal compatibility lane.
+
+The current generic per-header counts follow. JSON and Step Summary list every
+missing symbol as well as the separate Builtins headers. Original baseline totals
+above remain historical; regenerate this table when implementation changes.
 
 | Header | Referenced | Missing | Ignored |
 | --- | ---: | ---: | ---: |
@@ -144,16 +186,16 @@ missing symbol as well as the separate Builtins headers.
 | `tlv/diagnostic.h` | 3 | 11 | 0 |
 | `tlv/document/document.h` | 24 | 17 | 0 |
 | `tlv/endian.h` | 0 | 0 | 15 |
-| `tlv/field/escaped.h` | 0 | 2 | 0 |
-| `tlv/field/fixed.h` | 0 | 4 | 0 |
-| `tlv/field/packed.h` | 0 | 2 | 0 |
-| `tlv/field/variable.h` | 0 | 4 | 0 |
-| `tlv/format.h` | 0 | 8 | 0 |
-| `tlv/formats/compose.h` | 1 | 12 | 2 |
-| `tlv/formats/escaped.h` | 0 | 4 | 0 |
+| `tlv/field/escaped.h` | 2 | 0 | 0 |
+| `tlv/field/fixed.h` | 4 | 0 | 0 |
+| `tlv/field/packed.h` | 2 | 0 | 0 |
+| `tlv/field/variable.h` | 4 | 0 | 0 |
+| `tlv/format.h` | 6 | 0 | 2 |
+| `tlv/formats/compose.h` | 3 | 0 | 12 |
+| `tlv/formats/escaped.h` | 1 | 0 | 3 |
 | `tlv/formats/fixed.h` | 1 | 0 | 0 |
-| `tlv/formats/packed.h` | 0 | 4 | 0 |
-| `tlv/formats/variable.h` | 0 | 6 | 0 |
+| `tlv/formats/packed.h` | 4 | 0 | 0 |
+| `tlv/formats/variable.h` | 2 | 0 | 4 |
 | `tlv/generator.h` | 0 | 2 | 0 |
 | `tlv/query/adapters.h` | 2 | 1 | 0 |
 | `tlv/query/plan.h` | 0 | 2 | 0 |
@@ -257,7 +299,8 @@ directory after a compiler/toolchain change, as required by the build helper.
 the runner appends the configuration ID. Local results may include uncommitted
 changes, are marked `local`, and cannot satisfy the hosted gate.
 
-Public API/bridge behavior and the original migration assertions are unchanged.
+Original migration source identities are preserved. #17 adds generic APIs and
+records adapted bridge hashes plus explicit standalone source entries.
 See [migration deviations](../../MIGRATION.md#standalone-ci-and-migration-deviations-3)
 for source-build provenance limits and stage-specific adaptations.
 

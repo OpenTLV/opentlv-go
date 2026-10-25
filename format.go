@@ -25,7 +25,7 @@ const (
 	LTV
 )
 
-// LengthScope determines which bytes a fixed Length counts.
+// LengthScope determines which bytes a Length counts.
 type LengthScope int
 
 const (
@@ -69,8 +69,9 @@ const (
 )
 
 // Format is immutable configuration for the canonical C engine. Copies may be
-// shared concurrently. It owns no native resources and requires no Close.
-// Its zero value is invalid; use NewFixed or Builtin.
+// shared concurrently and require no Close. Composed formats own copied native
+// configuration reclaimed automatically after their last consumer is gone.
+// Its zero value is invalid; use a New format constructor or Builtin.
 type Format struct {
 	native capi.Format
 	valid  bool

@@ -69,9 +69,12 @@ type FixedConfig struct {
 	ByteOrder, Order, LengthScope int
 }
 
-// Format is immutable Go configuration. It owns no native resource and needs no Close.
-// Its zero value is invalid; construct it with NewFixed or Builtin.
-type Format struct{ config C.go_format }
+// Format is immutable configuration with optional shared native storage.
+// It needs no Close; the owner and persistent C consumers hold separate references.
+type Format struct {
+	config C.go_format
+	owner  *formatOwner
+}
 
 // NewFixed validates configuration through tlv_fixed_format_init.
 func NewFixed(config FixedConfig) (Format, Code) {
@@ -187,8 +190,9 @@ func diagnostic(d C.tlv_diagnostic_t, operation C.int) Diagnostic {
 
 // Read decodes the first element through the canonical Reader, without copying input.
 // final=false preserves NEED_MORE_DATA; consumed is zero on all non-success outcomes.
-// No input, output, cursor or configuration pointer is retained in C after return.
+// No input, output or cursor pointer is retained in C after return.
 func (f Format) Read(input []byte, final bool) (Element, int, Code, Diagnostic) {
+	defer runtime.KeepAlive(f)
 	var finalInput C.int
 	if final {
 		finalInput = 1
@@ -237,6 +241,7 @@ func (f Format) Write(output, tag, value []byte) (int, Code, Diagnostic) {
 }
 
 func (f Format) write(output, tag, value []byte, measure bool) (int, Code, Diagnostic) {
+	defer runtime.KeepAlive(f)
 	var sizing C.int
 	if measure {
 		sizing = 1

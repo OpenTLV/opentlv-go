@@ -7,6 +7,7 @@
 #error The Go binding requires Reader, Writer, Query, Schema and Codec
 #endif
 #include <tlv/formats/fixed.h>
+#include "fields.h"
 #include <tlv/reader/reader.h>
 #include <tlv/writer/writer.h>
 #include <tlv/writer/tree.h>
@@ -43,13 +44,15 @@ enum go_format_kind {
     GO_FORMAT_LLDP,
     GO_FORMAT_BLUETOOTH_LTV,
     GO_FORMAT_DHCPV4,
-    GO_FORMAT_NFC_TYPE2
+    GO_FORMAT_NFC_TYPE2,
+    GO_FORMAT_OWNED
 };
 
 typedef struct {
     int    kind;
     size_t tag_size, length_size;
     int    byte_order, element_order, length_scope;
+    go_owned_format* owned;
 } go_format;
 go_query_program* go_query_compile(go_format config, const uint8_t* text, size_t size,
                                    const tlv_query_compile_options_t* options,
@@ -109,6 +112,9 @@ typedef struct {
 } go_write_result;
 
 tlv_result_t    go_format_check(go_format config);
+int            go_format_inspect(go_format config, int operation, const uint8_t* tag, size_t size);
+tlv_result_t go_format_preserve(go_format, const uint8_t*, size_t, const uint8_t*, size_t,
+                                const uint8_t*, size_t, uint8_t*, size_t);
 go_write_result go_tree(go_format config, uint8_t* data, size_t capacity, const uint8_t* tag,
                         size_t tag_size, const uint8_t* value, size_t value_size, uint8_t* scratch,
                         int close);

@@ -26,7 +26,7 @@ Run Go commands from the repository root, which contains `go.mod`.
 - `tests/` contains Python tests for the build, CI and packaging helpers.
 - `examples/` contains runnable consumer programs.
 
-The internal bridge validates Fixed configuration and selects available native
+The internal bridge validates generic field and Format configuration and selects available native
 presets (BER, indefinite BER, DER, CER, EMV, LLDP, Bluetooth LTV, DHCPv4 and NFC
 Type 2). It delegates single-element reads, incremental-input status, encoded
 size calculation and writes to the canonical C Reader/Writer. Native source
@@ -39,12 +39,19 @@ presets return an unsupported status; the bridge contains no wire parser.
   Go pointers across calls. `runtime.KeepAlive` covers conversion of native
   results after the call. Nil and empty slices are supported without indexing
   their first byte; a non-nil empty slice remains distinct where relevant.
-- Reader/Writer calls build their descriptor, Fixed context and cursor on the C stack.
-  Format configuration is immutable and reusable concurrently. These operations
-  allocate no persistent native resources and require no `Close` or finalizer.
-  Document instead owns a C-allocated descriptor and Fixed context for its entire
-  lifetime, and copies all input before returning. Its finalizer is a fallback;
-  use Close for deterministic cleanup.
+- Reader/Writer calls build their descriptor and cursor on the C stack. Fixed
+  contexts remain call-local. Composed/variable/escaped/packed Formats hold an
+  immutable C-owned configuration with copied tables and policies. A shared Go
+  owner finalizer releases its reference; C Document and Query program objects
+  retain independent atomic references and release them on close or failed
+  construction. Calls keep the Go owner alive through native-result projection.
+  Format copies need no `Close` and may be used concurrently. Document copies
+  input and retains its descriptor for its lifetime; use its `Close` for
+  deterministic cleanup, with a finalizer only as fallback.
+- Standalone field encodings are pointer-free value snapshots. The bridge binds
+  their optional policy pointers only in C-local copies. Field callbacks in mixed
+  compositions adapt context only and delegate validation and wire operations to
+  Core. No Go callback or Go configuration pointer is retained by C.
 - Parsed Values, source bytes and source-bound Tags borrow the original Go
   slice, without copying. Returned slices keep its backing array alive. The
   caller must keep those bytes unchanged while results are in use and avoid

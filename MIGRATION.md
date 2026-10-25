@@ -546,3 +546,18 @@ migration by itself. A newer Core pin, verified release-binary consumption,
 public proxy/checksum-database availability and publishing the first module
 release require separate review. Publishing is explicitly outside this epic;
 recording readiness must not silently authorize a tag or publication.
+
+## Post-migration generic Format and fields (#17)
+
+The original Core commit, source paths and original SHA-256 values remain
+unchanged. Adapted hashes record the bridge ownership and documentation changes
+for generic field composition. New Go/C sources, public tests and the formats
+example are explicitly listed under `standalone_files` with their hashes and
+reasons; they are not presented as files imported from the migration baseline.
+The verifier continues to require an inventory entry for every Go/C source.
+
+Go adds public configuration snapshots and native context lifetime adapters.
+Core continues to own field validation, wire encoding, composition, packed table
+checks, constructed classification and source-preservation semantics. The exact
+Core pin and official feature selection are unchanged. The existing minimal
+compatibility lane also exercises the generic APIs without Builtins/Document.

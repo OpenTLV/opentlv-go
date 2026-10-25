@@ -14,7 +14,10 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     inventory = json.loads((ROOT / "migration/source-inventory.json").read_text())
     destinations = set()
-    for item in inventory["files"]:
+    standalone = inventory.get("standalone_files", [])
+    for item in standalone:
+        assert item.get("reason") and "source" not in item, item
+    for item in inventory["files"] + standalone:
         destination = item["destination"]
         assert destination not in destinations, destination
         destinations.add(destination)
@@ -29,7 +32,8 @@ def main():
                       for path in folder.rglob("*") if path.suffix in (".go", ".c", ".h")}
     implementation.update(path.name for path in ROOT.glob("*.go"))
     assert implementation <= destinations, implementation - destinations
-    print(f"Verified {len(destinations)} migrated files and all Go/C implementation sources.")
+    print(f"Verified {len(inventory['files'])} migrated files, {len(standalone)} standalone additions "
+          "and all Go/C implementation sources.")
 
 
 if __name__ == "__main__":

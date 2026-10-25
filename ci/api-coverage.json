@@ -23,6 +23,18 @@
     {
       "reason": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
       "symbols": ["tlv_number_decode", "tlv_number_encode", "tlv_text_decode", "tlv_text_encode", "tlv_digits_decode", "tlv_digits_encode"]
+    },
+    {
+      "reason": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "symbols": ["tlv_fields_decode", "tlv_fields_measure", "tlv_fields_encode", "tlv_tagged_fields_decode", "tlv_tagged_fields_measure", "tlv_tagged_fields_encode", "tlv_escaped_decode", "tlv_escaped_measure", "tlv_escaped_encode", "tlv_variable_decode", "tlv_variable_measure", "tlv_variable_encode", "tlv_variable_is_constructed"]
+    },
+    {
+      "reason": "NewComposed with fixed identifier/length encodings and TagOnly exposes the same generic tagged binary operation through the broader tagged-fields constructor; a second public constructor adds no functionality.",
+      "symbols": ["tlv_tagged_binary_format_init", "tlv_tagged_binary_decode", "tlv_tagged_binary_measure", "tlv_tagged_binary_encode"]
+    },
+    {
+      "reason": "Writer.Measure and WriteElement already expose canonical format measurement and encoding through richer diagnostic wrappers; Format.Preserve separately exposes exact source preservation.",
+      "symbols": ["tlv_format_measure", "tlv_format_encode"]
     }
   ]
 }

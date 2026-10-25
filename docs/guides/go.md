@@ -68,6 +68,7 @@ Run examples with `python3 scripts/go.py -- run ./examples/<name>`:
 | --- | --- |
 | [version](../../examples/version/main.go) | Independent binding and linked Core identities |
 | [quick_start](../../examples/quick_start/main.go) | Fixed-format write/read round trip |
+| [formats](../../examples/formats/main.go) | Mixed field encodings, tag-only elements and packed headers |
 | [reader](../../examples/reader/main.go) | Reader and borrowed input |
 | [writer](../../examples/writer/main.go) | Writer output and sizing |
 | [errors](../../examples/errors/main.go) | Status and diagnostic handling |
@@ -93,6 +94,72 @@ bytes, including available raw encoding. `Source()` exposes Header, Tag,
 Length, Value and Trailer ranges relative to the element start, with presence
 flags; `Offset()` is absolute in the input. Logical Elements have no source
 encoding. Format-supplied identifiers are copied into Go storage.
+
+### Generic fields and composition
+
+`NewFixedIdentifier` and `NewVariableIdentifier` create immutable
+`IdentifierEncoding` values. `NewFixedLength`, `NewVariableLength` and
+`NewEscapedLength` create `LengthEncoding` values. Each validates its configuration
+through Core and exposes `Read`, `Measure` and `Write`. Identifier reads borrow
+input; count reads return `uint64`. Failed reads return no semantic result and
+preserve Core's consumed-prefix detail. Failed field writes leave the destination
+unchanged and return zero written. `Write(nil, ...)` is a capacity error; use
+`Measure` to query width. Identifier writes reject overlapping slices.
+
+`NewComposed(CompositionConfig{Identifier: identifier, Length: length})` combines
+any of those identifier/count encodings. `Order` selects TLV or LTV, and
+`LengthScope` selects Value or Tag-and-Value counting. `TagOnly` is an optional
+table of identifiers that omit Length and require an empty Value. It requires
+TLV/ValueLength framing and implies no skipping or termination. A fixed field
+identifier width must be nonzero; use `NewFixed` for its existing absent-Tag case.
+
+`NewVariable(VariableConfig)` configures both variable fields and optional
+`IdentifierPolicy`, `LengthPolicy` and `ConstructedBit`. `NewEscaped(EscapedConfig)`
+combines fixed identifiers with inline or escape-prefixed counts. These APIs
+describe definite generic framing; protocol-specific and indefinite-length
+semantics remain with existing Builtin presets.
+
+`PackedField.Read` and `PackedField.Write` extract/insert unsigned bit fields in
+initialized backing bytes. Writes preserve unrelated bits and reject overflow.
+`NewPacked(PackedConfig)` composes nonoverlapping Tag/Length bit fields. Supply
+`TagStorage` as a complete table: entry `i` is `i` in `TagSize` big-endian bytes.
+For a two-bit Tag and one-byte canonical identifiers, this is `[]byte{0, 1, 2, 3}`.
+Core checks layout and capacity at construction and checks the selected table
+entry when decoding. Packed semantic tags are copied into Go storage; Values
+and source bytes still borrow input. Tag-and-Value scope counts the Tag's wire
+envelope rather than its canonical width.
+
+Constructors snapshot all policies, tables and predicates, so later changes to
+the input configuration do not affect the result. Encodings and Formats are
+safe to share concurrently; each consumer still owns its cursor and output.
+Composed native configuration is reclaimed automatically and needs no `Close`.
+Document and Query consumers retain it for their full lifetime.
+
+`Format.CanRead()` and `CanWrite()` inspect Core capabilities. `IsConstructed(tag)`
+applies the configured predicate to canonical Tag bytes without validating their
+wire representability. All return false for an invalid Format.
+`ConstructedBit{ByteIndex: 0, Mask: 0x20, Value: 0x20}` recognizes Tags with that
+bit set; supply it to variable, mixed or packed configuration for nested values.
+
+`format.Preserve(element)` returns an independent copy of the original encoding,
+including accepted nonminimal fields. It revalidates `element.Source().Bytes`
+and checks semantic equality through Core. Use the originating Format and keep
+source bytes unchanged; a logical Element without source returns `ErrInvalidArg`.
+`Writer.Write` instead regenerates framing according to the Format's policy.
+
+Run the [complete generic format example](../../examples/formats/main.go):
+
+```sh
+python3 scripts/go.py -- run ./examples/formats
+```
+
+Expected output:
+
+```text
+wire=0102476f tag=01 value=476f
+wire=00 tag=00 value=
+wire=82476f tag=02 value=476f
+```
 
 ## Reader and input windows
 

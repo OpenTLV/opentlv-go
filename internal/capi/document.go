@@ -22,6 +22,7 @@ type Node struct{ ptr unsafe.Pointer }
 
 // ParseDocument copies input into the canonical native Document.
 func (f Format) ParseDocument(data []byte, depth, elements int, defaults, retainSourceLocations bool) (*Document, Code, Diagnostic) {
+	defer runtime.KeepAlive(f)
 	if depth < 0 || elements < 0 {
 		return nil, InvalidArg, Diagnostic{Code: InvalidArg}
 	}
@@ -87,6 +88,7 @@ func (d *Document) Edit(n, before Node, tag, value []byte, operation int) (Node,
 
 // Encode delegates complete tree measurement or encoding to C Tree Writer.
 func (d *Document) Encode(f Format, output []byte, measure bool) (int, Code) {
+	defer runtime.KeepAlive(f)
 	var m C.int
 	if measure {
 		m = 1
