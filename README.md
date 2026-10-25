@@ -61,6 +61,11 @@ incremental tree cursors, resumable visitors, balanced event writes and exact
 source preservation. Run `python3 scripts/go.py -- run ./examples/streaming` for
 a generic event transformation with an output-capacity retry.
 
+The [structural schema guide](docs/guides/go.md#structural-schemas) covers copied
+recursive definitions, bounded findings and owned diagnostics. Run
+`python3 scripts/go.py -- run ./examples/schema` for generic validation that also
+works without Builtins or Document support.
+
 The central [Go documentation entry point](https://opentlv.github.io/opentlv-docs/latest/languages/go/)
 selects an immutable Go documentation revision. Go owns usage, API comments,
 build instructions and examples; the portal owns assembly and publication.

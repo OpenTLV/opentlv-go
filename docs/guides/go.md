@@ -300,6 +300,103 @@ open parent. Capacity failures preserve the Writer.
 
 Runnable version: [document/main.go](../../examples/document/main.go).
 
+For direct navigation, `doc.Find(parent, tag)` searches one scope (zero parent
+means roots), and `node.Next()`/`NextSameTag()` navigate siblings. A missing match
+is an invalid Node with no error; a stale or foreign parent is rejected.
+`doc.EncodedSize()`/`EncodedSizeAs(format)` measure the whole tree, while
+`node.Encode()`/`EncodeAs(format)` and `EncodedSize()`/`EncodedSizeAs(format)`
+operate on exactly one subtree. Encoding returns owned bytes and never remaps tags.
+An incompatible destination returns a `WriteError` with native status; the Core
+Document encoder does not provide optional diagnostic detail.
+
+With `DocumentOptions.RetainSourceLocations`, `node.SourceLocation()` returns
+independent optional `Offset` and `HeaderSize` values from the original input.
+They are coordinates, not ranges into the current encoding. Without retention
+they are absent. After mutation, reacquire all Nodes: affected nodes and ancestors
+lose their source coordinates, while unaffected nodes may retain old coordinates.
+An already returned location or encoding snapshot remains valid after Close.
+
+### Document result visitors
+
+After `execution.EvaluateDocument(doc, context, capacity)`, use
+`execution.VisitDocument(func(node Node) QueryVisit)` to visit remaining results.
+`QueryStop` returns successfully and the next call resumes after that node.
+`QueryVisitorError` returns `ErrVisitor`; an invalid action returns `ErrCallback`.
+Both preserve native callback diagnostics and invalidate the execution until Reset.
+Panics propagate after C returns and guards are restored, also requiring Reset.
+Keep the returned `*QueryExecution`; do not copy its mutable value. The callback
+cannot reenter the execution or edit/close the Document, including through copies
+of the Document. Read-only Node inspection is permitted. Document access
+still requires external serialization, and any edit outside a callback invalidates
+the retained Query results. `doc.EncodedSize()` supplies the complete snapshot
+capacity; passing a negative capacity to EvaluateDocument already measures it.
+
+## Structural schemas
+
+Structural validation operates directly on encoded input, independently of
+Document and compiled Query assertions. Core checks framing, nesting, lengths,
+occurrences, ordering, alternative groups and child membership; it does not decode
+semantic Values. The existing `ValidateQueryBuffer`/`ValidateQueryDocument` APIs
+continue to handle contextual boolean assertions with Query execution limits.
+
+```go
+schema, err := opentlv.PrepareStructure(&opentlv.StructureDefinition{
+    Rules: []opentlv.StructureRule{{
+        Entry: opentlv.SchemaEntry{
+            Tag: []byte{1}, Name: "payload", MinLength: 2, MaxLength: 8,
+            LengthMultiple: 2,
+        },
+        MinOccurs: 1, MaxOccurs: 1, Kind: opentlv.SchemaPrimitive,
+    }},
+})
+if err != nil { panic(err) }
+defer schema.Close()
+err = schema.Validate(data, format, opentlv.DefaultSchemaLimits())
+```
+
+Prepare copies all tags, names, tables and groups into native-owned immutable
+storage and checks the definition once. Shared and recursive `Children` references
+are supported, up to 256 distinct tables. Do not mutate the input graph during
+preparation; afterward it can be changed or discarded. Copies of the prepared
+handle share ownership. Close and validation serialize access; closing one copy
+closes all, and future validation returns `ErrInvalidState`. Garbage collection
+is a fallback for deterministic Close. No Go pointers are retained by C.
+
+Length and occurrence bounds are inclusive; **zero is literal** and `-1` means
+unbounded only for `MaxLength` and `MaxOccurs`. `Endpoints` permits only the two
+length bounds; `LengthMultiple` additionally requires divisibility. Individual
+length checks use `SchemaEntry.ValidateLength`. `Children` requires
+`SchemaConstructed`; a nil child schema leaves membership unrestricted while
+wire nesting is still validated. `SchemaOrderSequence` orders matched siblings.
+Nonzero rule `Group` references a `StructureGroup` in the same table; grouped
+rules require `MinOccurs == 0`, and the group bounds the combined occurrences.
+Names cannot contain NUL. Invalid definitions match `ErrInvalidSchema`;
+unrepresentable Go arguments match `ErrInvalidArg`.
+
+`SchemaLimits` explicitly bounds input depth and total elements. Zero limits are
+literal; `DefaultSchemaLimits()` returns 64 and 65536. These are traversal bounds,
+not an allocation-free guarantee or a bound on definition storage. Preparation
+allocates the copied graph; collection allocates up to the requested report capacity.
+
+`Validate` returns the first `*SchemaError`. `ValidateAll(data, format, limits,
+policy, capacity)` returns a `SchemaReport` with total `Count` and at most
+`capacity` stored `Findings`. Capacity zero counts without storing. Schema
+violations return `ErrSchema` together with the report. Fatal wire/resource
+errors return an empty report and `*SchemaError`. The unknown-tag policy either
+follows each scope's `AllowUnknown`, allows everywhere, or rejects everywhere.
+Finding order within one scope is not a public ordering guarantee.
+
+`SchemaError` preserves common location/path metadata, the discriminated Schema,
+Reader or Codec cause, and owned expected-versus-actual detail. Definition failures
+identify `DefinitionTable` (breadth-first table index, root zero) and
+`Detail.DefinitionIndex`; they have no wire location, and absent native fields
+are not inferred. Diagnostics survive input mutation and schema Close. `errors.Is`
+continues to match native statuses. Run the complete generic example with:
+
+```sh
+python3 scripts/go.py -- run ./examples/schema
+```
+
 ## Query and typed Values
 
 Compiled expressions use `CompileQuery(text, ProgramOptions)` and immutable

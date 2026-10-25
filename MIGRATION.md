@@ -556,6 +556,12 @@ example are explicitly listed under `standalone_files` with their hashes and
 reasons; they are not presented as files imported from the migration baseline.
 The verifier continues to require an inventory entry for every Go/C source.
 
+Issue #19 adds standalone Document extensions, prepared structural schemas,
+public contract tests and a schema example. Adapted hashes record the bridge,
+Document comments and guide updates; original source hashes and the exact Core
+pin remain unchanged. Schema semantic validation stays in Core. Go owns the
+immutable copied graph, lifetime guards, diagnostic snapshots and report storage.
+
 Go adds public configuration snapshots and native context lifetime adapters.
 Core continues to own field validation, wire encoding, composition, packed table
 checks, constructed classification and source-preservation semantics. The exact

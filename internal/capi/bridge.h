@@ -13,6 +13,7 @@
 #include <tlv/writer/tree.h>
 #include <tlv/query/adapters.h>
 #include <tlv/schema/query.h>
+#include <tlv/schema/schema.h>
 
 typedef struct go_document        go_document;
 typedef struct go_query_program   go_query_program;
@@ -151,4 +152,11 @@ size_t          go_document_count(go_document* document);
 int  go_document_query(go_document* document, const char* text, void*** nodes, size_t* count,
                        tlv_diagnostic_t* diagnostic);
 void go_query_free(void** nodes);
+void* go_document_find(go_document*, void*, const uint8_t*, size_t);
+void go_node_location(void*, size_t*, size_t*, int*, int*);
+tlv_result_t go_query_document_visit(go_query_execution*, uintptr_t, tlv_query_diagnostic_t*);
+go_write_result go_node_encode(void*, go_format, uint8_t*, size_t, int);
+tlv_result_t go_structure_validate(const tlv_schema_checked_t*, go_format, const uint8_t*, size_t,
+                                   size_t, size_t, int, tlv_schema_diagnostic_report_t*,
+                                   tlv_schema_diagnostic_t*);
 #endif

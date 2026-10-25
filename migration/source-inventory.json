@@ -7,8 +7,8 @@
       "source": "bindings/go/README.md",
       "destination": "docs/implementation.md",
       "sha256": "97fa2fd09724002289e8f6661b4200977a65bf2ba1d17585c57c64e7bbb8f092",
-      "adapted_sha256": "d427cb780dc27cdfe4d2e7c2a5ce86f5d4bee26a4804f0ec39439e9e4e1e3673",
-      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5). Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance."
+      "adapted_sha256": "067d659153a7f161a837e1fc6ed238652010c4e2bad678674d358e9c9e2dc09b",
+      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5). Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation."
     },
     {
       "source": "bindings/go/codec.go",
@@ -28,8 +28,8 @@
       "source": "bindings/go/document.go",
       "destination": "document.go",
       "sha256": "489ebdc7a2c4eaaee29c9ec2c06e5772dace94e09675eef524f320f9345e648f",
-      "adapted_sha256": "7ad0c4ed6ec3cdb335c7c27a9da004ad72e677a34b770ff444c53b98828b7a38",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "7b454bc4c648f2dd61b2b63a6ed8f50fff19006afdc6d4581a5b96b78a58c524",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation."
     },
     {
       "source": "bindings/go/element.go",
@@ -133,8 +133,8 @@
       "source": "bindings/go/internal/capi/bridge.c",
       "destination": "internal/capi/bridge.c",
       "sha256": "f76387f491945973cb944591b1b3e7c2dc81e97211891bac29f9b66ba979c532",
-      "adapted_sha256": "fb5eab33729932a2b43a3997c6a45d0376bd6333ea42f1c952e76514690a4708",
-      "adaptation": "Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance."
+      "adapted_sha256": "d90b6821dac3d11887be3941eb7a91808ab1031250e6114f0f8b387ad6c9754e",
+      "adaptation": "Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation."
     },
     {
       "source": "bindings/go/internal/capi/bridge.go",
@@ -147,8 +147,8 @@
       "source": "bindings/go/internal/capi/bridge.h",
       "destination": "internal/capi/bridge.h",
       "sha256": "6f04c436ccbdb1fcde184fa05d81908b34fabb1cb016d7c42f2c3154341ba101",
-      "adapted_sha256": "9e683f367f4d167accf2b1830a0800dd5271ebe9474ac491c64845a1d08c8fcd",
-      "adaptation": "Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance."
+      "adapted_sha256": "853cdd78334f16233f6635865bfe8a6870877dd7e851f5196318f1150d1c912e",
+      "adaptation": "Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation."
     },
     {
       "source": "bindings/go/internal/capi/bridge_test.go",
@@ -369,8 +369,8 @@
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "59a5bf84bb9aeb0c2489e621c8068eef262a46c2a4b44dcb029f1044b9692b4b",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance."
+      "adapted_sha256": "b74522a1f2b00d151633bb568e95c7c028d150f2ce7df93d87a6a680449ce202",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation."
     }
   ],
   "standalone_files": [
@@ -455,6 +455,41 @@
       "destination": "writer_source.go",
       "sha256": "7c97ae97aa45cddc7037afd3b674b689f931149970f9c999d075ef67da203505",
       "reason": "Go #18: standalone tree streaming API, native adapter, public contract test or example; not imported from Core."
+    },
+    {
+      "destination": "document_extensions.go",
+      "sha256": "aded33494fe02915bb7a094aeda0adb88cbb51065cae34b0eb484617aa6dab0c",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
+    },
+    {
+      "destination": "document_extensions_test.go",
+      "sha256": "4327c21532be8a5bdf2165648c621dd8f388978158ecbdb640151f562d7219b0",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
+    },
+    {
+      "destination": "schema.go",
+      "sha256": "405737fcd733677938a79566b4bfb569bd970d48ac3ffaf598c8d8ec02eaf7c4",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
+    },
+    {
+      "destination": "schema_test.go",
+      "sha256": "8cb051db74275fbd4092ad6ee15022fcc90f6a4d32069502f50bc1e063dc75b7",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/document_extensions.go",
+      "sha256": "57bbd4bc162ce8f2700e74f406357ecf8b836720e3278877d3953e0170191bff",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/schema.go",
+      "sha256": "50803ce10c6a7ecca8fab5e0aa0bbac0f9762d57ef722f46f21d54cf6b7b9a36",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
+    },
+    {
+      "destination": "examples/schema/main.go",
+      "sha256": "495dc597b8ef5c7093b3373c5b7db245c75a8398b975f5d7d3c4809f4cb57e29",
+      "reason": "Go #19: binding-owned Document/Query and structural schema API, native ownership adapter, public contract test or runnable example; not imported from Core."
     }
   ]
 }

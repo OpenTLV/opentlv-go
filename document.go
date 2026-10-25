@@ -70,8 +70,8 @@ func (d *Document) Close() error {
 func (d *Document) valid() bool { return d != nil && d.documentState != nil && d.native != nil }
 
 // Source returns an independent copy of the original complete encoding.
-// It returns nil after any successful edit or Close. Nodes have no wire ranges:
-// the C Document stores logical content, and Encode regenerates framing.
+// It returns nil after any successful edit or Close. Nodes have no wire ranges;
+// SourceLocation exposes optional retained coordinates, and Encode regenerates framing.
 func (d *Document) Source() []byte {
 	if !d.valid() {
 		return nil
@@ -150,7 +150,8 @@ func (n Node) Parent() Node {
 }
 
 // Element returns an independent content snapshot. Constructed nodes have an
-// empty Value; inspect Children instead. Source ranges are unavailable.
+// empty Value; inspect Children instead. Source ranges are unavailable; use
+// SourceLocation for optional original coordinates and Encode for subtree bytes.
 func (n Node) Element() (Element, error) {
 	if !n.Valid() {
 		return Element{}, StatusError{code: capi.InvalidState}

@@ -5,6 +5,46 @@
   "exclude": ["**/*_test.go"],
   "ignore": [
     {
+      "reason": "Parse(nil, format) plus Insert builds an empty mutable Document with the same defaults; ParseWithOptions(nil, ...) supplies explicit limits. The existing builder-based parser retains richer diagnostics. Native allocator callbacks and incremental Document-builder ownership are intentionally not separate Go APIs.",
+      "symbols": ["tlv_document_create", "tlv_document_parse"]
+    },
+    {
+      "reason": "Document/Node Encode and EncodedSize use the explicit-destination variants with the original Format; default-format wrappers add no operation. Returned output is owned Go memory rather than a borrowed native destination.",
+      "symbols": ["tlv_document_encode", "tlv_document_encoded_size", "tlv_node_encode", "tlv_node_encoded_size"]
+    },
+    {
+      "reason": "Document.Query exposes ordered exact-path results; taking the first result implements FindPath without another parser or result contract. It allocates the result slice rather than promising allocation-free first-match search.",
+      "symbols": ["tlv_document_find_path"]
+    },
+    {
+      "reason": "Go checks shared-owner generation before dereferencing every Node and invalidates all handles after successful edits. Node.Identity exposes the live identity. Native revision/retirement counters and stale-address scans are internal lifetime mechanisms, not public Go pointer operations.",
+      "symbols": ["tlv_document_revision", "tlv_document_retire_epoch", "tlv_document_node_identity"]
+    },
+    {
+      "reason": "Document.EncodedSize measures the complete canonical encoding and supplies the same snapshot bound already used by EvaluateDocument with negative capacity. Native discovery exposes caller-owned Tree Writer scratch; Go owns this staging and does not expose an allocation-free workspace contract.",
+      "symbols": ["tlv_document_query_value_size"]
+    },
+    {
+      "reason": "CompileQuery uses the explicit-length compile and scratch variants, including embedded-NUL syntax validation; NUL-terminated wrappers add no functionality. Reset recreates bounded execution storage and clears copied inputs/bindings. Finalized pulls use result_next_at to preserve ordinal identity.",
+      "symbols": ["tlv_query_compile", "tlv_query_compile_scratch", "tlv_query_exec_reset", "tlv_query_result_next"]
+    },
+    {
+      "reason": "ParseQuery.Matcher feeds exact-path matching over Go TreeReader nodes; compiled QueryExecution.Visit already supplies buffer/window visitors with owned results and stop/resume. Native V1 visitors add storage/callback variants rather than a distinct selection capability.",
+      "symbols": ["tlv_query_visit", "tlv_query_visit_buffer"]
+    },
+    {
+      "reason": "LoadQuery and QueryProgram.Info validate/copy native images and inspect requirements with frontend-enabled program APIs. Borrowing aligned hand-authored native instruction plans and frontend-disabled builds are intentionally outside the Go ownership/build contract.",
+      "symbols": ["tlv_query_plan_open", "tlv_query_plan_info"]
+    },
+    {
+      "reason": "QueryProvider already accepts typed Go decoding callbacks, and generic Codec.Decode delegates canonical conversions. The native callback adapter is a C environment/storage mechanism, not an additional public conversion.",
+      "symbols": ["tlv_query_codec_decode"]
+    },
+    {
+      "reason": "PrepareStructure checks and owns an immutable graph once via schema_prepare; Validate and ValidateAll use checked variants. Rechecking borrowed mutable native graphs adds no Go operation. SchemaEntry and StructureDefinition retain Go-owned tag/rule tables for application lookup; native borrowed length-entry lookup is not exposed.",
+      "symbols": ["tlv_schema_check", "tlv_schema_validate", "tlv_schema_validate_all_diag", "tlv_schema_find"]
+    },
+    {
       "reason": "NewReader plus Next already performs one-shot decoding with source and diagnostic output. Reduced one-shot wrappers add no distinct Go operation.",
       "symbols": ["tlv_read", "tlv_read_diag", "tlv_read_source_diag"]
     },
