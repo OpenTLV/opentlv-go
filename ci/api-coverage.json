@@ -5,6 +5,22 @@
   "exclude": ["**/*_test.go"],
   "ignore": [
     {
+      "reason": "Element.Value and Source.Bytes are Go slices: bytes.Clone or checked copy provides owned value/exact-byte copies, including overlap. Writer.CopyEncoded provides transactional sequence copying. No native pointer/length or size_t copy facade is needed.",
+      "symbols": ["tlv_copy_value", "tlv_copy_encoded"]
+    },
+    {
+      "reason": "Writer.Measure and Write/WriteElement serialize canonical tag/length/value through richer diagnostic Core wrappers. NewWriterBuffer supplies a fixed destination and preserves it on failure; this is not a raw byte copy. A second no-diagnostic serialization wrapper adds no wire capability.",
+      "symbols": ["tlv_copy_element"]
+    },
+    {
+      "reason": "Diagnostic is an owned Go snapshot with exported fields, contexts and path slices. Application enrichment uses Go values; native initialization, borrowed linked contexts and borrowed path setters are producer-side storage operations. NewLocation checks coordinates through Core. Mutating snapshot fields does not change an error's private StatusError identity or synchronize legacy Offset fields automatically.",
+      "symbols": ["tlv_diagnostic_init", "tlv_diagnostic_add_context", "tlv_diagnostic_set_location", "tlv_diagnostic_set_path"]
+    },
+    {
+      "reason": "Native readers/schema/query producers collect bounded paths and Go copies Path, HasPath and PathOmitted into owned diagnostics. Applications maintain additional traversal paths as Go slices and render them with encoding/hex and strings.Join. The native borrowed 32-tag stack and its exact display formatter are not separate Go APIs; no allocation-free or exact native path-rendering contract is promised.",
+      "symbols": ["tlv_diagnostic_path_init", "tlv_diagnostic_path_push", "tlv_diagnostic_path_pop", "tlv_diagnostic_path_string"]
+    },
+    {
       "reason": "IPv4ListCodec.Decode already validates the complete list through Core and returns an owned Go slice of [4]byte addresses. Indexing that slice provides address lookup with ordinary Go bounds checks; a second borrowed-native-list accessor adds no conversion capability.",
       "symbols": ["tlv_ipv4_list_at"]
     },

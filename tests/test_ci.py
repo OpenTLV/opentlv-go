@@ -198,6 +198,7 @@ class GateTests(unittest.TestCase):
                 self.assertEqual(dict(ci.stages(tier, config))["example-formats"], ["run", "./examples/formats"])
                 self.assertEqual(dict(ci.stages(tier, config))["example-schema"], ["run", "./examples/schema"])
                 self.assertEqual(dict(ci.stages(tier, config))["example-generation"], ["run", "./examples/generation"])
+                self.assertIn("api-completeness", dict(ci.stages(tier, config)))
         paths = self.records("pr")
         record = ci.read(paths[0])
         record["checks"] = [check for check in record["checks"] if check["name"] != "package"]

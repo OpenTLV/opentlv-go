@@ -55,6 +55,9 @@ the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,
 required quality gate, evidence and migration-specific limits.
 The [Core API reference inventory](docs/development/ci.md#core-api-reference-inventory)
 reports pinned symbols and known gaps separately from public API parity.
+The [reviewed generic contract gate](docs/development/ci.md#generic-completeness-review-and-gate-21)
+requires the exact Core pin, per-header inventory, explicit exclusions and public
+test anchors in every CI configuration. It complements the runtime tests.
 
 The [tree streaming guide](docs/guides/go.md#tree-streaming-and-visitors) covers
 incremental tree cursors, resumable visitors, balanced event writes and exact
@@ -71,6 +74,10 @@ covers Schema-aware numbers, scalar constraints, structured object callbacks and
 reproducible wire cases with explicit memory bounds. Run
 `python3 scripts/go.py -- run ./examples/generation`; it also works without
 Builtins or Document support.
+
+The [definition and location guide](docs/guides/go.md#definition-registries-and-diagnostic-locations)
+describes immutable application tag registries and checked diagnostic coordinates.
+Executable Go examples for both APIs run with the public tests.
 
 The central [Go documentation entry point](https://opentlv.github.io/opentlv-docs/latest/languages/go/)
 selects an immutable Go documentation revision. Go owns usage, API comments,

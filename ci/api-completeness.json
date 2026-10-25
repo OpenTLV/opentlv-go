@@ -1,0 +1,915 @@
+{
+  "schema": 1,
+  "inventory": {
+    "core": {
+      "repository": "https://github.com/OpenTLV/opentlv.git",
+      "version": null,
+      "commit": "cb3caed5b09706ce11ecfae839397fd4f99d0025"
+    },
+    "references": [
+      "internal/capi/*.go",
+      "internal/capi/*.c",
+      "internal/capi/*.h"
+    ],
+    "exclude": [
+      "**/*_test.go"
+    ],
+    "headers": {
+      "tlv/codec/codec.h": {
+        "referenced": [
+          "tlv_codec_decode",
+          "tlv_codec_encode"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/codec/diagnostic.h": {
+        "referenced": [
+          "tlv_codec_cause_string",
+          "tlv_codec_diagnostic_init",
+          "tlv_codec_operation_string",
+          "tlv_codec_reason_string",
+          "tlv_codec_violation_string"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/codec/digits.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_digits_decode",
+          "tlv_digits_encode"
+        ]
+      },
+      "tlv/codec/ipv4.h": {
+        "referenced": [
+          "tlv_codec_ipv4",
+          "tlv_codec_ipv4_list"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_ipv4_list_at"
+        ]
+      },
+      "tlv/codec/number.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_number_decode",
+          "tlv_number_encode"
+        ]
+      },
+      "tlv/codec/structure.h": {
+        "referenced": [
+          "tlv_structure_decode",
+          "tlv_structure_encode"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/codec/text.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_text_decode",
+          "tlv_text_encode"
+        ]
+      },
+      "tlv/codec/values.h": {
+        "referenced": [
+          "tlv_codec_bytes",
+          "tlv_codec_int64_minimal_be",
+          "tlv_codec_uint16_be",
+          "tlv_codec_uint16_le",
+          "tlv_codec_uint32_be",
+          "tlv_codec_uint32_le",
+          "tlv_codec_uint8"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/copy.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_copy_element",
+          "tlv_copy_encoded",
+          "tlv_copy_value"
+        ]
+      },
+      "tlv/definition.h": {
+        "referenced": [
+          "tlv_definition_find"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/diagnostic.h": {
+        "referenced": [
+          "tlv_diagnostic_severity_string",
+          "tlv_location_domain_string",
+          "tlv_location_kind_string",
+          "tlv_location_resolve",
+          "tlv_location_set",
+          "tlv_location_translate"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_diagnostic_add_context",
+          "tlv_diagnostic_init",
+          "tlv_diagnostic_path_init",
+          "tlv_diagnostic_path_pop",
+          "tlv_diagnostic_path_push",
+          "tlv_diagnostic_path_string",
+          "tlv_diagnostic_set_location",
+          "tlv_diagnostic_set_path"
+        ]
+      },
+      "tlv/document/document.h": {
+        "referenced": [
+          "tlv_document_builder_consume",
+          "tlv_document_builder_create",
+          "tlv_document_builder_free",
+          "tlv_document_count",
+          "tlv_document_encode_as",
+          "tlv_document_encoded_size_as",
+          "tlv_document_find",
+          "tlv_document_first",
+          "tlv_document_free",
+          "tlv_document_insert",
+          "tlv_document_options_init",
+          "tlv_document_query_edit",
+          "tlv_document_query_evaluate",
+          "tlv_document_query_next",
+          "tlv_document_query_program_visit",
+          "tlv_document_query_visit",
+          "tlv_node_encode_as",
+          "tlv_node_encoded_size_as",
+          "tlv_node_erase",
+          "tlv_node_first_child",
+          "tlv_node_identity",
+          "tlv_node_is_constructed",
+          "tlv_node_next",
+          "tlv_node_next_same_tag",
+          "tlv_node_parent",
+          "tlv_node_set_value",
+          "tlv_node_source_location",
+          "tlv_node_tag",
+          "tlv_node_value_data",
+          "tlv_node_value_size"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_document_create",
+          "tlv_document_encode",
+          "tlv_document_encoded_size",
+          "tlv_document_find_path",
+          "tlv_document_node_identity",
+          "tlv_document_parse",
+          "tlv_document_query_value_size",
+          "tlv_document_retire_epoch",
+          "tlv_document_revision",
+          "tlv_node_encode",
+          "tlv_node_encoded_size"
+        ]
+      },
+      "tlv/endian.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_endian_native",
+          "tlv_read_u16_be",
+          "tlv_read_u16_le",
+          "tlv_read_u32_be",
+          "tlv_read_u32_le",
+          "tlv_read_u64_be",
+          "tlv_read_u64_le",
+          "tlv_read_uint",
+          "tlv_write_u16_be",
+          "tlv_write_u16_le",
+          "tlv_write_u32_be",
+          "tlv_write_u32_le",
+          "tlv_write_u64_be",
+          "tlv_write_u64_le",
+          "tlv_write_uint"
+        ]
+      },
+      "tlv/field/escaped.h": {
+        "referenced": [
+          "tlv_escaped_length_read",
+          "tlv_escaped_length_write"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/field/fixed.h": {
+        "referenced": [
+          "tlv_fixed_identifier_read",
+          "tlv_fixed_identifier_write",
+          "tlv_fixed_length_read",
+          "tlv_fixed_length_write"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/field/packed.h": {
+        "referenced": [
+          "tlv_packed_field_read",
+          "tlv_packed_field_write"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/field/variable.h": {
+        "referenced": [
+          "tlv_variable_identifier_read",
+          "tlv_variable_identifier_write",
+          "tlv_variable_length_read",
+          "tlv_variable_length_write"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/format.h": {
+        "referenced": [
+          "tlv_constructed_bit_predicate",
+          "tlv_format_can_read",
+          "tlv_format_can_write",
+          "tlv_format_decode",
+          "tlv_format_init",
+          "tlv_source_preserve"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_format_encode",
+          "tlv_format_measure"
+        ]
+      },
+      "tlv/formats/compose.h": {
+        "referenced": [
+          "tlv_binary_decode",
+          "tlv_fields_format_init",
+          "tlv_tagged_fields_format_init"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_binary_encode",
+          "tlv_binary_measure",
+          "tlv_fields_decode",
+          "tlv_fields_encode",
+          "tlv_fields_measure",
+          "tlv_tagged_binary_decode",
+          "tlv_tagged_binary_encode",
+          "tlv_tagged_binary_format_init",
+          "tlv_tagged_binary_measure",
+          "tlv_tagged_fields_decode",
+          "tlv_tagged_fields_encode",
+          "tlv_tagged_fields_measure"
+        ]
+      },
+      "tlv/formats/escaped.h": {
+        "referenced": [
+          "tlv_escaped_format_init"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_escaped_decode",
+          "tlv_escaped_encode",
+          "tlv_escaped_measure"
+        ]
+      },
+      "tlv/formats/fixed.h": {
+        "referenced": [
+          "tlv_fixed_format_init"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/formats/packed.h": {
+        "referenced": [
+          "tlv_packed_decode",
+          "tlv_packed_encode",
+          "tlv_packed_layout_validate",
+          "tlv_packed_measure"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/formats/variable.h": {
+        "referenced": [
+          "tlv_variable_fields_init",
+          "tlv_variable_format_init"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_variable_decode",
+          "tlv_variable_encode",
+          "tlv_variable_is_constructed",
+          "tlv_variable_measure"
+        ]
+      },
+      "tlv/generator.h": {
+        "referenced": [
+          "tlv_generate",
+          "tlv_generator_workspace_size"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/query/adapters.h": {
+        "referenced": [
+          "tlv_query_builtin_hooks",
+          "tlv_query_definition_resolve"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_query_codec_decode"
+        ]
+      },
+      "tlv/query/plan.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_query_plan_info",
+          "tlv_query_plan_open"
+        ]
+      },
+      "tlv/query/program.h": {
+        "referenced": [
+          "tlv_query_cause_string",
+          "tlv_query_compile_commit",
+          "tlv_query_compile_options_init",
+          "tlv_query_compile_prepare",
+          "tlv_query_compile_prepare_size",
+          "tlv_query_error_kind_string",
+          "tlv_query_eval_init",
+          "tlv_query_eval_size",
+          "tlv_query_exec_bind",
+          "tlv_query_exec_context",
+          "tlv_query_exec_feed",
+          "tlv_query_exec_finish",
+          "tlv_query_exec_info",
+          "tlv_query_exec_init",
+          "tlv_query_exec_pruning",
+          "tlv_query_exec_result",
+          "tlv_query_exec_selected",
+          "tlv_query_exec_size",
+          "tlv_query_program_exists",
+          "tlv_query_program_explain",
+          "tlv_query_program_format",
+          "tlv_query_program_load",
+          "tlv_query_program_load_scratch",
+          "tlv_query_program_variable",
+          "tlv_query_program_variable_count",
+          "tlv_query_program_visit",
+          "tlv_query_result_next_ordinal"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_query_compile",
+          "tlv_query_compile_scratch",
+          "tlv_query_exec_reset",
+          "tlv_query_result_next"
+        ]
+      },
+      "tlv/query/query.h": {
+        "referenced": [
+          "tlv_query_count",
+          "tlv_query_format",
+          "tlv_query_matcher_init",
+          "tlv_query_matcher_rebind",
+          "tlv_query_matcher_visit",
+          "tlv_query_parse",
+          "tlv_query_parse_n",
+          "tlv_query_step"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_query_visit",
+          "tlv_query_visit_buffer"
+        ]
+      },
+      "tlv/reader/diagnostic.h": {
+        "referenced": [
+          "tlv_reader_operation_string"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/reader/reader.h": {
+        "referenced": [
+          "tlv_reader_consumed",
+          "tlv_reader_diagnostic_init",
+          "tlv_reader_init",
+          "tlv_reader_init_incremental",
+          "tlv_reader_next_source_diag"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_read",
+          "tlv_read_diag",
+          "tlv_read_source_diag",
+          "tlv_reader_at_end",
+          "tlv_reader_next",
+          "tlv_reader_next_diag",
+          "tlv_reader_offset",
+          "tlv_reader_set_input"
+        ]
+      },
+      "tlv/reader/tree.h": {
+        "referenced": [
+          "tlv_tree_reader_at_end",
+          "tlv_tree_reader_consumed",
+          "tlv_tree_reader_init",
+          "tlv_tree_reader_init_incremental",
+          "tlv_tree_reader_next_diag",
+          "tlv_tree_reader_next_event_diag",
+          "tlv_tree_reader_offset",
+          "tlv_tree_reader_set_input",
+          "tlv_tree_reader_skip_subtree"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_tree_reader_next",
+          "tlv_tree_reader_next_event"
+        ]
+      },
+      "tlv/reader/visitor.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_reader_visit",
+          "tlv_reader_visit_diag",
+          "tlv_tree_reader_visit"
+        ]
+      },
+      "tlv/result.h": {
+        "referenced": [
+          "tlv_result_string"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/schema/constraint.h": {
+        "referenced": [
+          "tlv_value_constraint_check",
+          "tlv_value_constraint_name",
+          "tlv_value_constraint_validate"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/schema/detail.h": {
+        "referenced": [
+          "tlv_schema_definition_kind_string",
+          "tlv_schema_issue_kind_string"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/schema/number.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_schema_number_decode",
+          "tlv_schema_number_encode"
+        ]
+      },
+      "tlv/schema/query.h": {
+        "referenced": [
+          "tlv_schema_query_size",
+          "tlv_schema_query_validate_buffer",
+          "tlv_schema_query_validate_document"
+        ],
+        "missing": [],
+        "ignored": []
+      },
+      "tlv/schema/schema.h": {
+        "referenced": [
+          "tlv_schema_cause_string",
+          "tlv_schema_diagnostic_init",
+          "tlv_schema_prepare",
+          "tlv_schema_validate_all_checked",
+          "tlv_schema_validate_checked",
+          "tlv_schema_validate_length"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_schema_check",
+          "tlv_schema_find",
+          "tlv_schema_validate",
+          "tlv_schema_validate_all_diag"
+        ]
+      },
+      "tlv/size.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_size_add",
+          "tlv_size_from_native",
+          "tlv_size_to_native",
+          "tlv_size_validate_native"
+        ]
+      },
+      "tlv/tag.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_tag_compare",
+          "tlv_tag_copy",
+          "tlv_tag_equal",
+          "tlv_tag_hash",
+          "tlv_tag_is_empty"
+        ]
+      },
+      "tlv/value.h": {
+        "referenced": [],
+        "missing": [],
+        "ignored": [
+          "tlv_value_compare",
+          "tlv_value_copy",
+          "tlv_value_equal",
+          "tlv_value_init",
+          "tlv_value_is_empty",
+          "tlv_value_slice",
+          "tlv_value_validate"
+        ]
+      },
+      "tlv/writer/tree.h": {
+        "referenced": [
+          "tlv_tree_writer_begin_diag",
+          "tlv_tree_writer_end_diag",
+          "tlv_tree_writer_init",
+          "tlv_tree_writer_size"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_tree_writer_begin",
+          "tlv_tree_writer_end",
+          "tlv_tree_writer_finish",
+          "tlv_tree_writer_measure",
+          "tlv_tree_writer_measure_events",
+          "tlv_tree_writer_set_tag_storage",
+          "tlv_tree_writer_write_element",
+          "tlv_tree_writer_write_element_diag",
+          "tlv_tree_writer_write_event",
+          "tlv_tree_writer_write_event_diag"
+        ]
+      },
+      "tlv/writer/writer.h": {
+        "referenced": [
+          "tlv_element_encoded_size_diag",
+          "tlv_write_element_diag",
+          "tlv_writer_copy_encoded",
+          "tlv_writer_copy_encoded_diag",
+          "tlv_writer_diagnostic_init",
+          "tlv_writer_init",
+          "tlv_writer_operation_string",
+          "tlv_writer_preserve_diag",
+          "tlv_writer_size"
+        ],
+        "missing": [],
+        "ignored": [
+          "tlv_element_encoded_size",
+          "tlv_encoded_size",
+          "tlv_write",
+          "tlv_write_diag",
+          "tlv_write_element",
+          "tlv_writer_copy_element",
+          "tlv_writer_preserve",
+          "tlv_writer_remaining",
+          "tlv_writer_write",
+          "tlv_writer_write_diag",
+          "tlv_writer_write_element",
+          "tlv_writer_write_element_diag"
+        ]
+      }
+    },
+    "exclusions": {
+      "tlv_binary_encode": "Callbacks selected by tlv_fixed_format_init for NewFixed; Core invokes them through the format descriptor. The referenced tlv_binary_decode identity check remains counted as a reference, not a separate public operation.",
+      "tlv_binary_measure": "Callbacks selected by tlv_fixed_format_init for NewFixed; Core invokes them through the format descriptor. The referenced tlv_binary_decode identity check remains counted as a reference, not a separate public operation.",
+      "tlv_copy_element": "Writer.Measure and Write/WriteElement serialize canonical tag/length/value through richer diagnostic Core wrappers. NewWriterBuffer supplies a fixed destination and preserves it on failure; this is not a raw byte copy. A second no-diagnostic serialization wrapper adds no wire capability.",
+      "tlv_copy_encoded": "Element.Value and Source.Bytes are Go slices: bytes.Clone or checked copy provides owned value/exact-byte copies, including overlap. Writer.CopyEncoded provides transactional sequence copying. No native pointer/length or size_t copy facade is needed.",
+      "tlv_copy_value": "Element.Value and Source.Bytes are Go slices: bytes.Clone or checked copy provides owned value/exact-byte copies, including overlap. Writer.CopyEncoded provides transactional sequence copying. No native pointer/length or size_t copy facade is needed.",
+      "tlv_diagnostic_add_context": "Diagnostic is an owned Go snapshot with exported fields, contexts and path slices. Application enrichment uses Go values; native initialization, borrowed linked contexts and borrowed path setters are producer-side storage operations. NewLocation checks coordinates through Core. Mutating snapshot fields does not change an error's private StatusError identity or synchronize legacy Offset fields automatically.",
+      "tlv_diagnostic_init": "Diagnostic is an owned Go snapshot with exported fields, contexts and path slices. Application enrichment uses Go values; native initialization, borrowed linked contexts and borrowed path setters are producer-side storage operations. NewLocation checks coordinates through Core. Mutating snapshot fields does not change an error's private StatusError identity or synchronize legacy Offset fields automatically.",
+      "tlv_diagnostic_path_init": "Native readers/schema/query producers collect bounded paths and Go copies Path, HasPath and PathOmitted into owned diagnostics. Applications maintain additional traversal paths as Go slices and render them with encoding/hex and strings.Join. The native borrowed 32-tag stack and its exact display formatter are not separate Go APIs; no allocation-free or exact native path-rendering contract is promised.",
+      "tlv_diagnostic_path_pop": "Native readers/schema/query producers collect bounded paths and Go copies Path, HasPath and PathOmitted into owned diagnostics. Applications maintain additional traversal paths as Go slices and render them with encoding/hex and strings.Join. The native borrowed 32-tag stack and its exact display formatter are not separate Go APIs; no allocation-free or exact native path-rendering contract is promised.",
+      "tlv_diagnostic_path_push": "Native readers/schema/query producers collect bounded paths and Go copies Path, HasPath and PathOmitted into owned diagnostics. Applications maintain additional traversal paths as Go slices and render them with encoding/hex and strings.Join. The native borrowed 32-tag stack and its exact display formatter are not separate Go APIs; no allocation-free or exact native path-rendering contract is promised.",
+      "tlv_diagnostic_path_string": "Native readers/schema/query producers collect bounded paths and Go copies Path, HasPath and PathOmitted into owned diagnostics. Applications maintain additional traversal paths as Go slices and render them with encoding/hex and strings.Join. The native borrowed 32-tag stack and its exact display formatter are not separate Go APIs; no allocation-free or exact native path-rendering contract is promised.",
+      "tlv_diagnostic_set_location": "Diagnostic is an owned Go snapshot with exported fields, contexts and path slices. Application enrichment uses Go values; native initialization, borrowed linked contexts and borrowed path setters are producer-side storage operations. NewLocation checks coordinates through Core. Mutating snapshot fields does not change an error's private StatusError identity or synchronize legacy Offset fields automatically.",
+      "tlv_diagnostic_set_path": "Diagnostic is an owned Go snapshot with exported fields, contexts and path slices. Application enrichment uses Go values; native initialization, borrowed linked contexts and borrowed path setters are producer-side storage operations. NewLocation checks coordinates through Core. Mutating snapshot fields does not change an error's private StatusError identity or synchronize legacy Offset fields automatically.",
+      "tlv_digits_decode": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "tlv_digits_encode": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "tlv_document_create": "Parse(nil, format) plus Insert builds an empty mutable Document with the same defaults; ParseWithOptions(nil, ...) supplies explicit limits. The existing builder-based parser retains richer diagnostics. Native allocator callbacks and incremental Document-builder ownership are intentionally not separate Go APIs.",
+      "tlv_document_encode": "Document/Node Encode and EncodedSize use the explicit-destination variants with the original Format; default-format wrappers add no operation. Returned output is owned Go memory rather than a borrowed native destination.",
+      "tlv_document_encoded_size": "Document/Node Encode and EncodedSize use the explicit-destination variants with the original Format; default-format wrappers add no operation. Returned output is owned Go memory rather than a borrowed native destination.",
+      "tlv_document_find_path": "Document.Query exposes ordered exact-path results; taking the first result implements FindPath without another parser or result contract. It allocates the result slice rather than promising allocation-free first-match search.",
+      "tlv_document_node_identity": "Go checks shared-owner generation before dereferencing every Node and invalidates all handles after successful edits. Node.Identity exposes the live identity. Native revision/retirement counters and stale-address scans are internal lifetime mechanisms, not public Go pointer operations.",
+      "tlv_document_parse": "Parse(nil, format) plus Insert builds an empty mutable Document with the same defaults; ParseWithOptions(nil, ...) supplies explicit limits. The existing builder-based parser retains richer diagnostics. Native allocator callbacks and incremental Document-builder ownership are intentionally not separate Go APIs.",
+      "tlv_document_query_value_size": "Document.EncodedSize measures the complete canonical encoding and supplies the same snapshot bound already used by EvaluateDocument with negative capacity. Native discovery exposes caller-owned Tree Writer scratch; Go owns this staging and does not expose an allocation-free workspace contract.",
+      "tlv_document_retire_epoch": "Go checks shared-owner generation before dereferencing every Node and invalidates all handles after successful edits. Node.Identity exposes the live identity. Native revision/retirement counters and stale-address scans are internal lifetime mechanisms, not public Go pointer operations.",
+      "tlv_document_revision": "Go checks shared-owner generation before dereferencing every Node and invalidates all handles after successful edits. Node.Identity exposes the live identity. Native revision/retirement counters and stale-address scans are internal lifetime mechanisms, not public Go pointer operations.",
+      "tlv_element_encoded_size": "Writer.Measure accepts actual content and uses tlv_element_encoded_size_diag; length-only or no-diagnostic measurement offers no additional wire capability.",
+      "tlv_encoded_size": "Writer.Measure accepts actual content and uses tlv_element_encoded_size_diag; length-only or no-diagnostic measurement offers no additional wire capability.",
+      "tlv_endian_native": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_escaped_decode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_escaped_encode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_escaped_measure": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_fields_decode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_fields_encode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_fields_measure": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_format_encode": "Writer.Measure and WriteElement already expose canonical format measurement and encoding through richer diagnostic wrappers; Format.Preserve separately exposes exact source preservation.",
+      "tlv_format_measure": "Writer.Measure and WriteElement already expose canonical format measurement and encoding through richer diagnostic wrappers; Format.Preserve separately exposes exact source preservation.",
+      "tlv_ipv4_list_at": "IPv4ListCodec.Decode already validates the complete list through Core and returns an owned Go slice of [4]byte addresses. Indexing that slice provides address lookup with ordinary Go bounds checks; a second borrowed-native-list accessor adds no conversion capability.",
+      "tlv_node_encode": "Document/Node Encode and EncodedSize use the explicit-destination variants with the original Format; default-format wrappers add no operation. Returned output is owned Go memory rather than a borrowed native destination.",
+      "tlv_node_encoded_size": "Document/Node Encode and EncodedSize use the explicit-destination variants with the original Format; default-format wrappers add no operation. Returned output is owned Go memory rather than a borrowed native destination.",
+      "tlv_number_decode": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "tlv_number_encode": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "tlv_query_codec_decode": "QueryProvider already accepts typed Go decoding callbacks, and generic Codec.Decode delegates canonical conversions. The native callback adapter is a C environment/storage mechanism, not an additional public conversion.",
+      "tlv_query_compile": "CompileQuery uses the explicit-length compile and scratch variants, including embedded-NUL syntax validation; NUL-terminated wrappers add no functionality. Reset recreates bounded execution storage and clears copied inputs/bindings. Finalized pulls use result_next_at to preserve ordinal identity.",
+      "tlv_query_compile_scratch": "CompileQuery uses the explicit-length compile and scratch variants, including embedded-NUL syntax validation; NUL-terminated wrappers add no functionality. Reset recreates bounded execution storage and clears copied inputs/bindings. Finalized pulls use result_next_at to preserve ordinal identity.",
+      "tlv_query_exec_reset": "CompileQuery uses the explicit-length compile and scratch variants, including embedded-NUL syntax validation; NUL-terminated wrappers add no functionality. Reset recreates bounded execution storage and clears copied inputs/bindings. Finalized pulls use result_next_at to preserve ordinal identity.",
+      "tlv_query_plan_info": "LoadQuery and QueryProgram.Info validate/copy native images and inspect requirements with frontend-enabled program APIs. Borrowing aligned hand-authored native instruction plans and frontend-disabled builds are intentionally outside the Go ownership/build contract.",
+      "tlv_query_plan_open": "LoadQuery and QueryProgram.Info validate/copy native images and inspect requirements with frontend-enabled program APIs. Borrowing aligned hand-authored native instruction plans and frontend-disabled builds are intentionally outside the Go ownership/build contract.",
+      "tlv_query_result_next": "CompileQuery uses the explicit-length compile and scratch variants, including embedded-NUL syntax validation; NUL-terminated wrappers add no functionality. Reset recreates bounded execution storage and clears copied inputs/bindings. Finalized pulls use result_next_at to preserve ordinal identity.",
+      "tlv_query_visit": "ParseQuery.Matcher feeds exact-path matching over Go TreeReader nodes; compiled QueryExecution.Visit already supplies buffer/window visitors with owned results and stop/resume. Native V1 visitors add storage/callback variants rather than a distinct selection capability.",
+      "tlv_query_visit_buffer": "ParseQuery.Matcher feeds exact-path matching over Go TreeReader nodes; compiled QueryExecution.Visit already supplies buffer/window visitors with owned results and stop/resume. Native V1 visitors add storage/callback variants rather than a distinct selection capability.",
+      "tlv_read": "NewReader plus Next already performs one-shot decoding with source and diagnostic output. Reduced one-shot wrappers add no distinct Go operation.",
+      "tlv_read_diag": "NewReader plus Next already performs one-shot decoding with source and diagnostic output. Reduced one-shot wrappers add no distinct Go operation.",
+      "tlv_read_source_diag": "NewReader plus Next already performs one-shot decoding with source and diagnostic output. Reduced one-shot wrappers add no distinct Go operation.",
+      "tlv_read_u16_be": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_read_u16_le": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_read_u32_be": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_read_u32_le": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_read_u64_be": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_read_u64_le": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_read_uint": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_reader_at_end": "Reader keeps its window, consumed prefix, absolute base and finality in Go; SetInput, Offset and AtEnd expose these operations without a persistent native sequential cursor. TreeReader delegates its structural window changes to Core.",
+      "tlv_reader_next": "Reader.Next uses tlv_reader_next_source_diag to preserve both source spans and diagnostics; these reduced-output wrappers add no separate public operation.",
+      "tlv_reader_next_diag": "Reader.Next uses tlv_reader_next_source_diag to preserve both source spans and diagnostics; these reduced-output wrappers add no separate public operation.",
+      "tlv_reader_offset": "Reader keeps its window, consumed prefix, absolute base and finality in Go; SetInput, Offset and AtEnd expose these operations without a persistent native sequential cursor. TreeReader delegates its structural window changes to Core.",
+      "tlv_reader_set_input": "Reader keeps its window, consumed prefix, absolute base and finality in Go; SetInput, Offset and AtEnd expose these operations without a persistent native sequential cursor. TreeReader delegates its structural window changes to Core.",
+      "tlv_reader_visit": "Reader.Visit and TreeReader.Visit are Go callback adapters over canonical diagnostic pulls. They preserve stop/resume, input pauses and borrowed views while returning application errors unchanged and guarding callback reentrancy; no cgo callback trampoline is needed.",
+      "tlv_reader_visit_diag": "Reader.Visit and TreeReader.Visit are Go callback adapters over canonical diagnostic pulls. They preserve stop/resume, input pauses and borrowed views while returning application errors unchanged and guarding callback reentrancy; no cgo callback trampoline is needed.",
+      "tlv_schema_check": "PrepareStructure checks and owns an immutable graph once via schema_prepare; Validate and ValidateAll use checked variants. Rechecking borrowed mutable native graphs adds no Go operation. SchemaEntry and StructureDefinition retain Go-owned tag/rule tables for application lookup; native borrowed length-entry lookup is not exposed.",
+      "tlv_schema_find": "PrepareStructure checks and owns an immutable graph once via schema_prepare; Validate and ValidateAll use checked variants. Rechecking borrowed mutable native graphs adds no Go operation. SchemaEntry and StructureDefinition retain Go-owned tag/rule tables for application lookup; native borrowed length-entry lookup is not exposed.",
+      "tlv_schema_number_decode": "SchemaNumberCodec installs these callbacks via the inline tlv_schema_number_codec constructor and calls the canonical tlv_codec_decode/encode wrappers. Direct callbacks add no public conversion or field-length capability.",
+      "tlv_schema_number_encode": "SchemaNumberCodec installs these callbacks via the inline tlv_schema_number_codec constructor and calls the canonical tlv_codec_decode/encode wrappers. Direct callbacks add no public conversion or field-length capability.",
+      "tlv_schema_validate": "PrepareStructure checks and owns an immutable graph once via schema_prepare; Validate and ValidateAll use checked variants. Rechecking borrowed mutable native graphs adds no Go operation. SchemaEntry and StructureDefinition retain Go-owned tag/rule tables for application lookup; native borrowed length-entry lookup is not exposed.",
+      "tlv_schema_validate_all_diag": "PrepareStructure checks and owns an immutable graph once via schema_prepare; Validate and ValidateAll use checked variants. Rechecking borrowed mutable native graphs adds no Go operation. SchemaEntry and StructureDefinition retain Go-owned tag/rule tables for application lookup; native borrowed length-entry lookup is not exposed.",
+      "tlv_size_add": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_size_from_native": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_size_to_native": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_size_validate_native": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_tag_compare": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_tag_copy": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_tag_equal": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_tag_hash": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_tag_is_empty": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_tagged_binary_decode": "NewComposed with fixed identifier/length encodings and TagOnly exposes the same generic tagged binary operation through the broader tagged-fields constructor; a second public constructor adds no functionality.",
+      "tlv_tagged_binary_encode": "NewComposed with fixed identifier/length encodings and TagOnly exposes the same generic tagged binary operation through the broader tagged-fields constructor; a second public constructor adds no functionality.",
+      "tlv_tagged_binary_format_init": "NewComposed with fixed identifier/length encodings and TagOnly exposes the same generic tagged binary operation through the broader tagged-fields constructor; a second public constructor adds no functionality.",
+      "tlv_tagged_binary_measure": "NewComposed with fixed identifier/length encodings and TagOnly exposes the same generic tagged binary operation through the broader tagged-fields constructor; a second public constructor adds no functionality.",
+      "tlv_tagged_fields_decode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_tagged_fields_encode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_tagged_fields_measure": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_text_decode": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "tlv_text_encode": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "tlv_tree_reader_next": "TreeReader.Next and NextEvent use diagnostic variants and project their source metadata; reduced-output wrappers add no public operation.",
+      "tlv_tree_reader_next_event": "TreeReader.Next and NextEvent use diagnostic variants and project their source metadata; reduced-output wrappers add no public operation.",
+      "tlv_tree_reader_visit": "Reader.Visit and TreeReader.Visit are Go callback adapters over canonical diagnostic pulls. They preserve stop/resume, input pauses and borrowed views while returning application errors unchanged and guarding callback reentrancy; no cgo callback trampoline is needed.",
+      "tlv_tree_writer_begin": "Writer uses tlv_write_element_diag and tlv_tree_writer_begin_diag/end_diag; the no-diagnostic wrappers add no separate public operation.",
+      "tlv_tree_writer_end": "Writer uses tlv_write_element_diag and tlv_tree_writer_begin_diag/end_diag; the no-diagnostic wrappers add no separate public operation.",
+      "tlv_tree_writer_finish": "Writer and TreeWriter retain copied tags and staged values in Go-owned frames; Finish checks those frames. TreeWriter enforces depth/count budgets and delegates encoding to diagnostic Writer/Tree Writer operations. Caller-owned native tag/scratch storage is intentionally replaced by Go allocation, not exposed as an allocation-free guarantee.",
+      "tlv_tree_writer_measure": "WriteEvent checks balanced kind/depth/skipped rules in Go and dispatches to the existing diagnostic Begin/Write/End operations. EncodeTree/EncodeEvents and MeasureTree/MeasureEvents stage through that same writer, including content-dependent encoding. Native callback/workspace variants duplicate these operations with different storage ownership.",
+      "tlv_tree_writer_measure_events": "WriteEvent checks balanced kind/depth/skipped rules in Go and dispatches to the existing diagnostic Begin/Write/End operations. EncodeTree/EncodeEvents and MeasureTree/MeasureEvents stage through that same writer, including content-dependent encoding. Native callback/workspace variants duplicate these operations with different storage ownership.",
+      "tlv_tree_writer_set_tag_storage": "Writer and TreeWriter retain copied tags and staged values in Go-owned frames; Finish checks those frames. TreeWriter enforces depth/count budgets and delegates encoding to diagnostic Writer/Tree Writer operations. Caller-owned native tag/scratch storage is intentionally replaced by Go allocation, not exposed as an allocation-free guarantee.",
+      "tlv_tree_writer_write_element": "Writer and TreeWriter retain copied tags and staged values in Go-owned frames; Finish checks those frames. TreeWriter enforces depth/count budgets and delegates encoding to diagnostic Writer/Tree Writer operations. Caller-owned native tag/scratch storage is intentionally replaced by Go allocation, not exposed as an allocation-free guarantee.",
+      "tlv_tree_writer_write_element_diag": "Writer and TreeWriter retain copied tags and staged values in Go-owned frames; Finish checks those frames. TreeWriter enforces depth/count budgets and delegates encoding to diagnostic Writer/Tree Writer operations. Caller-owned native tag/scratch storage is intentionally replaced by Go allocation, not exposed as an allocation-free guarantee.",
+      "tlv_tree_writer_write_event": "WriteEvent checks balanced kind/depth/skipped rules in Go and dispatches to the existing diagnostic Begin/Write/End operations. EncodeTree/EncodeEvents and MeasureTree/MeasureEvents stage through that same writer, including content-dependent encoding. Native callback/workspace variants duplicate these operations with different storage ownership.",
+      "tlv_tree_writer_write_event_diag": "WriteEvent checks balanced kind/depth/skipped rules in Go and dispatches to the existing diagnostic Begin/Write/End operations. EncodeTree/EncodeEvents and MeasureTree/MeasureEvents stage through that same writer, including content-dependent encoding. Native callback/workspace variants duplicate these operations with different storage ownership.",
+      "tlv_value_compare": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_value_copy": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_value_equal": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_value_init": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_value_is_empty": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_value_slice": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_value_validate": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_variable_decode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_variable_encode": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_variable_is_constructed": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_variable_measure": "Core constructors install these callbacks for NewComposed, NewEscaped and NewVariable. Reader/Writer, Document and Query invoke the resulting descriptors; direct callback APIs would duplicate these operations without Core's wrapper checks.",
+      "tlv_write": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "tlv_write_diag": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "tlv_write_element": "Writer uses tlv_write_element_diag and tlv_tree_writer_begin_diag/end_diag; the no-diagnostic wrappers add no separate public operation.",
+      "tlv_write_u16_be": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_write_u16_le": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_write_u32_be": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_write_u32_le": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_write_u64_be": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_write_u64_le": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_write_uint": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "tlv_writer_copy_element": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "tlv_writer_preserve": "Writer.Remaining reports fixed root capacity directly from its Go slice, with an explicit distinction for growable output; Preserve uses the diagnostic native variant.",
+      "tlv_writer_remaining": "Writer.Remaining reports fixed root capacity directly from its Go slice, with an explicit distinction for growable output; Preserve uses the diagnostic native variant.",
+      "tlv_writer_write": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "tlv_writer_write_diag": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "tlv_writer_write_element": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "tlv_writer_write_element_diag": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication."
+    }
+  },
+  "contracts": [
+    {
+      "name": "fields and formats",
+      "headers": [
+        "tlv/field/escaped.h",
+        "tlv/field/fixed.h",
+        "tlv/field/packed.h",
+        "tlv/field/variable.h",
+        "tlv/format.h",
+        "tlv/formats/compose.h",
+        "tlv/formats/escaped.h",
+        "tlv/formats/fixed.h",
+        "tlv/formats/packed.h",
+        "tlv/formats/variable.h"
+      ],
+      "surface": "Fixed, variable, escaped and packed fields; composed TLV/LTV Formats; capability/constructed inspection and exact source preservation.",
+      "limitations": "Declarative immutable snapshots. No arbitrary Go format callbacks, custom terminated-value resolvers or native descriptor borrowing.",
+      "tests": [
+        "field_test.go:TestIdentifierFieldPublicContract",
+        "field_test.go:TestLengthFieldPublicContract",
+        "field_test.go:TestPackedFieldPublicContract",
+        "field_test.go:TestFieldPolicySnapshots",
+        "format_composition_test.go:TestComposedFieldCombinations",
+        "format_composition_test.go:TestVariableConstructedConsumers",
+        "format_composition_test.go:TestPackedFormatOwnership",
+        "format_composition_test.go:TestFormatPreservesOriginalFraming"
+      ]
+    },
+    {
+      "name": "readers and visitors",
+      "headers": [
+        "tlv/reader/diagnostic.h",
+        "tlv/reader/reader.h",
+        "tlv/reader/tree.h",
+        "tlv/reader/visitor.h"
+      ],
+      "surface": "Sequential and tree readers, incremental windows, borrowed nodes/events, bounded traversal and resumable Go visitors.",
+      "limitations": "Go manages sequential cursors; borrowed bytes must remain stable. Callback errors/panics remain in Go, and mutable cursors are not concurrently usable.",
+      "tests": [
+        "reader_test.go:TestReaderIncrementalEverySplit",
+        "stream_test.go:TestTreeReaderIncrementalDiscardEverySplit",
+        "stream_test.go:TestTreeReaderLimitsAndRecovery",
+        "stream_test.go:TestReaderVisitorResumptionAndReentrancy",
+        "stream_test.go:TestTreeVisitorStopSkipAndCallbackErrors"
+      ]
+    },
+    {
+      "name": "writers and copies",
+      "headers": [
+        "tlv/copy.h",
+        "tlv/writer/tree.h",
+        "tlv/writer/writer.h"
+      ],
+      "surface": "Canonical element/tree/event encoding and measurement, exact encoded copies, original framing preservation and capacity retry.",
+      "limitations": "Go owns staging and output. No native callback replay, borrowed scratch or allocation-free guarantee. Go slices replace raw value/byte copy APIs.",
+      "tests": [
+        "generic_contract_test.go:TestGenericCopyAlternativesOwnershipAndFailure",
+        "stream_test.go:TestWriterCopyPreserveAndCapacity",
+        "stream_test.go:TestTreeWriterEventsCapacityRetryAndOwnership",
+        "stream_test.go:TestTreeMeasurementAndPreorder"
+      ]
+    },
+    {
+      "name": "definitions",
+      "headers": [
+        "tlv/definition.h"
+      ],
+      "surface": "Immutable application-selected DefinitionRegistry; first exact tag match with owned names and result bytes.",
+      "limitations": "Names are descriptive, empty means unnamed; lookup does not validate tags, resolve domains or select codecs. Native storage is reclaimed by shared Go ownership.",
+      "tests": [
+        "generic_contract_test.go:TestDefinitionRegistrySnapshotLookupAndLifetime"
+      ]
+    },
+    {
+      "name": "diagnostics and result identity",
+      "headers": [
+        "tlv/diagnostic.h",
+        "tlv/result.h"
+      ],
+      "surface": "Owned typed diagnostic snapshots, canonical names, errors.Is/errors.As and checked Location creation/translation/Value resolution.",
+      "limitations": "No borrowed producer-side context/path mutation ABI or exact native path formatter. Exported snapshot enrichment does not mutate error identity or automatically synchronize Offset fields.",
+      "tests": [
+        "generic_contract_test.go:TestLocationCheckedCoordinatesAndResolution",
+        "errors_test.go:TestCallbackAndUnsupportedStatusIdentity",
+        "errors_test.go:TestParseErrorSnapshotAndAbsoluteOffsets",
+        "diagnostic_test.go:TestCanonicalDiagnosticNames",
+        "program_test.go:TestQuerySchemaDiagnosticPathTruncation"
+      ]
+    },
+    {
+      "name": "documents",
+      "headers": [
+        "tlv/document/document.h"
+      ],
+      "surface": "Owned mutable documents, node navigation/identity, source metadata, subtree encoding and resumable exact-path visitors.",
+      "limitations": "Explicit shared Close; edits invalidate node generations. Builder scratch and native retirement/revision pointer APIs are internal, with no resumable public Document Builder.",
+      "tests": [
+        "document_test.go:TestDocumentOwnershipMutationAndCleanup",
+        "document_extensions_test.go:TestNodeSubtreeEncodingNavigationAndSource",
+        "document_extensions_test.go:TestDocumentQueryVisitorResumeGuardsAndUnwind"
+      ]
+    },
+    {
+      "name": "queries",
+      "headers": [
+        "tlv/query/adapters.h",
+        "tlv/query/plan.h",
+        "tlv/query/program.h",
+        "tlv/query/query.h"
+      ],
+      "surface": "Exact paths/matchers, compiled programs, typed providers/bindings, copied images, window execution, retained results and transactional document edits.",
+      "limitations": "No borrowed/aligned hand-authored native plans or frontend-disabled builds. Images are Core-version-specific; Go storage/callback adapters replace native variants.",
+      "tests": [
+        "query_v1_test.go:TestV1QueryNativeFormattingMatchingAndRebinding",
+        "program_test.go:TestCompiledProgramTypedBindingsAndImage",
+        "program_test.go:TestQueryCustomProvidersLifetimeImageAndErrors",
+        "program_test.go:TestCompiledStreamingContinuationOwnershipAndReentry",
+        "program_test.go:TestQueryCompletedDocumentEditRetryAndOverlap",
+        "query_extensions_test.go:TestQueryTagAdaptersAndCheckedResolvers"
+      ]
+    },
+    {
+      "name": "structural and query schemas",
+      "headers": [
+        "tlv/schema/schema.h",
+        "tlv/schema/detail.h",
+        "tlv/schema/query.h"
+      ],
+      "surface": "Copied recursive prepared structural definitions, bounded reports with owned typed findings, and Query Schema validation.",
+      "limitations": "Close invalidates shared prepared owners. Native mutable borrowed graphs and length-entry lookup are represented by Go definition tables; no native allocator callback ABI.",
+      "tests": [
+        "schema_test.go:TestStructureOwnedGraphAndDiagnosticSnapshots",
+        "schema_test.go:TestStructureRecursiveSharedDefinitionsAndErrors",
+        "schema_test.go:TestStructureCopiesConcurrentCloseAndZeroValue",
+        "program_test.go:TestQuerySchemaOwnedDiagnosticsAndBounds"
+      ]
+    },
+    {
+      "name": "codecs and scalar constraints",
+      "headers": [
+        "tlv/codec/codec.h",
+        "tlv/codec/diagnostic.h",
+        "tlv/codec/digits.h",
+        "tlv/codec/ipv4.h",
+        "tlv/codec/number.h",
+        "tlv/codec/structure.h",
+        "tlv/codec/text.h",
+        "tlv/codec/values.h",
+        "tlv/schema/constraint.h",
+        "tlv/schema/number.h"
+      ],
+      "surface": "Generic bytes/text/digits/integer/IPv4 and Schema-aware numbers, copied scalar constraints, structured object conversions via Go callbacks.",
+      "limitations": "No protocol-specific codec parity claim. Callbacks bound their own allocations and return application errors unchanged; native callback constructors are used indirectly.",
+      "tests": [
+        "query_codec_test.go:TestValueCodecs",
+        "query_codec_test.go:TestCodecFailures",
+        "codec_extensions_test.go:TestSchemaNumberCodecSnapshotAndConversion",
+        "codec_extensions_test.go:TestValueConstraintOwnedDefinitionsAndNames",
+        "structure_codec_test.go:TestStructureCodecValidationOwnershipAndCallbacks",
+        "structure_codec_test.go:TestStructureCodecReentryCloseAndConcurrentUse"
+      ]
+    },
+    {
+      "name": "wire generation",
+      "headers": [
+        "tlv/generator.h"
+      ],
+      "surface": "Immutable copied candidates, deterministic seed/case-index mapping, bounded native scratch and owned generated results.",
+      "limitations": "Wire-format generation, not Schema-valid or protocol-valid data; no allocation-free guarantee. Candidates must be independently composable.",
+      "tests": [
+        "generator_test.go:TestGeneratorPinnedNativeSeedIndexMapping",
+        "generator_test.go:TestGeneratorSnapshotRandomAccessAndOwnedOutput",
+        "generator_test.go:TestGeneratorBoundsAndFailurePublication"
+      ]
+    },
+    {
+      "name": "Go storage primitives",
+      "headers": [
+        "tlv/endian.h",
+        "tlv/size.h",
+        "tlv/tag.h",
+        "tlv/value.h"
+      ],
+      "surface": "Go byte slices, length, bytes equality/copy and checked conversions; Core performs wire conversion through fields, formats and codecs.",
+      "limitations": "No duplicate facade for raw C storage/endian helpers or arbitrary native pointers; source-reference exclusions are not promises of allocation-free C storage parity.",
+      "tests": [
+        "model_test.go:TestPublicElementOwnership",
+        "generic_contract_test.go:TestGenericCopyAlternativesOwnershipAndFailure",
+        "field_test.go:TestLengthFieldPublicContract"
+      ]
+    }
+  ]
+}

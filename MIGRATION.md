@@ -549,6 +549,12 @@ recording readiness must not silently authorize a tag or publication.
 
 ## Post-migration generic Format and fields (#17)
 
+Issue #21 adds standalone Definition registry and diagnostic location adapters,
+public contract tests and executable examples. The reviewed completeness baseline
+is Go-owned tooling; it does not change Core semantics, the dependency pin or
+official feature defaults. New source entries and adapted documentation hashes
+preserve every original migration identity.
+
 The original Core commit, source paths and original SHA-256 values remain
 unchanged. Adapted hashes record the bridge ownership and documentation changes
 for generic field composition. New Go/C sources, public tests and the formats
