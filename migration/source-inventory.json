@@ -7,8 +7,8 @@
       "source": "bindings/go/README.md",
       "destination": "docs/implementation.md",
       "sha256": "97fa2fd09724002289e8f6661b4200977a65bf2ba1d17585c57c64e7bbb8f092",
-      "adapted_sha256": "9112008e98ac73c84e8f63aa9e53c17213d6d41094f0764cf79772793f8d8bc4",
-      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5). Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation. Go #20: generic Schema-aware and structured codecs, scalar constraints, wire generation and owned API documentation."
+      "adapted_sha256": "6fd88e0f9023acdc455871505b061f04279f947a2de424e2d5441a408f3d3bec",
+      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5). Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation. Go #20: generic Schema-aware and structured codecs, scalar constraints, wire generation and owned API documentation. Go #21: reviewed generic Core completeness, Definition registry, checked diagnostic coordinates and public ownership documentation."
     },
     {
       "source": "bindings/go/codec.go",
@@ -371,8 +371,8 @@
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "6327e3c24b8e8c065c0ca00518cd3707094261ee4bf6476d39d8bb7c31b3a60d",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation. Go #20: generic Schema-aware and structured codecs, scalar constraints, wire generation and owned API documentation."
+      "adapted_sha256": "ba206777022723ffd5673910d868bdb90e414b2090c9c5901c3f117029d6f6c6",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation. Go #20: generic Schema-aware and structured codecs, scalar constraints, wire generation and owned API documentation. Go #21: reviewed generic Core completeness, Definition registry, checked diagnostic coordinates and public ownership documentation."
     }
   ],
   "standalone_files": [
@@ -542,6 +542,31 @@
       "destination": "value_constraint.go",
       "sha256": "24abbb0cfa415efce486ddcbcb2c3e3c9a70fe38908f43966c01b8deaec1c42f",
       "reason": "Go #20: binding-owned generic codec, constraint or Generator adapter, public contract tests or runnable example; not imported from Core."
+    },
+    {
+      "destination": "definition.go",
+      "sha256": "f3b071562231b13b30e6300d62d5d3960ef54aabf0ca2e998edcd815f667299b",
+      "reason": "Go #21: binding-owned Definition registry or diagnostic location adapter, public contract tests and executable examples; not imported from Core."
+    },
+    {
+      "destination": "generic_contract_test.go",
+      "sha256": "34893a659f68e668964893afb6d823bf1968b088137489c952d298ff66e23dea",
+      "reason": "Go #21: binding-owned Definition registry or diagnostic location adapter, public contract tests and executable examples; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/definition.go",
+      "sha256": "6fa003981ef06ca6440e1c832c26b29dd68237218a5eebc97cb818597b98bef1",
+      "reason": "Go #21: binding-owned Definition registry or diagnostic location adapter, public contract tests and executable examples; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/location.go",
+      "sha256": "b798a7a23218f735ffb5d46dcc984dd7a42a467b53a59cc193de86e3ff5a3d02",
+      "reason": "Go #21: binding-owned Definition registry or diagnostic location adapter, public contract tests and executable examples; not imported from Core."
+    },
+    {
+      "destination": "location.go",
+      "sha256": "37c4ad2d804fb14a129df440cb3726e9cd7a48dbcd9a95c5d2a3f044d6edaef9",
+      "reason": "Go #21: binding-owned Definition registry or diagnostic location adapter, public contract tests and executable examples; not imported from Core."
     }
   ]
 }

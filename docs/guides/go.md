@@ -579,14 +579,77 @@ The example combines a counter object codec with a length Schema and scalar
 constraint, then reproduces a generated wire case. Core owns algorithms and
 protocol behavior; Go tests its input mapping, ownership, limits and errors.
 
+## Definition registries and diagnostic locations
+
+`NewDefinitionRegistry(entries)` snapshots an application-selected list of
+`Definition{Tag, Name}` values. `registry.Find(tag)` uses Core's first exact
+tag-byte match and returns `(Definition, bool)`. Tags may be empty; nil and empty
+lookup tags are equal. Duplicate tags retain entry order. Names need not be
+unique; empty means unnamed, and Go strings preserve embedded NUL bytes.
+An unknown tag returns false without implying that it is structurally invalid.
+
+```go
+registry, err := opentlv.NewDefinitionRegistry([]opentlv.Definition{
+    {Tag: []byte{1}, Name: "counter"},
+})
+if err != nil {
+    return err
+}
+definition, found := registry.Find([]byte{1})
+```
+
+The registry is immutable and safe for concurrent lookups. Copies share ownership
+and need no `Close`; native storage follows Go object lifetime. Construction copies
+tag bytes, and every returned tag is independent. Do not mutate constructor or
+lookup inputs concurrently with the call. The zero registry is empty. Lookup
+does not select a Format, Codec or Schema, resolve a protocol context or convert
+canonical tag bytes into a wire header.
+
+`NewLocation(domain, kind, begin, end)` checks coordinates through Core. Invalid
+domains, kinds, reversed spans, unequal point/boundary endpoints and coordinates
+outside native `size_t` become unknown evidence. A known point or empty span at
+zero remains distinct from unknown. Coordinates use `uint64` in Go; valid native
+ranges therefore depend on the target architecture.
+
+`location.Translate(origin)` returns a checked offset in the same domain.
+`location.Resolve(origin, domain)` places Value-local evidence in its enclosing
+coordinate space, for example:
+
+```go
+local := opentlv.NewLocation(opentlv.LocationValue, opentlv.LocationSpan, 0, 2)
+wire := local.Resolve(4, opentlv.LocationInput) // input span 4..6
+```
+
+Both return new values. Overflow becomes unknown; Resolve leaves other domains
+and invalid enclosing domains unchanged after checking the original coordinates.
+Use the actual Value origin supplied by your input/source metadata. These helpers
+do not change the error code. Assigning exported `Diagnostic` snapshot fields
+does not change its error wrapper's identity or automatically update legacy
+`Offset`/`HasOffset` projections. Diagnostic contexts and paths are owned Go data;
+applications enrich/render snapshots with Go values, slices and formatting tools.
+There is no native borrowed path-stack or exact native path-formatting API.
+
+The executable `ExampleDefinitionRegistry_Find` and `ExampleLocation_Resolve`
+examples run via `python3 scripts/go.py -- test -run Example ./...`.
+
+Copy operations use existing Go APIs: `bytes.Clone(element.Value())` makes an
+owned value copy, and `element.Clone()` also retains copied tag/source metadata.
+`Writer.Measure` and `Writer.Write`/`WriteElement` measure and serialize canonical
+framing through Core. `Writer.CopyEncoded` copies exact bytes without validation;
+`Format.Preserve`/`Writer.Preserve` check original framing. Fixed Writer buffers
+reject short capacity without publishing partial output. These are the reviewed
+alternatives to native copy helpers, not additional raw-pointer APIs.
+
 ## Current limitations
 
-There is no generic Definition registry, custom Format callback adapter,
-borrowed Query or resumable Document Builder. Generic structured codecs use
+There is no custom Format callback adapter, borrowed Query or resumable Document
+Builder. Generic structured codecs use
 application-supplied Go object mappings; protocol-specific Builtins codec parity
 is outside this binding's generic API work.
 Go's copied Node snapshots, owned diagnostics and explicit Close are intentional
-ergonomic differences; missing operations remain capability gaps. The
+ergonomic differences. The [reviewed generic contract baseline](../development/ci.md#generic-completeness-review-and-gate-21)
+records supported families and these limitations against the exact Core pin;
+zero unreviewed symbols does not promise every C storage or callback ABI. The
 [binding matrix](https://github.com/OpenTLV/opentlv/blob/main/docs/concepts/bindings.md#capability-implementation-matrix)
 distinguishes these from disabled native components.
 

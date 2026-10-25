@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Complete generic Core review with an immutable Definition registry, checked diagnostic location translation/resolution, public ownership tests and executable examples; record exact-pin per-header coverage and justified alternatives, and require a reviewed functional contract baseline in every CI tier. (#21)
 - Complete generic codecs with Schema-aware numbers, copied scalar constraints and structured object conversion; add deterministic wire generation with copied candidates, explicit workspace limits, owned results, public contract tests and a runnable example, and update exact-pin API coverage and exclusions. (#20)
 - Complete generic Document/Node navigation, source locations and subtree encoding, resumable Document Query visitors, and prepared structural schemas with copied recursive graphs, bounded reports and owned diagnostics; add public contract tests, a schema example and exact-pin API exclusions. (#19)
 - Complete generic Reader/Writer streaming with borrowed tree nodes and balanced events, incremental windows, resumable visitors, traversal budgets, exact source writes and tree sizing; preserve diagnostics, ownership and retry semantics through public contract tests and a runnable example. (#18)

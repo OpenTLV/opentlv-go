@@ -24,7 +24,8 @@ the same matrix/stage definitions in `scripts/ci.py`.
 
 Every configuration checks migration hashes, Python infrastructure regressions,
 `gofmt`, `go vet`, all Go tests with `-count=1`, external module ZIP consumption
-(`package-check`), and the version, quick-start, generic format, streaming and schema examples.
+(`package-check`), the reviewed generic API completeness gate, and the version,
+quick-start, generic format, streaming, schema and generation examples.
 The package check runs
 without `replace` or workspace access using a fresh module cache and local file
 proxy; it validates module/version/license metadata and a native round trip.
@@ -54,7 +55,9 @@ the per-header report to the GitHub Step Summary. Missing references, stale igno
 patterns and report-job failures do not block the Go quality gate. Invalid input
 or an unrecognized `TLV_API` declaration does fail the report job visibly; it does
 not produce a successful report. Main omits this report, matching the Python
-coverage workflow. No percentage threshold is enforced.
+coverage workflow. No percentage threshold is enforced. Separately, every native
+build now requires the [reviewed generic contract baseline](#generic-completeness-review-and-gate-21);
+generic inventory drift, stale exclusions or pin changes fail that required stage.
 
 `scripts/api_coverage.py` is adapted from Python's standard-library reporter at
 revision `74d7ed756229ab11544d5eba38568ae6f2bfddb0`. Its binding-specific
@@ -75,12 +78,12 @@ Public Go API and lifetime/error tests remain the evidence for usable behavior;
 Core owns native semantics and its shared Query corpus.
 
 Each exclusion has a reason in the configuration and the JSON/Markdown report.
-The initial 44 exclusions cover Go storage primitives, reduced-output wrappers
+The initial 44 exclusions covered Go storage primitives, reduced-output wrappers
 whose richer diagnostic operations are used, and callbacks installed by bound
-format/codec constructors. Missing functions in unrelated families remain visible.
-For example, `tlv_copy_element` stays in the inventory because it serializes an
-element rather than merely copying a Go byte slice. Builtins are not blanket
-ignored; their 291-symbol inventory is visible but parity is outside epic #15.
+format/codec constructors. Subsequent reviews below account for the remaining
+generic symbols. For example, #21 maps `tlv_copy_element` to canonical diagnostic
+Writer serialization, not merely to copying a Go byte slice. Builtins are not
+blanket ignored; their 291-symbol inventory is visible but parity is outside epic #15.
 
 The PR report reads the previous lock at `github.event.pull_request.base.sha`
 and inventories both exact Core commits. Added symbols include their current
@@ -283,6 +286,59 @@ minimal compatibility lane. Official feature defaults and the Core pin remain
 unchanged. Tests target copies, callback errors/reentry, shared Schema lifetime,
 memory/traversal bounds, error publication and deterministic seed/index mapping.
 
+### Generic completeness review and gate (#21)
+
+Before coding #21, Go `68af66efd7c482a1a8bf9e46e4b5ab2d294449b1` was inventoried
+against Core `cb3caed5b09706ce11ecfae839397fd4f99d0025`: 162 referenced,
+15 missing and 120 excluded generic symbols. The 15 remaining symbols were
+three copy functions, Definition lookup and eleven diagnostic/location helpers.
+
+The review adds `DefinitionRegistry` and checked `NewLocation`, `Translate` and
+`Resolve` operations, with owned results, concurrent immutable lookup, exact
+error identity and executable public examples. Four symbols become referenced.
+The remaining eleven have explicit reasons: Go value/exact copies, diagnostic
+Writer serialization, owned diagnostic enrichment and producer-side borrowed
+path helpers. Native path text rendering and allocation-free storage are not
+promised. Existing constructor-installed callbacks and equivalent variants were
+reviewed with the public contract families, including ownership and limitations.
+
+The final inventory is **166 referenced, zero missing and 131 excluded** generic
+symbols across **43 headers** (297 total). Builtins remains 12 referenced and
+279 missing with no exclusions. These counts are an inventory, not a functional
+coverage percentage or full C API parity claim. Official builds retain all
+supported Core/Builtins; the minimal lane remains a compatibility configuration.
+
+[`ci/api-completeness.json`](../../ci/api-completeness.json) records the exact
+pin, every generic header's symbol disposition, exclusion reasons and eleven
+reviewed public contract families. Each family describes its public surface and
+limitations and points to named `opentlv_test` tests. It includes non-symbol
+contracts such as Go ownership, callbacks and native-size conversion.
+
+Every PR, Main and Full native build runs `scripts/api_completeness.py` after
+the runtime tests/package check, using that build's exact Core Git object store.
+It fails on changed pins (even with identical symbol sets), missing generic
+symbols, reference/exclusion drift, stale patterns, incomplete header mapping
+or missing/public-to-private test anchors. The baseline is not refreshed by CI.
+This is a reviewed scope and regression gate: test existence cannot establish
+test adequacy, and source references cannot establish reachability. Human review
+of the mapped contracts plus the separately required runtime tests is essential.
+Full adds race, cgocheck2, shared/native platform and Query conformance evidence.
+
+```sh
+python3 -B scripts/api_completeness.py --core ../opentlv --output build/api-completeness.json
+```
+
+For a Core pin update, first generate the informational report with `--base`
+against the previous binding revision. Review changed declarations/signatures,
+callbacks, ownership and inline/type/macro contracts at both exact revisions;
+the lexical inventory cannot detect semantic changes. Implement meaningful gaps
+or document narrow alternatives, update public tests and the family limitations,
+then explicitly update the baseline and per-header table in the same reviewed
+change. Run the required tests and Full configurations; never refresh the
+baseline solely to restore a score. `api-completeness.json` and the per-header
+log accompany each build artifact. A failed gate removes stale success output.
+Local results cannot substitute for hosted quality or release evidence.
+
 The current generic per-header counts follow. JSON and Step Summary list every
 missing symbol as well as the separate Builtins headers. Original baseline totals
 above remain historical; regenerate this table when implementation changes.
@@ -297,9 +353,9 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/codec/structure.h` | 2 | 0 | 0 |
 | `tlv/codec/text.h` | 0 | 0 | 2 |
 | `tlv/codec/values.h` | 7 | 0 | 0 |
-| `tlv/copy.h` | 0 | 3 | 0 |
-| `tlv/definition.h` | 0 | 1 | 0 |
-| `tlv/diagnostic.h` | 3 | 11 | 0 |
+| `tlv/copy.h` | 0 | 0 | 3 |
+| `tlv/definition.h` | 1 | 0 | 0 |
+| `tlv/diagnostic.h` | 6 | 0 | 8 |
 | `tlv/document/document.h` | 30 | 0 | 11 |
 | `tlv/endian.h` | 0 | 0 | 15 |
 | `tlv/field/escaped.h` | 2 | 0 | 0 |

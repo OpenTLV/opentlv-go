@@ -358,6 +358,17 @@ Run `go run ./examples/codec`, and with Document enabled,
 
 ## Errors and diagnostics
 
+The immutable `DefinitionRegistry` owns copied Go entries and a C-allocated tag
+table used by `tlv_definition_find`. Names stay as Go strings, preserving embedded
+NUL bytes. Copies retain one shared finalizer owner; lookup keeps it alive across
+the C call and copies result tags. No Go pointer is retained by C, no native entry
+pointer escapes, and concurrent reads need no mutable cursor or lock.
+
+`NewLocation`, `Location.Translate` and `Location.Resolve` use Core's checked
+location helpers after rejecting enum/size narrowing. Values return by copy;
+overflow clears optional evidence without changing the producing error's identity.
+Owned diagnostic snapshots replace native borrowed context/path mutation APIs.
+
 Diagnostic `Path` retains outermost enclosing tags, and `PathOmitted` counts
 innermost scopes beyond the native path capacity.
 

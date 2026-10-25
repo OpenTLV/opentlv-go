@@ -80,7 +80,7 @@ def identity():
 def stages(tier, config):
     result = [("migration", None), ("infrastructure", None), ("format", None),
               ("vet", ["vet", "./..."]), ("test", ["test", "-count=1", "-v", "./..."]),
-              ("package", ["package-check"])]
+              ("package", ["package-check"]), ("api-completeness", None)]
     if tier == "full" and config["id"] in ("linux-default", "linux-minimal"):
         result += [("race", ["test", "-race", "-count=1", "./..."]),
                    ("cgocheck2", ["test", "-count=1", "./..."])]
@@ -163,6 +163,9 @@ def run_build(tier, config, work, evidence):
                 for folder in ("internal", "tests", "examples"):
                     files += sorted((ROOT / folder).rglob("*.go"))
                 argv = ["gofmt", "-l", *map(str, files)]
+            elif name == "api-completeness":
+                argv = [sys.executable, "-B", "scripts/api_completeness.py", "--core", str(work / "core"),
+                        "--output", str(evidence / "api-completeness.json")]
             else:
                 source = work / "core"
                 # Do not let the oracle create bytecode/untracked output in the managed checkout.
