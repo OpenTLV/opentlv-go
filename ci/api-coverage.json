@@ -5,6 +5,14 @@
   "exclude": ["**/*_test.go"],
   "ignore": [
     {
+      "reason": "IPv4ListCodec.Decode already validates the complete list through Core and returns an owned Go slice of [4]byte addresses. Indexing that slice provides address lookup with ordinary Go bounds checks; a second borrowed-native-list accessor adds no conversion capability.",
+      "symbols": ["tlv_ipv4_list_at"]
+    },
+    {
+      "reason": "SchemaNumberCodec installs these callbacks via the inline tlv_schema_number_codec constructor and calls the canonical tlv_codec_decode/encode wrappers. Direct callbacks add no public conversion or field-length capability.",
+      "symbols": ["tlv_schema_number_decode", "tlv_schema_number_encode"]
+    },
+    {
       "reason": "Parse(nil, format) plus Insert builds an empty mutable Document with the same defaults; ParseWithOptions(nil, ...) supplies explicit limits. The existing builder-based parser retains richer diagnostics. Native allocator callbacks and incremental Document-builder ownership are intentionally not separate Go APIs.",
       "symbols": ["tlv_document_create", "tlv_document_parse"]
     },

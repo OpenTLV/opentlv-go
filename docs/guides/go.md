@@ -473,7 +473,8 @@ Diagnostics copy byte slices, text, context and paths into Go storage, surviving
 input reuse or Document cleanup. Presence flags distinguish absent information
 from zero or empty values. Only detail supplied by C is exposed: Document
 encoding can return a status without wire detail, Query reports its text error
-offset where available, and Value codecs supply no structured diagnostic.
+offset where available, and Value/Structure codecs preserve their native
+conversion evidence in `CodecError.Detail`.
 Runnable version: [errors/main.go](../../examples/errors/main.go).
 
 Immutable Formats and Codecs can be shared concurrently. Readers, Writers,
@@ -482,11 +483,108 @@ synchronization. Returned slices are mutable; synchronize their use as well.
 C retains no Go pointer across calls. See the
 [Go development guide](../development/go.md) for race and cgo-boundary checks.
 
+## Generic codecs and wire generation
+
+`SchemaNumberCodec(entry, config)` composes `SchemaEntry` byte-length rules with
+the existing unsigned BE, LE or BCD conversion. Width zero chooses the shortest
+schema-permitted width; a fixed width is never silently widened. The codec copies
+the entry's tag and name, validates on use and returns owned `CodecError` evidence
+for representation or Schema failures. `MaxLength: -1` means unrestricted, while
+zero is a literal bound. Existing scalar, byte, text, digit and IPv4 codecs remain
+available; `IPv4ListCodec` returns an ordinary owned slice for indexed access.
+
+```go
+entry := opentlv.SchemaEntry{Tag: []byte{1}, Name: "counter", MinLength: 2, MaxLength: 4}
+number := opentlv.SchemaNumberCodec(entry, opentlv.NumberConfig{Encoding: opentlv.NumberBE})
+wire, err := number.Encode(42) // 00 2a: shortest permitted width
+if err != nil { return err }
+value, err := number.Decode(wire)
+```
+
+`NewValueConstraint` snapshots inclusive signed bounds or an allowed-value set.
+Call `Validate` on the decoded scalar; violations match `ErrSchema`, malformed
+native definitions match `ErrInvalidSchema`. Optional `Names` parallels
+`AllowedValues`; `Name(value)` returns `(name, found, error)`, preserving a named
+empty string separately from an absent name. NUL names and mismatched name counts
+match `ErrInvalidArg`. An empty allowed set rejects all values; the zero
+`ValueConstraint` permits all values. Convert unsigned numbers to `int64` only
+after checking they are representable. Length and occurrence rules remain
+separate from scalar constraints.
+
+`NewStructureCodec[T](format, schema, options, decode, encode)` maps an entire
+sequence to an application object. A nil Schema validates framing and nesting;
+a prepared Schema also validates its rules. Decode invokes Core before the Go
+callback and gives the callback a private input copy that it may retain. Encode
+calls the Go callback once and sends its complete bytes through Core's structure
+encoder for validation and an owned output copy. Invalid output is never returned.
+The callback must keep its returned bytes stable until Encode returns. A nil
+callback disables its operation with `ErrUnsupported`.
+
+Callbacks run outside C and native locks; application errors are returned
+unchanged and decode errors return the zero object. Native failures wrap
+`CodecError` with owned Reader/Schema evidence; encode locations refer to output.
+Closing the retained Schema invalidates future native conversions, including
+encode validation if a callback closes it. A successful decode callback may close
+the Schema after validation without invalidating the returned Go object. Codec
+copies share this lifetime, and concurrent use requires concurrency-safe callbacks.
+Callback panics propagate normally. No Go callback is retained by C.
+
+`DefaultStructureCodecOptions` permits depth 64, 65536 elements and a 16 MiB
+sequence. Custom zero limits are literal. `MaxBytes` checks incoming or callback
+output size before binding copies; callbacks must bound their own allocations.
+Core performs traversal checks, with its pinned native depth ceiling. These are
+owned Go operations, without a caller-owned native workspace or allocation-free
+promise.
+
+`NewGenerator(format, options)` snapshots the ordered candidate table and retains
+Format. `Generate(caseIndex)` calls the canonical wire Generator and returns owned
+bytes. Same `GeneratorVersion`, Format, candidates, options, seed and case index
+give identical results independent of call order. Different inputs need not yield
+distinct bytes. The zero Generator is invalid; valid instances need no Close and
+can be shared concurrently.
+
+```go
+options := opentlv.DefaultGeneratorOptions()
+options.Seed = 42
+options.Candidates = []opentlv.GeneratorCandidate{
+    {Tag: []byte{1}, MinValueSize: 0, MaxValueSize: 16},
+}
+generator, err := opentlv.NewGenerator(format, options)
+if err != nil { return err }
+wire, err := generator.Generate(7)
+```
+
+`MaxElements`, `MaxDepth`, `MaxValueSize` and `MaxCaseSize` constrain generation.
+`MaxWorkspaceSize` explicitly bounds native scratch: Core requires
+`(MaxDepth + 1) * MaxCaseSize` bytes, exposed by `WorkspaceSize()`. Output requires
+another `MaxCaseSize` bytes, and candidate tables/tags require their own copied
+storage; the scratch budget is not a total process-memory limit. Defaults use
+depth 8, 64 elements, 256 Value bytes, 4096 case bytes and a 1 MiB scratch budget.
+Zero seed, case index, depth and Value size are valid. Missing candidates,
+negative bounds or zero element/case/workspace limits are invalid. Unsupported
+depth, native overflow, insufficient scratch budget and an unproductive bounded
+search preserve their corresponding errors; failures return no partial bytes.
+
+Primitive Values contain arbitrary bytes, not Schema-valid or Codec-valid
+content. Format alone identifies constructed tags. Candidates must be
+independently composable: exclude terminators and identifiers requiring
+message-level ordering. Nil tags are absent; nonnil empty slices are explicitly
+present-empty identifiers. Run the generic example in every feature configuration:
+
+```sh
+python3 scripts/go.py -- run ./examples/generation
+```
+
+The example combines a counter object codec with a length Schema and scalar
+constraint, then reproduces a generated wire case. Core owns algorithms and
+protocol behavior; Go tests its input mapping, ownership, limits and errors.
+
 ## Current limitations
 
-There is no public pull Tree Reader, Visitor, Schema, generic Definition registry,
-custom Format callback adapter, borrowed Query or resumable Document Builder.
-Writer has staged nesting, not the full public event-based Tree Writer facade.
+There is no generic Definition registry, custom Format callback adapter,
+borrowed Query or resumable Document Builder. Generic structured codecs use
+application-supplied Go object mappings; protocol-specific Builtins codec parity
+is outside this binding's generic API work.
 Go's copied Node snapshots, owned diagnostics and explicit Close are intentional
 ergonomic differences; missing operations remain capability gaps. The
 [binding matrix](https://github.com/OpenTLV/opentlv/blob/main/docs/concepts/bindings.md#capability-implementation-matrix)

@@ -556,6 +556,13 @@ example are explicitly listed under `standalone_files` with their hashes and
 reasons; they are not presented as files imported from the migration baseline.
 The verifier continues to require an inventory entry for every Go/C source.
 
+Issue #20 adds standalone structured codecs, scalar constraints and wire Generator
+adapters, tests and a generic generation example. Schema-aware numeric conversion
+extends the existing value-codec adapter. Adapted hashes record those additions
+and the bridge/documentation changes; original migration source identities and
+hashes remain unchanged. All conversion, validation and wire generation semantics
+continue to execute in the exact pinned Core.
+
 Issue #19 adds standalone Document extensions, prepared structural schemas,
 public contract tests and a schema example. Adapted hashes record the bridge,
 Document comments and guide updates; original source hashes and the exact Core

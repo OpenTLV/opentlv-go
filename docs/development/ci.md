@@ -250,6 +250,39 @@ counts, zero limits, unknown policy, concurrent Close and minimal-build support.
 Core remains responsible for semantic behavior suites. The schema example runs
 in every CI tier/configuration; official feature selection and the pin are unchanged.
 
+### Generic Codec and Generator review (#20)
+
+Before coding #20, Go `af92a3dadd4c5064140893ada54c714fefbf772a` was inventoried
+against unchanged Core `cb3caed5b09706ce11ecfae839397fd4f99d0025`: 155 referenced,
+25 missing and 117 ignored generic symbols. Existing scalar, numeric, byte, text,
+digits and IPv4 conversions already use canonical descriptors and wrappers.
+
+| Pinned header | Before: referenced / missing / ignored | Result of review |
+| --- | --- | --- |
+| `codec/codec.h`, `codec/values.h` | 9 / 0 / 0 | Existing generic encode/decode and all scalar/bytes descriptors; no duplicate API |
+| `codec/number.h`, `codec/text.h`, `codec/digits.h` | 0 / 0 / 6 | Existing constructors install canonical callbacks; direct callback symbols remain excluded |
+| `codec/ipv4.h` | 2 / 1 / 0 | Existing owned `[4]byte` and `[][4]byte` results; native borrowed-list accessor excluded in favor of Go slice indexing |
+| `codec/structure.h` | 0 / 2 / 0 | Add typed complete-sequence conversion with Core validation, optional prepared Schema, bounded copies and Go object callbacks |
+| `schema/number.h` | 0 / 2 / 0 | Add copied Schema/number composition through its inline constructor; direct callback symbols explicitly excluded |
+| `schema/constraint.h` | 0 / 3 / 0 | Add copied scalar definitions, validation and owned name lookup |
+| `generator.h` | 0 / 2 / 0 | Add copied candidates, random-access seeded cases, native workspace sizing and an explicit scratch budget |
+
+After #20, generic Core has **162/177 (91.5%) referenced**, **15 missing** and
+**120 ignored** out of 297 symbols. Builtins remains **12/291 (4.1%) referenced**,
+279 missing and no exclusions. No ignore is stale. All codec, numeric-schema,
+scalar-constraint and generator declarations are referenced or justified in
+`ci/api-coverage.json`. The remaining 15 generic symbols are copy (3), definition
+(1) and common diagnostic helpers (11), outside this issue. Reference counts do
+not claim complete public parity or Builtins-specific support.
+
+Go retains object mapping callbacks, owned results and diagnostic snapshots;
+Core owns all conversion/validation/generation algorithms. No native callback
+ABI, borrowed object pointer or allocation-free workspace contract is exposed.
+The generation example runs in every tier/configuration, including the existing
+minimal compatibility lane. Official feature defaults and the Core pin remain
+unchanged. Tests target copies, callback errors/reentry, shared Schema lifetime,
+memory/traversal bounds, error publication and deterministic seed/index mapping.
+
 The current generic per-header counts follow. JSON and Step Summary list every
 missing symbol as well as the separate Builtins headers. Original baseline totals
 above remain historical; regenerate this table when implementation changes.
@@ -259,9 +292,9 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/codec/codec.h` | 2 | 0 | 0 |
 | `tlv/codec/diagnostic.h` | 5 | 0 | 0 |
 | `tlv/codec/digits.h` | 0 | 0 | 2 |
-| `tlv/codec/ipv4.h` | 2 | 1 | 0 |
+| `tlv/codec/ipv4.h` | 2 | 0 | 1 |
 | `tlv/codec/number.h` | 0 | 0 | 2 |
-| `tlv/codec/structure.h` | 0 | 2 | 0 |
+| `tlv/codec/structure.h` | 2 | 0 | 0 |
 | `tlv/codec/text.h` | 0 | 0 | 2 |
 | `tlv/codec/values.h` | 7 | 0 | 0 |
 | `tlv/copy.h` | 0 | 3 | 0 |
@@ -279,7 +312,7 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/formats/fixed.h` | 1 | 0 | 0 |
 | `tlv/formats/packed.h` | 4 | 0 | 0 |
 | `tlv/formats/variable.h` | 2 | 0 | 4 |
-| `tlv/generator.h` | 0 | 2 | 0 |
+| `tlv/generator.h` | 2 | 0 | 0 |
 | `tlv/query/adapters.h` | 2 | 0 | 1 |
 | `tlv/query/plan.h` | 0 | 0 | 2 |
 | `tlv/query/program.h` | 27 | 0 | 4 |
@@ -289,9 +322,9 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/reader/tree.h` | 9 | 0 | 2 |
 | `tlv/reader/visitor.h` | 0 | 0 | 3 |
 | `tlv/result.h` | 1 | 0 | 0 |
-| `tlv/schema/constraint.h` | 0 | 3 | 0 |
+| `tlv/schema/constraint.h` | 3 | 0 | 0 |
 | `tlv/schema/detail.h` | 2 | 0 | 0 |
-| `tlv/schema/number.h` | 0 | 2 | 0 |
+| `tlv/schema/number.h` | 0 | 0 | 2 |
 | `tlv/schema/query.h` | 3 | 0 | 0 |
 | `tlv/schema/schema.h` | 6 | 0 | 4 |
 | `tlv/size.h` | 0 | 0 | 4 |

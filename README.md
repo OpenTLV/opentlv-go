@@ -66,6 +66,12 @@ recursive definitions, bounded findings and owned diagnostics. Run
 `python3 scripts/go.py -- run ./examples/schema` for generic validation that also
 works without Builtins or Document support.
 
+The [generic codec and generation guide](docs/guides/go.md#generic-codecs-and-wire-generation)
+covers Schema-aware numbers, scalar constraints, structured object callbacks and
+reproducible wire cases with explicit memory bounds. Run
+`python3 scripts/go.py -- run ./examples/generation`; it also works without
+Builtins or Document support.
+
 The central [Go documentation entry point](https://opentlv.github.io/opentlv-docs/latest/languages/go/)
 selects an immutable Go documentation revision. Go owns usage, API comments,
 build instructions and examples; the portal owns assembly and publication.

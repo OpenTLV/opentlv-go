@@ -14,6 +14,9 @@
 #include <tlv/query/adapters.h>
 #include <tlv/schema/query.h>
 #include <tlv/schema/schema.h>
+#include <tlv/codec/structure.h>
+#include <tlv/generator.h>
+
 
 typedef struct go_document        go_document;
 typedef struct go_query_program   go_query_program;
@@ -55,6 +58,11 @@ typedef struct {
     int    byte_order, element_order, length_scope;
     go_owned_format* owned;
 } go_format;
+tlv_result_t go_structure_convert(go_format, const tlv_structure_schema_t*, size_t, size_t,
+                                  const uint8_t*, size_t, uint8_t*, int,
+                                  tlv_codec_diagnostic_t*);
+tlv_result_t go_generate(go_format, const tlv_generator_options_t*, uint8_t*, size_t,
+                         uint8_t*, size_t, size_t*);
 go_query_program* go_query_compile(go_format config, const uint8_t* text, size_t size,
                                    const tlv_query_compile_options_t* options,
                                    const go_query_name* names, size_t name_count,
