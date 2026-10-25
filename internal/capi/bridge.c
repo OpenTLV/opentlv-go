@@ -34,9 +34,13 @@
 #include <tlv/builtins/nfc/type2.h>
 #endif
 
-/* All descriptors, contexts and cursors are call-local. No Go pointer is retained. */
+/* Fixed contexts are call-local; owned compositions retain C-only storage. */
 static tlv_result_t resolve(go_format config, tlv_format_t* format, tlv_fixed_format_t* fixed) {
     switch (config.kind) {
+        case GO_FORMAT_OWNED:
+            if (!config.owned) return TLV_ERR_INVALID_ARG;
+            *format = go_owned_format_descriptor(config.owned);
+            return TLV_OK;
         case GO_FORMAT_FIXED:
             fixed->identifier.size = config.tag_size;
             fixed->length.size = config.length_size;
@@ -75,6 +79,7 @@ static tlv_result_t resolve(go_format config, tlv_format_t* format, tlv_fixed_fo
 
 /* Persistent descriptors and their context are entirely C-owned. */
 struct go_document {
+    go_owned_format* owned;
     tlv_format_t       format;
     tlv_fixed_format_t fixed;
 #if OPENTLV_DOCUMENT
@@ -93,6 +98,8 @@ go_document* go_document_parse(go_format config, const uint8_t* data, size_t siz
         *code = TLV_ERR_OUT_OF_MEMORY;
         return NULL;
     }
+    d->owned = config.owned;
+    go_owned_format_retain(d->owned);
     *code = resolve(config, &d->format, &d->fixed);
     if (*code == TLV_OK) *code = tlv_document_options_init(&options, &d->format);
     if (*code == TLV_OK) {
@@ -122,6 +129,7 @@ go_document* go_document_parse(go_format config, const uint8_t* data, size_t siz
         }
     }
     if (*code != TLV_OK) {
+        go_owned_format_free(d->owned);
         free(d);
         return NULL;
     }
@@ -143,6 +151,7 @@ void go_document_free(go_document* d) {
 #if OPENTLV_DOCUMENT
     if (d) tlv_document_free(d->document);
 #endif
+    if (d) go_owned_format_free(d->owned);
     free(d);
 }
 
@@ -288,6 +297,32 @@ tlv_result_t go_format_check(go_format config) {
     return resolve(config, &format, &fixed);
 }
 
+int go_format_inspect(go_format config, int operation, const uint8_t* tag, size_t size) {
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    if (resolve(config, &format, &fixed) != TLV_OK) return 0;
+    if (operation == 0) return tlv_format_can_read(&format);
+    if (operation == 1) return tlv_format_can_write(&format);
+    tlv_tag_t identifier = tlv_tag(tag, size);
+    return format.is_constructed ? format.is_constructed(format.context, &identifier) : 0;
+}
+
+tlv_result_t go_format_preserve(go_format config, const uint8_t* source, size_t source_size,
+    const uint8_t* tag, size_t tag_size, const uint8_t* value, size_t value_size,
+    uint8_t* output, size_t capacity) {
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    tlv_decoded_t decoded;
+    tlv_result_t rc = resolve(config, &format, &fixed);
+    if (rc != TLV_OK) return rc;
+    rc = tlv_format_decode(&format, source, source_size, &decoded, NULL);
+    if (rc != TLV_OK) return rc;
+    if (decoded.source.size != source_size) return TLV_ERR_INVALID_ARG;
+    tlv_element_t element = {tlv_tag(tag, tag_size), {value, value_size}};
+    size_t written = 0;
+    return tlv_source_preserve(&decoded.source, &element, output, capacity, &written);
+}
+
 /* Reconstruct a single staged parent for this call; all pointers are call-local. */
 go_write_result go_tree(go_format config, uint8_t* data, size_t capacity, const uint8_t* tag,
                         size_t tag_size, const uint8_t* value, size_t value_size, uint8_t* scratch,
@@ -352,6 +387,7 @@ go_write_result go_write(go_format config, uint8_t* data, size_t capacity, const
 
 /* Owning language adapter. Core Query calls still receive explicit storage. */
 struct go_query_program {
+    go_owned_format* owned;
     size_t                     references;
     tlv_format_t               format;
     tlv_fixed_format_t         fixed;
@@ -449,6 +485,8 @@ go_query_program* go_query_compile(go_format format, const uint8_t* text, size_t
         return NULL;
     }
     p->references = 1;
+    p->owned = format.owned;
+    go_owned_format_retain(p->owned);
     if (tags) {
         p->tag_handle = tags->handle;
         p->tags = (tlv_query_tag_adapter_t){tags->id, (const void*)tags->handle,
@@ -544,6 +582,7 @@ void go_query_program_free(go_query_program* p) {
             goQueryProviderRelease(p->provider_handles[i]);
         if (p->tag_handle) goQueryProviderRelease(p->tag_handle);
         free(p->image);
+        go_owned_format_free(p->owned);
         free(p);
     }
 }

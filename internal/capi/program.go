@@ -146,6 +146,7 @@ type QuerySchemaDiagnostic struct {
 // ValidateQuerySchema owns storage adaptation only; canonical C evaluates every rule.
 func ValidateQuerySchema(rules []QueryRule, data []byte, document *Document, format Format,
 	limits QuerySchemaLimits) (Code, QuerySchemaDiagnostic) {
+	defer runtime.KeepAlive(format)
 	if limits.Depth < 0 || limits.Nodes < 0 || limits.Work < 0 || limits.Contexts < 0 || limits.ValueCapacity < -1 {
 		return InvalidArg, QuerySchemaDiagnostic{}
 	}
@@ -256,6 +257,7 @@ func ValidateQuerySchema(rules []QueryRule, data []byte, document *Document, for
 
 // CompileProgram compiles bounded bytes or loads a same-release image copy.
 func (f Format) CompileProgram(data []byte, options ProgramOptions, image bool) (*Program, Code, ProgramDiagnostic) {
+	defer runtime.KeepAlive(f)
 	var config C.tlv_query_compile_options_t
 	C.tlv_query_compile_options_init(&config)
 	values := []struct {

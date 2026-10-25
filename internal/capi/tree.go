@@ -12,6 +12,7 @@ import "runtime"
 
 // Begin validates an opening parent using the canonical Tree Writer.
 func (f Format) Begin(tag []byte) (Code, Diagnostic) {
+	defer runtime.KeepAlive(f)
 	r := C.go_tree(f.config, nil, 0, bytePointer(tag), C.size_t(len(tag)), nil, 0, nil, 0)
 	runtime.KeepAlive(tag)
 	return Code(r.code), writerDiagnostic(r, tag)
@@ -19,6 +20,7 @@ func (f Format) Begin(tag []byte) (Code, Diagnostic) {
 
 // End closes a staged parent through the canonical Tree Writer.
 func (f Format) End(output, tag, value []byte) (int, Code, Diagnostic) {
+	defer runtime.KeepAlive(f)
 	if overlaps(output, tag) || overlaps(output, value) {
 		return 0, InvalidArg, Diagnostic{Code: InvalidArg}
 	}

@@ -195,6 +195,7 @@ class GateTests(unittest.TestCase):
         for tier in ci.TIERS:
             for config in ci.matrix(tier):
                 self.assertEqual(dict(ci.stages(tier, config))["package"], ["package-check"])
+                self.assertEqual(dict(ci.stages(tier, config))["example-formats"], ["run", "./examples/formats"])
         paths = self.records("pr")
         record = ci.read(paths[0])
         record["checks"] = [check for check in record["checks"] if check["name"] != "package"]

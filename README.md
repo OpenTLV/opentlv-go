@@ -31,6 +31,10 @@ with the Go target; an MSVC library cannot be used by this cgo setup. See the
 examples and checks, the [user guide](docs/guides/go.md) for public API usage, and
 [implementation details](docs/implementation.md) for native ownership boundaries.
 
+Generic fields and composed, variable, escaped and packed Formats are described
+in the [field composition guide](docs/guides/go.md#generic-fields-and-composition)
+and demonstrated by `python3 scripts/go.py -- run ./examples/formats`.
+
 Import `github.com/OpenTLV/opentlv-go` as package `opentlv`. The binding has its own
 source version, `opentlv.BindingVersion` (`0.1.0-dev`); `opentlv.Version()` continues
 to report the linked Core version. No public module release is claimed.

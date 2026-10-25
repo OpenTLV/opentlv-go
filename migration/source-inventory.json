@@ -7,8 +7,8 @@
       "source": "bindings/go/README.md",
       "destination": "docs/implementation.md",
       "sha256": "97fa2fd09724002289e8f6661b4200977a65bf2ba1d17585c57c64e7bbb8f092",
-      "adapted_sha256": "8d196e9328f87c6000a5a0163af6c079dd90a4d5deea3e2519d653618a0402e7",
-      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5)."
+      "adapted_sha256": "53c2689abd046ac2e8404cda26fecb857eeeee4ac510231a699b6001220041da",
+      "adaptation": "Relocate documentation, update owner links and replace monorepo setup with standalone build instructions. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Document the standalone test layout, root command location and completed module identity (Go #5). Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/codec.go",
@@ -119,8 +119,8 @@
       "source": "bindings/go/format.go",
       "destination": "format.go",
       "sha256": "65fa48d9e9179d05fb751e1901f4be03950951484ace0e014c48fd2cc0b7f7f3",
-      "adapted_sha256": "634ac002c88a89a6278f5bb4efb3345f77fcbee8b93990dab2eea710d4499019",
-      "adaptation": "Use the canonical standalone Go module path (Go #4)."
+      "adapted_sha256": "42536b70e4da8f8ed547c85712512f499392f74c65ea88552e10ad9fa7d3a70d",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/go.mod",
@@ -132,17 +132,23 @@
     {
       "source": "bindings/go/internal/capi/bridge.c",
       "destination": "internal/capi/bridge.c",
-      "sha256": "f76387f491945973cb944591b1b3e7c2dc81e97211891bac29f9b66ba979c532"
+      "sha256": "f76387f491945973cb944591b1b3e7c2dc81e97211891bac29f9b66ba979c532",
+      "adapted_sha256": "6dbb06a9a8c8bd9b8dbe505e0e7eda37ae933dce35885d5be93a7d8b7850806c",
+      "adaptation": " Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/internal/capi/bridge.go",
       "destination": "internal/capi/bridge.go",
-      "sha256": "58a3e2c1c4707a6bddbf1c42af670872466be832bfd346cec1b3e93e5dc8f1ff"
+      "sha256": "58a3e2c1c4707a6bddbf1c42af670872466be832bfd346cec1b3e93e5dc8f1ff",
+      "adapted_sha256": "c7b69e0cbf3e8ed930040d690c65a647621fd5c813f42e13fabd06e86f5158c3",
+      "adaptation": " Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/internal/capi/bridge.h",
       "destination": "internal/capi/bridge.h",
-      "sha256": "6f04c436ccbdb1fcde184fa05d81908b34fabb1cb016d7c42f2c3154341ba101"
+      "sha256": "6f04c436ccbdb1fcde184fa05d81908b34fabb1cb016d7c42f2c3154341ba101",
+      "adapted_sha256": "af27023d3f73dbba2467233fa5f52bf20a6c04c528b73a2264cfd2d38ff42441",
+      "adaptation": " Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/internal/capi/bridge_test.go",
@@ -172,12 +178,16 @@
     {
       "source": "bindings/go/internal/capi/document.go",
       "destination": "internal/capi/document.go",
-      "sha256": "668d713afe9663a10fac7d3ee18a709ce66f2af1beba748150d2afb071be99ca"
+      "sha256": "668d713afe9663a10fac7d3ee18a709ce66f2af1beba748150d2afb071be99ca",
+      "adapted_sha256": "d3d9c11c1e6dddf065d48dfa2d45cc97c217235b60b95fd02ad037d98b1d90b1",
+      "adaptation": " Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/internal/capi/program.go",
       "destination": "internal/capi/program.go",
-      "sha256": "959f0e56a0dbc87f2fcfb03631a33c3a8ee1caf20ab77b405af3e2b7a6f3f124"
+      "sha256": "959f0e56a0dbc87f2fcfb03631a33c3a8ee1caf20ab77b405af3e2b7a6f3f124",
+      "adapted_sha256": "f23059fa9e63765781843c3bc4dbdf33fae68cb6c384c0dafe367950e27f34b7",
+      "adaptation": " Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/internal/capi/query.go",
@@ -197,7 +207,9 @@
     {
       "source": "bindings/go/internal/capi/tree.go",
       "destination": "internal/capi/tree.go",
-      "sha256": "6e922c194d5206250faea424cfb5aaccb97f00e3117daa5bb86d54798d1775b0"
+      "sha256": "6e922c194d5206250faea424cfb5aaccb97f00e3117daa5bb86d54798d1775b0",
+      "adapted_sha256": "a810773f96ca68547bf284c65ef7f5a510b5f99980f15ebeadb16da1c864eab2",
+      "adaptation": " Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
     },
     {
       "source": "bindings/go/opentlv.go",
@@ -357,8 +369,55 @@
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "ec6ba528bdfc3808b86cc7aa25d03e367de2f8b36ba5f7d75271aabbd90240a8",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly."
+      "adapted_sha256": "07997e3f13f1f41e6b85b1991c7049bcd71c9f5eeda806f0082a2dbe687f255c",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation."
+    }
+  ],
+  "standalone_files": [
+    {
+      "destination": "examples/formats/main.go",
+      "sha256": "09981946a3d177271cfdeb910cfe37a6eb734b7369d4416c92db4cf97c627650",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "field.go",
+      "sha256": "712df7145428a3d901f9098a1e47c9cd449170e179579ef07b0989b35eaed266",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "field_test.go",
+      "sha256": "efcd0c9701ee5e2ad4753ea2ef87f40ff508db7484944eef367d1d457cc6fb5b",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "format_composition.go",
+      "sha256": "74177c14980212535645a17dad4462808efaadf56bf86139d0637aee9f50783a",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "format_composition_test.go",
+      "sha256": "9de2886e2b003421424ebff0d472672eb2b427da6a451cd0282b64c3a43c7037",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/fields.c",
+      "sha256": "8122731eda0aaf71a02cc2de6c89a2c169fde98d9e11f4ae8184f511eed38cfa",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/fields.go",
+      "sha256": "98089908ec99a3124fd3acf15cbe776478da96283dacdc32822593c0afcf68a9",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/fields.h",
+      "sha256": "9cde0fc8bb61dd3e53402aa1fd4d405969e03a6074195a73a5dc3fba5c2b4d4e",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
+    },
+    {
+      "destination": "internal/capi/fields_test.go",
+      "sha256": "8519483f5d760075e8d6b5cf155819699dff49126438dea05683302acfed2586",
+      "reason": "Go #17: standalone generic field/format implementation, ownership contract tests or public example; not imported from Core."
     }
   ]
 }
