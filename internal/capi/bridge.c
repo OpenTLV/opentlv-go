@@ -333,6 +333,51 @@ go_write_result go_node_encode(void* node, go_format config, uint8_t* data, size
     return r;
 }
 
+/* Go callbacks run outside C and locks. These adapters carry only staged wire
+ * bytes; Core owns complete structure validation and diagnostic coordinates. */
+static tlv_result_t structure_decode_bytes(const void* context, const tlv_format_t* format,
+    const uint8_t* data, size_t size, void* value, size_t capacity,
+    tlv_codec_diagnostic_t* diagnostic) {
+    (void)context; (void)format; (void)data; (void)size;
+    (void)value; (void)capacity; (void)diagnostic;
+    return TLV_OK;
+}
+static tlv_result_t structure_encode_bytes(const void* context, const tlv_format_t* format,
+    const void* value, size_t size, uint8_t* data, size_t capacity, size_t* written,
+    tlv_codec_diagnostic_t* diagnostic) {
+    (void)context; (void)format; (void)diagnostic;
+    if (data && capacity < size) return TLV_ERR_BUFFER_TOO_SHORT;
+    if (data && size) memcpy(data, value, size);
+    *written = size;
+    return TLV_OK;
+}
+tlv_result_t go_structure_convert(go_format config, const tlv_structure_schema_t* schema,
+    size_t depth, size_t elements, const uint8_t* data, size_t size, uint8_t* output,
+    int encode, tlv_codec_diagnostic_t* diagnostic) {
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    uint8_t dummy = 0;
+    size_t written = 0;
+    tlv_codec_diagnostic_init(diagnostic, encode ? TLV_CODEC_OP_ENCODE : TLV_CODEC_OP_DECODE);
+    tlv_result_t code = resolve(config, &format, &fixed);
+    if (code != TLV_OK) return code;
+    tlv_structure_codec_t codec = {NULL, &format, schema, depth, elements,
+                                  structure_decode_bytes, structure_encode_bytes};
+    if (encode)
+        return tlv_structure_encode(&codec, data ? data : &dummy, size,
+                                     output ? output : &dummy, size, &written, diagnostic);
+    return tlv_structure_decode(&codec, data, size, &dummy, sizeof(dummy), diagnostic);
+}
+
+tlv_result_t go_generate(go_format config, const tlv_generator_options_t* options,
+    uint8_t* data, size_t capacity, uint8_t* workspace, size_t workspace_size, size_t* written) {
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    tlv_result_t code = resolve(config, &format, &fixed);
+    if (code != TLV_OK) return code;
+    return tlv_generate(&format, options, data, capacity, workspace, workspace_size, written);
+}
+
 tlv_result_t go_structure_validate(const tlv_schema_checked_t* checked, go_format config,
                                    const uint8_t* data, size_t size, size_t depth, size_t elements,
                                    int unknown, tlv_schema_diagnostic_report_t* report,

@@ -90,10 +90,11 @@ covered by the helper's selection receipt; clear Go's cache when replacing them.
 ## Examples and shared tests
 
 Use `python3 scripts/go.py -- run ./examples/<name>` for `version`, `quick_start`,
-`reader`, `writer`, `errors`, `codec`, `document` and `query`. Document and Query
+`reader`, `writer`, `errors`, `codec`, `formats`, `streaming`, `schema`,
+`generation`, `document` and `query`. Document and Query
 examples require the default feature configuration.
 
-The ninth example, `query_conformance`, consumes Core-owned shared Query inputs:
+The `query_conformance` example consumes Core-owned shared Query inputs:
 
 ```sh
 python3 scripts/go.py -- build -o build/go-query-conformance ./examples/query_conformance

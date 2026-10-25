@@ -332,6 +332,27 @@ Use `errors.Is(err, opentlv.ErrInvalidValue)` or `errors.As` with `*CodecError`.
 Its `Detail` owns the conversion diagnostic and available delegated cause.
 Query providers return shared errors; nil denotes success.
 
+`SchemaNumberCodec` adds canonical field-length composition, copying its entry
+metadata before use. `ValueConstraint` snapshots scalar ranges/allowed sets and
+uses Core to check definitions, validate decoded scalars and resolve display names.
+
+`StructureCodec[T]` uses `tlv_structure_decode` before a Go decoder callback and
+`tlv_structure_encode` after a Go encoder callback. Internal C callbacks only
+acknowledge validated input or copy staged bytes; all framing/Schema behavior
+remains in Core. Application callbacks run once outside C/locks. A retained
+prepared Schema is locked only during native conversion and diagnostic copying;
+Close is synchronized and invalidates subsequent operations. Byte spans whose
+diagnostics may borrow tags remain pinned until diagnostics are copied. Output is
+published only on success, and application callback errors are returned unchanged.
+
+The immutable wire `Generator` copies candidates (including tag presence), keeps
+the Format owner alive and calls `tlv_generator_workspace_size`/`tlv_generate`.
+Each call owns independent output and scratch, checked against the configured
+workspace budget before allocation. Temporary candidate tables contain only C
+allocations and are released before returning. No generator cursor or random
+state is retained between case indices. `GeneratorVersion` comes from the linked
+header. These APIs work with Builtins and Document disabled.
+
 Run `go run ./examples/codec`, and with Document enabled,
 `go run ./examples/query` for querying followed by typed Value decoding.
 

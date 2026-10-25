@@ -3,7 +3,10 @@
 
 package opentlv
 
-import "github.com/OpenTLV/opentlv-go/internal/capi"
+import (
+	"bytes"
+	"github.com/OpenTLV/opentlv-go/internal/capi"
+)
 
 // CodecError retains a shared OpenTLV status and conversion evidence.
 type CodecError struct {
@@ -101,6 +104,14 @@ type NumberConfig struct {
 // NumberCodec converts configured uint64 values through the C number codec.
 func NumberCodec(c NumberConfig) Codec[uint64] {
 	return unsignedCodec[uint64](capi.CodecConfig{Kind: 7, Encoding: int(c.Encoding), Width: c.Width, Digits: c.Digits})
+}
+
+// SchemaNumberCodec snapshots an entry and composes its byte-length rules with
+// canonical numeric conversion. Width zero chooses the shortest permitted width;
+// fixed widths are never changed. Invalid definitions fail on Encode/Decode.
+func SchemaNumberCodec(entry SchemaEntry, c NumberConfig) Codec[uint64] {
+	return unsignedCodec[uint64](capi.CodecConfig{Kind: 13, Encoding: int(c.Encoding), Width: c.Width, Digits: c.Digits,
+		Schema: &capi.NumberSchema{Tag: bytes.Clone(entry.Tag), Name: entry.Name, Min: entry.MinLength, Max: entry.MaxLength, Multiple: entry.LengthMultiple, Endpoints: entry.Endpoints}})
 }
 
 // BytesCodec copies arbitrary bytes without semantic interpretation.
