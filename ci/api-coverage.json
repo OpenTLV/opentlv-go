@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "lock": "core-source.json",
+  "references": ["internal/capi/*.go", "internal/capi/*.c", "internal/capi/*.h"],
+  "exclude": ["**/*_test.go"],
+  "ignore": [
+    {
+      "reason": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
+      "headers": ["tlv/endian.h", "tlv/tag.h", "tlv/value.h", "tlv/size.h"]
+    },
+    {
+      "reason": "Reader.Next uses tlv_reader_next_source_diag to preserve both source spans and diagnostics; these reduced-output wrappers add no separate public operation.",
+      "symbols": ["tlv_reader_next", "tlv_reader_next_diag"]
+    },
+    {
+      "reason": "Writer uses tlv_write_element_diag and tlv_tree_writer_begin_diag/end_diag; the no-diagnostic wrappers add no separate public operation.",
+      "symbols": ["tlv_write_element", "tlv_tree_writer_begin", "tlv_tree_writer_end"]
+    },
+    {
+      "reason": "Callbacks selected by tlv_fixed_format_init for NewFixed; Core invokes them through the format descriptor. The referenced tlv_binary_decode identity check remains counted as a reference, not a separate public operation.",
+      "symbols": ["tlv_binary_measure", "tlv_binary_encode"]
+    },
+    {
+      "reason": "Callbacks installed by the inline tlv_number_codec, tlv_text_codec and tlv_digits_codec constructors used by NumberCodec, TextCodec and DigitsCodec; Go invokes tlv_codec_decode/encode on those descriptors.",
+      "symbols": ["tlv_number_decode", "tlv_number_encode", "tlv_text_decode", "tlv_text_encode", "tlv_digits_decode", "tlv_digits_encode"]
+    }
+  ]
+}

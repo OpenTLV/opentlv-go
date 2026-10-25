@@ -45,6 +45,136 @@ The build helper retains its native-input-specific Go cache within each job.
 It creates a nested Go module boundary in `build/` (or an external build directory)
 so `./...` cannot collect another configuration's generated cgo or toolchain files.
 
+## Core API reference inventory
+
+PR and Full run the independent, informational **Core API coverage** job. It
+publishes `build/api-coverage.json` as `go-api-coverage-<tier>-<attempt>` and writes
+the per-header report to the GitHub Step Summary. Missing references, stale ignore
+patterns and report-job failures do not block the Go quality gate. Invalid input
+or an unrecognized `TLV_API` declaration does fail the report job visibly; it does
+not produce a successful report. Main omits this report, matching the Python
+coverage workflow. No percentage threshold is enforced.
+
+`scripts/api_coverage.py` is adapted from Python's standard-library reporter at
+revision `74d7ed756229ab11544d5eba38568ae6f2bfddb0`. Its binding-specific
+configuration is [`ci/api-coverage.json`](../../ci/api-coverage.json). It reads
+`TLV_API` function and data declarations from Git blobs under `tlv/include` at
+the full immutable `core-source.json` commit, independent of Core's working tree.
+Headers under `tlv/builtins/` are reported separately. Conditional declarations
+are inventoried without preprocessing; static inline helpers, types and macros
+are outside this metric. A referenced descriptor can call unreferenced callbacks.
+
+Only production `internal/capi/*.go`, `*.c` and `*.h` files contribute references.
+The scanner includes C preambles attached to `import "C"`, while excluding
+ordinary comments, C/Go string literals (including Go raw strings), bridge tests,
+examples, documentation and generated build output. It is a lexical inventory,
+not a call graph: a declaration, identity comparison or conditional reference can
+count without proving an operation is reachable through the public Go facade.
+Public Go API and lifetime/error tests remain the evidence for usable behavior;
+Core owns native semantics and its shared Query corpus.
+
+Each exclusion has a reason in the configuration and the JSON/Markdown report.
+The initial 44 exclusions cover Go storage primitives, reduced-output wrappers
+whose richer diagnostic operations are used, and callbacks installed by bound
+format/codec constructors. Missing functions in unrelated families remain visible.
+For example, `tlv_copy_element` stays in the inventory because it serializes an
+element rather than merely copying a Go byte slice. Builtins are not blanket
+ignored; their 291-symbol inventory is visible but parity is outside epic #15.
+
+The PR report reads the previous lock at `github.event.pull_request.base.sha`
+and inventories both exact Core commits. Added symbols include their current
+reference/ignore status; removed symbols retain their former header and kind.
+An unchanged pin is stated explicitly. This is a symbol-set diff, not a C ABI or
+signature compatibility check. A standalone Full run has no implicit base.
+
+From the repository root:
+
+```sh
+python3 -B scripts/api_coverage.py --output build/api-coverage.json
+python3 -B scripts/api_coverage.py --base origin/main --output build/api-coverage.json
+python3 -B scripts/api_coverage.py --core ../opentlv --base HEAD --output build/api-coverage.json
+```
+
+The default shallow-fetches the exact pin(s) into `build/api-coverage/core.git`.
+`--core` explicitly selects an existing Git object store and never fetches into
+or changes it; every requested commit must already exist there. Its checked-out
+HEAD need not equal the lock. `--summary PATH` appends Markdown, `--base-commit SHA`
+selects a previous Core revision directly, and `--commit SHA` is an explicit
+exploratory override, not pinned-build evidence. Use `python` on Windows.
+
+### Initial baseline and public surface
+
+The pre-change implementation at Go `6edf392293eb039986f0ca2aaa6936f8bc51607e`
+was inventoried before implementation against Core
+`cb3caed5b09706ce11ecfae839397fd4f99d0025`. Before exclusions, generic Core has
+107 references and 190 missing symbols out of 297. With the reviewed exclusions,
+the initial report is **107/253 (42.3%) referenced**, 146 missing and 44 ignored.
+Builtins has **12/291 (4.1%) referenced**, 279 missing and no exclusions. There
+are no stale ignore patterns. These numbers describe source references, not the
+percentage of supported Go functionality, and must be regenerated after changes.
+
+| Existing public Go surface | Remaining review work |
+| --- | --- |
+| `NewFixed`, `Builtin`, immutable `Format` and slice-backed `Element` | General field/format composition and format inspection (#17) |
+| `Reader`, incremental input, `Writer` and staged constructed writes | Reader/Writer/tree streaming and visitor gaps (#18) |
+| Owned `Document`, navigation, edits and encoding; parsed/compiled Query, matchers, execution and Query Schema validation | Remaining Document/Query/Schema operations (#19) |
+| Typed scalar, bytes, text, digits, IPv4 and numeric codecs | Generic structure codecs and wire generation (#20) |
+| Structured diagnostic snapshots and Go errors | Remaining generic API and final evidence/exclusion review (#21) |
+
+This reporting change adds no public Go operations, changes no ownership/error
+contracts, and does not modify migration baselines or Core build settings.
+Official builds retain all supported Core components and Builtins; the existing
+minimal Full lane is compatibility testing, not a reduced official distribution.
+
+The initial generic per-header counts follow. JSON and Step Summary list every
+missing symbol as well as the separate Builtins headers.
+
+| Header | Referenced | Missing | Ignored |
+| --- | ---: | ---: | ---: |
+| `tlv/codec/codec.h` | 2 | 0 | 0 |
+| `tlv/codec/diagnostic.h` | 5 | 0 | 0 |
+| `tlv/codec/digits.h` | 0 | 0 | 2 |
+| `tlv/codec/ipv4.h` | 2 | 1 | 0 |
+| `tlv/codec/number.h` | 0 | 0 | 2 |
+| `tlv/codec/structure.h` | 0 | 2 | 0 |
+| `tlv/codec/text.h` | 0 | 0 | 2 |
+| `tlv/codec/values.h` | 7 | 0 | 0 |
+| `tlv/copy.h` | 0 | 3 | 0 |
+| `tlv/definition.h` | 0 | 1 | 0 |
+| `tlv/diagnostic.h` | 3 | 11 | 0 |
+| `tlv/document/document.h` | 24 | 17 | 0 |
+| `tlv/endian.h` | 0 | 0 | 15 |
+| `tlv/field/escaped.h` | 0 | 2 | 0 |
+| `tlv/field/fixed.h` | 0 | 4 | 0 |
+| `tlv/field/packed.h` | 0 | 2 | 0 |
+| `tlv/field/variable.h` | 0 | 4 | 0 |
+| `tlv/format.h` | 0 | 8 | 0 |
+| `tlv/formats/compose.h` | 1 | 12 | 2 |
+| `tlv/formats/escaped.h` | 0 | 4 | 0 |
+| `tlv/formats/fixed.h` | 1 | 0 | 0 |
+| `tlv/formats/packed.h` | 0 | 4 | 0 |
+| `tlv/formats/variable.h` | 0 | 6 | 0 |
+| `tlv/generator.h` | 0 | 2 | 0 |
+| `tlv/query/adapters.h` | 2 | 1 | 0 |
+| `tlv/query/plan.h` | 0 | 2 | 0 |
+| `tlv/query/program.h` | 27 | 4 | 0 |
+| `tlv/query/query.h` | 8 | 2 | 0 |
+| `tlv/reader/diagnostic.h` | 1 | 0 | 0 |
+| `tlv/reader/reader.h` | 5 | 6 | 2 |
+| `tlv/reader/tree.h` | 3 | 8 | 0 |
+| `tlv/reader/visitor.h` | 0 | 3 | 0 |
+| `tlv/result.h` | 1 | 0 | 0 |
+| `tlv/schema/constraint.h` | 0 | 3 | 0 |
+| `tlv/schema/detail.h` | 2 | 0 | 0 |
+| `tlv/schema/number.h` | 0 | 2 | 0 |
+| `tlv/schema/query.h` | 3 | 0 | 0 |
+| `tlv/schema/schema.h` | 1 | 9 | 0 |
+| `tlv/size.h` | 0 | 0 | 4 |
+| `tlv/tag.h` | 0 | 0 | 5 |
+| `tlv/value.h` | 0 | 0 | 7 |
+| `tlv/writer/tree.h` | 4 | 8 | 2 |
+| `tlv/writer/writer.h` | 5 | 15 | 1 |
+
 ## Quality gate and evidence
 
 Configure branch protection to require the PR workflow's **Go quality gate**

@@ -49,6 +49,8 @@ the remaining workspace integration and release-process handoff.
 PR/Fast, Main and manually dispatched/reusable Full CI run Go-owned checks against
 the pinned Core. See the [CI policy](docs/development/ci.md) for the matrix,
 required quality gate, evidence and migration-specific limits.
+The [Core API reference inventory](docs/development/ci.md#core-api-reference-inventory)
+reports pinned symbols and known gaps separately from public API parity.
 
 The central [Go documentation entry point](https://opentlv.github.io/opentlv-docs/latest/languages/go/)
 selects an immutable Go documentation revision. Go owns usage, API comments,
