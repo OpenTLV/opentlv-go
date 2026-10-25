@@ -5,6 +5,42 @@
   "exclude": ["**/*_test.go"],
   "ignore": [
     {
+      "reason": "NewReader plus Next already performs one-shot decoding with source and diagnostic output. Reduced one-shot wrappers add no distinct Go operation.",
+      "symbols": ["tlv_read", "tlv_read_diag", "tlv_read_source_diag"]
+    },
+    {
+      "reason": "Reader keeps its window, consumed prefix, absolute base and finality in Go; SetInput, Offset and AtEnd expose these operations without a persistent native sequential cursor. TreeReader delegates its structural window changes to Core.",
+      "symbols": ["tlv_reader_set_input", "tlv_reader_offset", "tlv_reader_at_end"]
+    },
+    {
+      "reason": "TreeReader.Next and NextEvent use diagnostic variants and project their source metadata; reduced-output wrappers add no public operation.",
+      "symbols": ["tlv_tree_reader_next", "tlv_tree_reader_next_event"]
+    },
+    {
+      "reason": "Reader.Visit and TreeReader.Visit are Go callback adapters over canonical diagnostic pulls. They preserve stop/resume, input pauses and borrowed views while returning application errors unchanged and guarding callback reentrancy; no cgo callback trampoline is needed.",
+      "symbols": ["tlv_reader_visit", "tlv_reader_visit_diag", "tlv_tree_reader_visit"]
+    },
+    {
+      "reason": "Writer and TreeWriter retain copied tags and staged values in Go-owned frames; Finish checks those frames. TreeWriter enforces depth/count budgets and delegates encoding to diagnostic Writer/Tree Writer operations. Caller-owned native tag/scratch storage is intentionally replaced by Go allocation, not exposed as an allocation-free guarantee.",
+      "symbols": ["tlv_tree_writer_finish", "tlv_tree_writer_set_tag_storage", "tlv_tree_writer_write_element", "tlv_tree_writer_write_element_diag"]
+    },
+    {
+      "reason": "WriteEvent checks balanced kind/depth/skipped rules in Go and dispatches to the existing diagnostic Begin/Write/End operations. EncodeTree/EncodeEvents and MeasureTree/MeasureEvents stage through that same writer, including content-dependent encoding. Native callback/workspace variants duplicate these operations with different storage ownership.",
+      "symbols": ["tlv_tree_writer_write_event", "tlv_tree_writer_write_event_diag", "tlv_tree_writer_measure", "tlv_tree_writer_measure_events"]
+    },
+    {
+      "reason": "Writer.Measure accepts actual content and uses tlv_element_encoded_size_diag; length-only or no-diagnostic measurement offers no additional wire capability.",
+      "symbols": ["tlv_encoded_size", "tlv_element_encoded_size"]
+    },
+    {
+      "reason": "Writer.Write/WriteElement stage and commit through tlv_write_element_diag. Cursor, copy-element and tag/value variants re-encode the same logical input; Go owns the output position and transactional publication.",
+      "symbols": ["tlv_write", "tlv_write_diag", "tlv_writer_write", "tlv_writer_write_diag", "tlv_writer_write_element", "tlv_writer_write_element_diag", "tlv_writer_copy_element"]
+    },
+    {
+      "reason": "Writer.Remaining reports fixed root capacity directly from its Go slice, with an explicit distinction for growable output; Preserve uses the diagnostic native variant.",
+      "symbols": ["tlv_writer_remaining", "tlv_writer_preserve"]
+    },
+    {
       "reason": "Go byte slices, copy, equality and checked native-size conversions represent these storage primitives; wire decoding and encoding still delegate to Core.",
       "headers": ["tlv/endian.h", "tlv/tag.h", "tlv/value.h", "tlv/size.h"]
     },

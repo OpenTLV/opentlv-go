@@ -16,6 +16,7 @@ type Reader struct {
 	final, waiting, done bool
 	element              Element
 	err                  error
+	visiting, reentered  bool
 }
 
 // NewReader borrows a complete input buffer. Invalid Formats are reported by Err.
@@ -39,6 +40,10 @@ func NewIncrementalReader(input []byte, format Format) *Reader {
 // for more input; inspect Err and NeedsMoreData. It clears the current Element
 // on false and never advances the cursor on error or incomplete input.
 func (r *Reader) Next() bool {
+	if r.visiting {
+		r.reentered = true
+		return false
+	}
 	r.element = Element{}
 	if !r.format.Valid() && r.err == nil {
 		r.err = StatusError{code: capi.InvalidArg}
@@ -79,6 +84,15 @@ func (r *Reader) NeedsMoreData() bool { return r.waiting }
 // Offset returns the absolute cursor position, including discarded bytes.
 func (r *Reader) Offset() int { return r.base + r.pos }
 
+// Consumed returns the current-window prefix available for discard in SetInput.
+// Retained Elements may still borrow it.
+func (r *Reader) Consumed() int { return r.pos }
+
+// AtEnd reports exhaustion of final input, including before the next EOF pull.
+func (r *Reader) AtEnd() bool {
+	return r.format.Valid() && r.err == nil && r.final && r.pos == len(r.input)
+}
+
 // SetInput replaces the contiguous window, discarding at most the consumed
 // prefix. Input must start with the old bytes from discard through the old end,
 // followed by optional new bytes; prefix identity is a caller precondition.
@@ -86,6 +100,10 @@ func (r *Reader) Offset() int { return r.base + r.pos }
 // bytes may still be discarded. Retained views borrow their original storage.
 // Failure leaves Reader unchanged; terminal parse errors cannot be resumed.
 func (r *Reader) SetInput(input []byte, discard int, final bool) error {
+	if r.visiting {
+		r.reentered = true
+		return ErrInvalidState
+	}
 	if !r.format.Valid() || r.err != nil || discard < 0 || discard > r.pos || len(input) < len(r.input)-discard || (r.final && (!final || len(input) != len(r.input)-discard)) {
 		return StatusError{code: capi.InvalidArg}
 	}

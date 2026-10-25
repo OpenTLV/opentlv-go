@@ -135,7 +135,7 @@ func (f Format) IsConstructed(tag []byte) bool { return f.Valid() && f.native.In
 // including accepted nonminimal fields. It revalidates Source.Bytes with f and
 // uses Core to check that the tag and value still match. Source bytes must remain
 // unchanged since decoding. Logical elements without source return ErrInvalidArg.
-// Use the originating Format; Writer instead regenerates canonical framing.
+// Use the originating Format; Writer.Write instead regenerates canonical framing.
 func (f Format) Preserve(element Element) ([]byte, error) {
 	source := element.Source().Bytes
 	if !f.Valid() || len(source) == 0 {

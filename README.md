@@ -56,6 +56,11 @@ required quality gate, evidence and migration-specific limits.
 The [Core API reference inventory](docs/development/ci.md#core-api-reference-inventory)
 reports pinned symbols and known gaps separately from public API parity.
 
+The [tree streaming guide](docs/guides/go.md#tree-streaming-and-visitors) covers
+incremental tree cursors, resumable visitors, balanced event writes and exact
+source preservation. Run `python3 scripts/go.py -- run ./examples/streaming` for
+a generic event transformation with an output-capacity retry.
+
 The central [Go documentation entry point](https://opentlv.github.io/opentlv-docs/latest/languages/go/)
 selects an immutable Go documentation revision. Go owns usage, API comments,
 build instructions and examples; the portal owns assembly and publication.

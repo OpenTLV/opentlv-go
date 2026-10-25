@@ -194,6 +194,35 @@ temporary storage. Bytes borrows output; keep that storage unchanged while in us
 Document serialization is available through `WriteDocument` (#477).
 Run the preset-independent example with `go run ./examples/writer`.
 
+### Tree streaming extensions
+
+The [tree streaming guide](guides/go.md#tree-streaming-and-visitors) covers
+`TreeReader`, node/event projections, window replacement, limits and resumable
+visitors, plus `TreeWriter`, `Writer.WriteEvent`, source writes and exact tree
+measurement. See [streaming/main.go](../examples/streaming/main.go) for a generic
+example with incremental input and a fixed-buffer retry.
+
+The private Tree Reader adapter stores only Core scalar continuation fields and
+offset-only frames between calls. Each call reattaches input, frames and the
+retained immutable Format to a local C cursor, invokes Core, and clears all
+pointers before storing the next continuation. Borrowed results are projected
+onto the original Go input; Format-owned tags and diagnostics are copied. There
+are no retained Go pointers in C and no public Close requirement. Window
+replacement does not relocate previously returned views.
+
+Visitors execute Go callbacks after native pulls return. This preserves source
+metadata, native parse diagnostics and the consumed-current-item rule, with
+application errors returned unchanged. Mutating reentrancy is rejected and
+callback panics unwind normally without leaving the visitor guard active.
+
+Tree Writer uses existing Go-owned staged frames and copied tags. Event ordering
+and traversal budgets are Go adapter checks; native diagnostic measurement,
+encoding and parent closure remain authoritative for wire semantics. Temporary
+encodings are committed only after success. This deliberately exposes neither
+native scratch/tag-storage pointers nor an allocation-free bounded-memory
+promise. Native diagnostic offsets keep the existing per-encoding-operation
+coordinate system rather than predicting final offsets inside open parents.
+
 ## Document
 
 `Parse(data, format)` copies complete input into the canonical C Document.

@@ -385,6 +385,86 @@ go_write_result go_write(go_format config, uint8_t* data, size_t capacity, const
     return result;
 }
 
+/* The only persistent Reader data are scalar continuation fields and offsets.
+ * Reattach borrowed pointers to a call-local cursor, never to Go-owned state. */
+go_tree_read_result go_tree_read(go_format config, tlv_tree_reader_t* state,
+    tlv_tree_frame_t* frames, size_t capacity, const uint8_t* old_data,
+    const uint8_t* data, size_t size, size_t discard, int final_input,
+    size_t max_depth, size_t max_elements, int operation) {
+    go_tree_read_result result = {0};
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    tlv_tree_reader_t reader = *state;
+    tlv_reader_diagnostic_init(&result.diagnostic);
+    result.code = resolve(config, &format, &fixed);
+    if (result.code != TLV_OK) return result;
+    reader.input.format = &format;
+    reader.input.data = old_data;
+    reader.frames = frames;
+    reader.capacity = capacity;
+    if (operation == 0) {
+        result.code = final_input
+            ? tlv_tree_reader_init(&reader, data, size, &format, frames, capacity,
+                                   max_depth, max_elements)
+            : tlv_tree_reader_init_incremental(&reader, data, size, &format, frames, capacity,
+                                               max_depth, max_elements);
+    } else if (operation == 1) {
+        result.code = tlv_tree_reader_next_event_diag(&reader, &result.event, &result.diagnostic);
+    } else if (operation == 2) {
+        tlv_tree_item_t item = {0};
+        result.code = tlv_tree_reader_next_diag(&reader, &item, &result.diagnostic);
+        if (result.code == TLV_OK) {
+            result.event = (tlv_tree_event_t){item.constructed ? TLV_TREE_BEGIN : TLV_TREE_ELEMENT,
+                                            item.element, item.source, item.depth, item.offset, 0};
+        }
+    } else if (operation == 3) {
+        result.code = tlv_tree_reader_set_input(&reader, data, size, discard, final_input);
+    } else if (operation == 4) {
+        result.code = tlv_tree_reader_skip_subtree(&reader);
+    } else {
+        result.code = TLV_ERR_INVALID_ARG;
+    }
+    result.consumed = tlv_tree_reader_consumed(&reader);
+    result.offset = tlv_tree_reader_offset(&reader);
+    result.at_end = tlv_tree_reader_at_end(&reader);
+    result.event.source.format = NULL;
+    reader.input.format = NULL;
+    reader.input.data = NULL;
+    reader.frames = NULL;
+    *state = reader;
+    return result;
+}
+
+go_write_result go_writer_append(go_format config, uint8_t* output, size_t capacity,
+    const uint8_t* source, size_t source_size, const uint8_t* tag, size_t tag_size,
+    const uint8_t* value, size_t value_size, int preserve) {
+    go_write_result result = {0};
+    tlv_format_t format;
+    tlv_fixed_format_t fixed;
+    tlv_writer_t writer;
+    tlv_decoded_t decoded;
+    tlv_writer_diagnostic_init(&result.diagnostic);
+    result.code = resolve(config, &format, &fixed);
+    if (result.code != TLV_OK) return result;
+    result.code = tlv_writer_init(&writer, output, capacity, &format);
+    if (result.code != TLV_OK) return result;
+    if (preserve) {
+        result.code = tlv_format_decode(&format, source, source_size, &decoded, NULL);
+        if (result.code != TLV_OK) return result;
+        if (decoded.source.size != source_size) {
+            result.code = TLV_ERR_INVALID_ARG;
+            return result;
+        }
+        tlv_element_t element = {tlv_tag(tag, tag_size), {value, value_size}};
+        result.code = tlv_writer_preserve_diag(&writer, &decoded.source, &element,
+                                              &result.diagnostic);
+    } else {
+        result.code = tlv_writer_copy_encoded_diag(&writer, source, source_size, &result.diagnostic);
+    }
+    if (result.code == TLV_OK) result.size = tlv_writer_size(&writer);
+    return result;
+}
+
 /* Owning language adapter. Core Query calls still receive explicit storage. */
 struct go_query_program {
     go_owned_format* owned;
