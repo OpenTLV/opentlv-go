@@ -111,6 +111,21 @@ typedef struct {
     tlv_writer_diagnostic_t diagnostic;
 } go_write_result;
 
+typedef struct {
+    tlv_result_t code;
+    tlv_tree_event_t event;
+    tlv_reader_diagnostic_t diagnostic;
+    size_t consumed, offset;
+    int at_end;
+} go_tree_read_result;
+
+/* state contains no pointers between calls; frames contain only offsets. */
+go_tree_read_result go_tree_read(go_format, tlv_tree_reader_t*, tlv_tree_frame_t*, size_t,
+                                 const uint8_t*, const uint8_t*, size_t, size_t, int,
+                                 size_t, size_t, int);
+go_write_result go_writer_append(go_format, uint8_t*, size_t, const uint8_t*, size_t,
+                                  const uint8_t*, size_t, const uint8_t*, size_t, int);
+
 tlv_result_t    go_format_check(go_format config);
 int            go_format_inspect(go_format config, int operation, const uint8_t* tag, size_t size);
 tlv_result_t go_format_preserve(go_format, const uint8_t*, size_t, const uint8_t*, size_t,

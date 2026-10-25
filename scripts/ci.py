@@ -84,7 +84,7 @@ def stages(tier, config):
     if tier == "full" and config["id"] in ("linux-default", "linux-minimal"):
         result += [("race", ["test", "-race", "-count=1", "./..."]),
                    ("cgocheck2", ["test", "-count=1", "./..."])]
-    examples = ["version", "quick_start", "formats"]
+    examples = ["version", "quick_start", "formats", "streaming"]
     if tier == "full":
         examples += ["reader", "writer", "errors", "codec"]
         if not config["minimal"]:

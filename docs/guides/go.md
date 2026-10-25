@@ -71,6 +71,7 @@ Run examples with `python3 scripts/go.py -- run ./examples/<name>`:
 | [formats](../../examples/formats/main.go) | Mixed field encodings, tag-only elements and packed headers |
 | [reader](../../examples/reader/main.go) | Reader and borrowed input |
 | [writer](../../examples/writer/main.go) | Writer output and sizing |
+| [streaming](../../examples/streaming/main.go) | Incremental tree events and output-capacity retry |
 | [errors](../../examples/errors/main.go) | Status and diagnostic handling |
 | [codec](../../examples/codec/main.go) | Typed Value conversion |
 | [document](../../examples/document/main.go) | Owned Document editing; requires Document support |
@@ -199,6 +200,81 @@ prefix into larger storage so the failed write or End can be retried. Writer
 requires no `Close`.
 
 Runnable version: [writer/main.go](../../examples/writer/main.go).
+
+## Tree streaming and visitors
+
+`NewTreeReader(input, format, nil)` borrows a final input window.
+`NewIncrementalTreeReader` starts with non-final input. Both return `(*TreeReader,
+error)` and need no `Close`. Choose one projection for the cursor's lifetime:
+
+- `Next()` / `Item()` produces preorder `TreeItem` values with depth, absolute
+  offset and constructed classification.
+- `NextEvent()` / `Event()` produces balanced `TreeBegin`, `TreeElement` and
+  `TreeEnd` events, including BEGIN/END for empty parents. END has no borrowed
+  payload; its offset is the end of the parent's value.
+
+Check `Err()` after a false pull. `NeedsMoreData()` identifies an incremental
+pause. BEGIN requires the complete encoded parent; this is not an early-header
+parser. `Consumed()` is the discardable prefix of the current window, while
+`Offset()` includes prior discards. `AtEnd()` requires final input and closure of
+all scopes. `SetInput(window, discard, final)` preserves the undiscarded suffix
+unchanged; retained views still borrow their original storage. Clone them before
+overwriting it. These consumption/end accessors are also available on `Reader`.
+
+Nil `TreeReaderOptions` selects 64 frames, maximum depth 64 and an unlimited item
+count. With explicit options, zero is literal: `FrameCapacity: 0` allows roots
+and skipping, `MaxDepth: 0` permits roots only, and `MaxElements: 0` permits no
+nodes. A frame shortage leaves descent pending: call `GrowFrames` and retry.
+`SkipSubtree()` can recover from a descent limit without validating descendants;
+event mode emits a skipped END. Limits and parse errors preserve the native
+continuation; a retry repeats the failing operation unless the caller changes
+input/storage or skips a pending subtree. Mixing projections fails without
+advancing the cursor.
+
+`Reader.Visit` and `TreeReader.Visit` take callbacks returning `(VisitAction,
+error)`. `VisitContinue` advances; `VisitStop` returns successfully. A callback
+error is returned unchanged. The current node has already been consumed, so
+another Visit resumes without replay; a stopped constructed item still has
+pending children. `ErrNeedMoreData` reports a resumable pause. A nil TreeReader
+callback validates only; a nil Reader callback is invalid. Callbacks must not
+advance or mutate their cursor; reentrant operations are rejected. Callback
+side effects are never rolled back.
+
+`Writer.WriteEvent(event)` consumes a balanced stream, copying BEGIN tags and
+ignoring source metadata. Its source Value is ignored on BEGIN; subsequent
+events build the new children. A skipped event cannot represent complete output
+and is rejected. On failure, keep the current event for retry before advancing
+the producer. `NewTreeWriter` and `NewTreeWriterBuffer` add explicit maximum depth
+and node-count budgets (`TreeWriterOptions`); END does not consume that budget.
+Nil options select depth 64 and unlimited nodes. They use the same Go staging
+as Writer, including with fixed root output; frame/tag/scratch memory is not
+bounded or allocation-free. `Finish` checks balance, and `SetBuffer` permits a
+failed root write/close to be retried. No writer streams unfinished parents to
+an I/O sink, and native Format restrictions remain in force.
+
+`format.EncodeEvents(events, options)` and `EncodeTree(preorderItems, options)`
+return staged bytes. `MeasureEvents` and `MeasureTree` return their exact size
+by performing the same encoding, necessary for content-dependent formats. They
+allocate complete output; when bytes are also needed, call Encode once and use
+`len`. Preorder construction closes parents from depth transitions and retains
+empty constructed nodes. Measurement and encoding errors return no partial result.
+
+For exact framing, `writer.Preserve(element)` revalidates the original bytes
+with the writer's Format and checks unchanged logical content through Core.
+Use the originating Format. `CopyEncoded(bytes)` deliberately copies without
+validation or conversion. Both work at roots and inside staged parents, copy
+input before publication, support aliasing with `Bytes`, and preserve state on
+failure. `Remaining()` returns `(bytes, true)` for fixed root capacity or
+`(0, false)` for growable output; open parents are not subtracted.
+
+Run the generic [streaming example](../../examples/streaming/main.go):
+
+```sh
+python3 scripts/go.py -- run ./examples/streaming
+```
+
+It demonstrates incomplete-parent input, balanced events and retrying END after
+enlarging the output buffer. It runs in all CI tiers, including minimal builds.
 
 ## Document, edits and cleanup
 

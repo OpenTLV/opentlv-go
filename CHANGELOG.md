@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 
+- Complete generic Reader/Writer streaming with borrowed tree nodes and balanced events, incremental windows, resumable visitors, traversal budgets, exact source writes and tree sizing; preserve diagnostics, ownership and retry semantics through public contract tests and a runnable example. (#18)
 - Expose generic identifier/count field encodings, packed fields, composed/escaped/variable/packed formats, capability and constructed inspection, and exact source preservation with copied configuration, native lifetime ownership, public contract tests and a runnable example; update pinned Core coverage and intentional exclusions. (#17)
 - Report pinned Core API symbol references in informational PR/Full CI, separating generic Core and Builtins with per-header gaps, justified exclusions, Core-pin diffs, JSON artifacts and Step Summaries; document the Go baseline and test cgo-aware scanning. (#16)
 - Record the final Go migration review with source parity, exact cross-repository CI evidence, all epic acceptance criteria, documented deviations, successful repaired Go Full validation and remaining workspace acceptance requirements. (#7)

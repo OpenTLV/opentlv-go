@@ -24,7 +24,7 @@ the same matrix/stage definitions in `scripts/ci.py`.
 
 Every configuration checks migration hashes, Python infrastructure regressions,
 `gofmt`, `go vet`, all Go tests with `-count=1`, external module ZIP consumption
-(`package-check`), and the version, quick-start and generic format examples.
+(`package-check`), and the version, quick-start, generic format and streaming examples.
 The package check runs
 without `replace` or workspace access using a fresh module cache and local file
 proxy; it validates module/version/license metadata and a native round trip.
@@ -167,6 +167,46 @@ the Go owner's reference explicitly to verify independent native Document/Query
 retention and failure-path cleanup. The generic formats example runs in every CI
 tier, including the existing minimal compatibility lane.
 
+### Reader, Writer and tree inventory (#18)
+
+Before coding #18, Go `443080565786675cf17a65668fe42cd930a5a095` was inventoried
+against the unchanged exact Core pin `cb3caed5b09706ce11ecfae839397fd4f99d0025`.
+The baseline was 134 referenced, 100 missing and 63 ignored generic symbols.
+Inspection distinguished existing sequential/incremental Reader, staged Writer
+and `Format.Preserve` from tree operations only used internally by Document/Query.
+
+| Pinned header | Before: referenced / missing / ignored | Public operation after #18 |
+| --- | --- | --- |
+| `reader/reader.h` | 5 / 6 / 2 | Existing source-aware Reader; add `Consumed`, `AtEnd` |
+| `reader/tree.h` | 3 / 8 / 0 | `TreeReader`, node/event pulls, window replacement, frame growth, skipping, limits and absolute offsets |
+| `reader/visitor.h` | 0 / 3 / 0 | Go `Visit` adapters with STOP/error/pause resumption and guarded reentrancy |
+| `writer/writer.h` | 5 / 15 / 1 | Existing transactional Writer; add `CopyEncoded`, `Preserve`, `Remaining` |
+| `writer/tree.h` | 4 / 8 / 2 | `WriteEvent`, budgeted `TreeWriter`, preorder/event encoding and exact staged measurement |
+
+After #18, generic Core has **144/204 (70.6%) referenced**, **60 missing** and
+**93 ignored** out of 297 symbols. Builtins remains **12/291 (4.1%) referenced**,
+279 missing and no exclusions. No stale ignore patterns remain. Every symbol in
+these Reader/Writer headers is now either referenced or intentionally excluded;
+this does not assert allocation-free parity or full generic Core coverage.
+
+The 30 new exclusions are reviewed semantic alternatives: reduced-output and
+one-shot Reader wrappers; sequential cursor access already represented by Go
+state; Go visitor callbacks over diagnostic pulls; duplicate Writer entry points;
+and native Tree Writer callback/workspace APIs represented by Go-owned staging.
+Writer events validate kind/depth/classification and dispatch to canonical
+diagnostic encoding. Exact tree measurement encodes actual children, including
+content-dependent framing. Complete output is allocated; native bounded scratch,
+tag-storage configuration and callback replay are intentionally not public APIs.
+`TreeWriterOptions` bounds depth/count, while fixed buffers bound completed roots.
+These choices and callback errors are documented in the public guide.
+
+Public tests exercise borrowed views and clones, Format lifetime across GC,
+every input split, discard inside a parent, absolute diagnostics, frame-growth
+and skip recovery, trees deeper than the default, visitor STOP/error/panic and
+reentrancy, malformed event streams, exact source preservation, output aliasing,
+fixed-buffer retries and native Format restrictions. Core retains wire behavior
+tests. The generic streaming example runs in all tiers and configurations.
+
 The current generic per-header counts follow. JSON and Step Summary list every
 missing symbol as well as the separate Builtins headers. Original baseline totals
 above remain historical; regenerate this table when implementation changes.
@@ -202,9 +242,9 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/query/program.h` | 27 | 4 | 0 |
 | `tlv/query/query.h` | 8 | 2 | 0 |
 | `tlv/reader/diagnostic.h` | 1 | 0 | 0 |
-| `tlv/reader/reader.h` | 5 | 6 | 2 |
-| `tlv/reader/tree.h` | 3 | 8 | 0 |
-| `tlv/reader/visitor.h` | 0 | 3 | 0 |
+| `tlv/reader/reader.h` | 5 | 0 | 8 |
+| `tlv/reader/tree.h` | 9 | 0 | 2 |
+| `tlv/reader/visitor.h` | 0 | 0 | 3 |
 | `tlv/result.h` | 1 | 0 | 0 |
 | `tlv/schema/constraint.h` | 0 | 3 | 0 |
 | `tlv/schema/detail.h` | 2 | 0 | 0 |
@@ -214,8 +254,8 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/size.h` | 0 | 0 | 4 |
 | `tlv/tag.h` | 0 | 0 | 5 |
 | `tlv/value.h` | 0 | 0 | 7 |
-| `tlv/writer/tree.h` | 4 | 8 | 2 |
-| `tlv/writer/writer.h` | 5 | 15 | 1 |
+| `tlv/writer/tree.h` | 4 | 0 | 10 |
+| `tlv/writer/writer.h` | 9 | 0 | 12 |
 
 ## Quality gate and evidence
 
