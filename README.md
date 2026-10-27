@@ -104,4 +104,27 @@ Run commands from the repository root. Public tests run with `go test .`;
 `scripts/go.py --` before these commands to supply the selected native Core.
 See [layout migration deviations](MIGRATION.md#standalone-layout-and-migration-deviations-5).
 
-Licensed under the [MIT License](LICENSE).
+## Contributing and security
+
+Follow the shared [contribution guidelines](https://github.com/OpenTLV/.github/blob/main/CONTRIBUTING.md)
+and [Code of Conduct](https://github.com/OpenTLV/.github/blob/main/CODE_OF_CONDUCT.md).
+Go-specific build, test and [license checks](docs/development/go.md#licensing-and-contributor-checks)
+remain in this repository. GitHub community policies and common issue/PR templates
+come from the public `OpenTLV/.github` defaults; this repository has no local overrides.
+
+Report suspected vulnerabilities through the
+[private Go reporting form](https://github.com/OpenTLV/opentlv-go/security/advisories/new)
+and follow the shared [security policy](https://github.com/OpenTLV/.github/blob/main/SECURITY.md).
+Use its coordination route for cross-repository reports or an unavailable Go form.
+Include the binding revision, Core revision and platform/build configuration.
+Private reporting and advisory access are repository settings managed separately
+from these links.
+
+## License
+
+Licensed under the [MIT License](LICENSE). Marek Cingel retains copyright in his
+original contributions; other contributors retain theirs. OpenTLV is the GitHub
+organization, not a separate legal copyright holder. See
+[dependencies and attribution](THIRD_PARTY.md) for Core, generated sources and
+distribution notices. [REUSE.toml](REUSE.toml) covers explicit metadata paths;
+source files retain their own copyright and SPDX headers.

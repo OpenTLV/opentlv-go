@@ -580,3 +580,15 @@ Core continues to own field validation, wire encoding, composition, packed table
 checks, constructed classification and source-preservation semantics. The exact
 Core pin and official feature selection are unchanged. The existing minimal
 compatibility lane also exercises the generic APIs without Builtins/Document.
+
+## Licensing and community normalization (#29)
+
+The REUSE review preserves the root MIT attribution, existing source headers and
+both generated diagnostic snapshots. Exact-path annotations cover documentation
+and metadata, while the module retains its own license text and dependency
+notices. Community policies and common templates are linked from `OpenTLV/.github`;
+Go build, test, license and packaging instructions stay here.
+
+Only the adapted hash for `docs/development/go.md` changes in the migration
+inventory to record the contributor-check instructions. Original source paths,
+original hashes, the Core pin and implementation bytes remain unchanged.

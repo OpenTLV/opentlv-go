@@ -16,6 +16,13 @@ dependencies, `replace` directives or required Go workspace. No `go.sum` is need
 in this module today. All C/cgo implementation remains private in `internal/capi`.
 The module contains the bridge sources; it does not bundle the Core library.
 
+The module ZIP carries the root `LICENSE` with original attribution,
+`LICENSES/MIT.txt`, `REUSE.toml` and `THIRD_PARTY.md`. The package check rejects
+missing licensing inputs and tests exact notice bytes in the ZIP. See
+[dependencies and attribution](../THIRD_PARTY.md) for the Core and toolchain review
+and notice handling when distributing linked binaries. Shared community policies
+remain in `OpenTLV/.github`; they do not supply a module license.
+
 ## Independent versions and tags
 
 `BindingVersion` identifies the Go binding source independently of Core. The

@@ -124,3 +124,48 @@ Neither command writes into Core, discovers a sibling implicitly or changes
 `core-source.json`. Review generated changes with the selected Core revision and
 run the binding tests against the same native library. The reader is available
 in both the original Core lock and the Core checkout after extraction.
+
+## Licensing and contributor checks
+
+Follow the shared [contribution guidelines](https://github.com/OpenTLV/.github/blob/main/CONTRIBUTING.md),
+[Code of Conduct](https://github.com/OpenTLV/.github/blob/main/CODE_OF_CONDUCT.md)
+and [security policy](https://github.com/OpenTLV/.github/blob/main/SECURITY.md).
+The Go build and test commands above remain local instructions.
+
+Contributor checks require Python 3.10+ in a separate environment; the build
+helper's Python requirement is unchanged. From this repository root:
+
+```sh
+python -m venv .venv
+```
+
+Activate with `.venv\Scripts\Activate.ps1` in PowerShell or
+`source .venv/bin/activate` in Bash, then run:
+
+```sh
+python -m pip install -r requirements-dev.txt
+python -m pre_commit install
+python -m pre_commit validate-config
+python -m pre_commit run --all-files
+python -m reuse lint
+```
+
+The pinned hooks check whitespace, final newlines, YAML/JSON, Python syntax,
+large files, Markdown and repository-wide REUSE metadata. Initial setup downloads
+hook environments. Formatting hooks may edit files; review changes and rerun.
+New files must be staged for `--all-files`, or checked in a disposable Git snapshot
+of the complete proposed tree. Run the Go formatting and runtime checks above
+separately. These local hooks do not establish hosted CI or publication evidence.
+
+Go sources and tests, C/cgo sources, Python helpers and workflows retain their
+existing SPDX/MIT and accurate copyright headers. `REUSE.toml` uses exact paths
+with aggregate metadata for reviewed documentation and configuration, including
+`go.mod`. New sources need their own notices; preserve contributor names, years
+and third-party licenses. No hook automatically assigns copyright. See
+[dependencies and attribution](../../THIRD_PARTY.md) for the distribution review.
+
+Generated diagnostic snapshots are excluded from formatting hooks and keep the
+headers emitted by their generator. Vendor/generated directories are also
+excluded from formatting, but remain subject to REUSE checks. Use file-specific
+headers or license sidecars for future third-party code and binary fixtures;
+do not apply a blanket original-author annotation. Keep license texts in `LICENSES/`.
