@@ -1,0 +1,31 @@
+# Formatting must not rewrite third-party or generated sources. REUSE still
+# checks their licensing; ownership is never assigned automatically.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        types: [text]
+        exclude: '(^|/)(vendor|third_party|generated)/|^diagnostic_(kind|vocabulary_test)\.go$|(?i:\.(bin|dat)$)'
+      - id: end-of-file-fixer
+        types: [text]
+        exclude: '(^|/)(vendor|third_party|generated)/|^diagnostic_(kind|vocabulary_test)\.go$|(?i:\.(bin|dat)$)'
+      - id: check-yaml
+      - id: check-json
+      - id: check-ast
+      - id: check-added-large-files
+        args: [--enforce-all]
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.45.0
+    hooks:
+      - id: markdownlint
+        types: [markdown, text]
+        args: [--fix, --config, .markdownlint.json]
+        exclude: '(^|/)(vendor|third_party|generated)/'
+
+  - repo: https://codeberg.org/fsfe/reuse-tool
+    rev: v6.2.0
+    hooks:
+      - id: reuse
+        additional_dependencies: ['reuse[charset-normalizer]==6.2.0']

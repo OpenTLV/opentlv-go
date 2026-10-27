@@ -14,6 +14,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULE = "github.com/OpenTLV/opentlv-go"
+LICENSE_FILES = ("LICENSE", "LICENSES/MIT.txt", "REUSE.toml", "THIRD_PARTY.md")
 
 
 def require(condition, message):
@@ -22,6 +23,8 @@ def require(condition, message):
 
 
 def metadata(root=ROOT):
+    for name in LICENSE_FILES:
+        require((root / name).is_file(), f"Missing module licensing file: {name}")
     mod = (root / "go.mod").read_text(encoding="utf-8")
     require(mod.strip() == f"module {MODULE}\n\ngo 1.22", "Unexpected Go module contract")
     source = (root / "opentlv.go").read_text(encoding="utf-8")
@@ -44,6 +47,7 @@ def module_files(root=ROOT):
     names = subprocess.check_output(["git", "-C", str(root), "ls-files", "-z",
                                      "--cached", "--others", "--exclude-standard"]).decode().split("\0")
     files = sorted(set(filter(None, names)))
+    require(set(LICENSE_FILES) <= set(files), "Missing module licensing files in ZIP inputs")
     for name in files:
         path = root / name
         require(path.is_file() and not path.is_symlink() and path.resolve().is_relative_to(root.resolve()),

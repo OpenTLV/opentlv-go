@@ -20,8 +20,25 @@ class PackagingTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name).resolve()
-        for name in ("go.mod", "opentlv.go", "LICENSE", "CHANGELOG.md"):
+        for name in ("go.mod", "opentlv.go", "CHANGELOG.md", *packaging.LICENSE_FILES):
+            (self.root / name).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / name, self.root / name)
+
+    def test_metadata_rejects_each_missing_licensing_file(self):
+        for name in packaging.LICENSE_FILES:
+            path = self.root / name
+            original = path.read_bytes()
+            path.unlink()
+            with self.subTest(name=name), self.assertRaisesRegex(ValueError, "Missing module licensing file"):
+                packaging.metadata(self.root)
+            path.write_bytes(original)
+
+    def test_zip_inputs_require_each_licensing_file(self):
+        for omitted in packaging.LICENSE_FILES:
+            names = [name for name in packaging.LICENSE_FILES if name != omitted]
+            with patch.object(packaging.subprocess, "check_output", return_value="\0".join(names).encode()):
+                with self.subTest(omitted=omitted), self.assertRaisesRegex(ValueError, "licensing files in ZIP"):
+                    packaging.write_proxy(self.root / ("proxy-" + omitted.replace("/", "-")), self.root)
 
     def test_module_rejects_legacy_path_replace_and_changed_minimum(self):
         path = self.root / "go.mod"
@@ -51,7 +68,7 @@ class PackagingTests(unittest.TestCase):
                 packaging.metadata(self.root)
 
     def test_zip_has_canonical_prefix_cgo_sources_and_reproducible_bytes(self):
-        files = ["go.mod", "opentlv.go", "LICENSE", "CHANGELOG.md", "internal/capi/bridge.c"]
+        files = ["go.mod", "opentlv.go", "CHANGELOG.md", *packaging.LICENSE_FILES, "internal/capi/bridge.c"]
         bridge = self.root / files[-1]
         bridge.parent.mkdir(parents=True)
         bridge.write_bytes(b"/* cgo bridge */\n")
@@ -63,11 +80,15 @@ class PackagingTests(unittest.TestCase):
         with zipfile.ZipFile(archive) as bundle:
             self.assertEqual(bundle.namelist(), [f"{packaging.MODULE}@{version}/{name}" for name in files])
             self.assertEqual(bundle.read(f"{packaging.MODULE}@{version}/{files[-1]}"), bridge.read_bytes())
+            for name in packaging.LICENSE_FILES:
+                self.assertEqual(bundle.read(f"{packaging.MODULE}@{version}/{name}"),
+                                 (self.root / name).read_bytes())
 
     def test_module_files_reject_legacy_imports_and_missing_inputs(self):
         source = self.root / "bad.go"
         source.write_text('package bad\nimport "github.com/marekcingel/OpenTLV/bindings/go"\n')
-        with patch.object(packaging.subprocess, "check_output", return_value=b"bad.go\0"):
+        names = "\0".join(["bad.go", *packaging.LICENSE_FILES]).encode()
+        with patch.object(packaging.subprocess, "check_output", return_value=names):
             with self.assertRaisesRegex(ValueError, "Legacy module import"):
                 packaging.module_files(self.root)
             source.unlink()

@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Marek Cingel
+
+version = 1
+
+# Exact paths cover reviewed documentation and metadata, not future sources,
+# generated files, vendored code or contributor additions.
+[[annotations]]
+path = [
+    ".gitattributes",
+    ".gitignore",
+    ".markdownlint.json",
+    ".pre-commit-config.yaml",
+    "CHANGELOG.md",
+    "MIGRATION.md",
+    "README.md",
+    "THIRD_PARTY.md",
+    "ci/api-completeness.json",
+    "ci/api-coverage.json",
+    "core-source.json",
+    "docs-examples.json",
+    "docs/development/ci.md",
+    "docs/development/go.md",
+    "docs/guides/go.md",
+    "docs/implementation.md",
+    "docs/packaging.md",
+    "go.mod",
+    "migration/source-inventory.json",
+    "requirements-dev.txt",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2026 Marek Cingel"
+SPDX-License-Identifier = "MIT"
