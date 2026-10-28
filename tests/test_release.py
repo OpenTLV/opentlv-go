@@ -32,10 +32,13 @@ def release_tree(root, closed=True):
                  *release.package_check.LICENSE_FILES):
         (root / name).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / name, root / name)
-    if closed:
-        changelog = root / "CHANGELOG.md"
-        changelog.write_text(changelog.read_text(encoding="utf-8").replace(
-            "## [Unreleased]", "## [0.1.0] - 2026-10-28", 1), encoding="utf-8")
+    # Normalize the first version heading, whether the real changelog is open or closed.
+    changelog = root / "CHANGELOG.md"
+    heading = "## [0.1.0] - 2026-10-28" if closed else "## [Unreleased]"
+    text, count = re.subn(r"^## \[[^\]]+\].*$", heading, changelog.read_text(encoding="utf-8"),
+                          count=1, flags=re.M)
+    assert count == 1
+    changelog.write_text(text, encoding="utf-8")
 
 
 def write_records(folder):
