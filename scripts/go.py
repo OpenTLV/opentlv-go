@@ -37,7 +37,9 @@ def load_lock(root=ROOT):
     lock = json.loads((root / "core-source.json").read_text(encoding="utf-8"))
     require(lock.get("schema") == 1 and lock.get("repository") == REPOSITORY
             and isinstance(lock.get("commit"), str)
-            and re.fullmatch("[0-9a-f]{40}", lock["commit"]), "Invalid immutable Core source lock")
+            and re.fullmatch("[0-9a-f]{40}", lock["commit"])
+            and re.fullmatch(r"(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)", str(lock.get("version"))),
+            "Invalid immutable Core source lock")
     return lock
 
 

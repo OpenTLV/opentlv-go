@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+### Changed
+
+- Prepare the first standalone Go release as `0.1.0`, independently of Core: `BindingVersion`, the documentation example catalog and versioned release notes. Pin Core `v0.8.0` at `345c77acb29266036df5f27d04ce315bb61853cc` and record its release version in the source lock and the reviewed completeness baseline; the generic API inventory and diagnostic snapshots are unchanged. Add a manual GitHub release workflow that requires Main on the exact commit, a changelog closed under the release version and same-attempt Full evidence, attests and publishes the release notes, evidence manifest and checksums, verifies the tag, notes and uploaded assets before publishing, and then verifies the module through the public Go proxy and checksum database. The package check accepts the changelog closed under the binding version. (#31)
+
 ### Fixed
 
 - Keep license and CI definition bytes identical in Windows and Unix checkouts so the Full quality gate can verify all six native configurations without weakening hash checks. (#7)

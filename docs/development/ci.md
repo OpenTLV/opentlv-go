@@ -11,7 +11,9 @@ Core owns native semantics, native tests and the shared Query corpus/oracle.
 `go-pr.yml` runs Fast on every pull request to `main`, without path filters.
 `go-main.yml` checks the merged commit on every push to `main`. `go-full.yml` is
 manually dispatched or called by another workflow. All use `go-checks.yml` and
-the same matrix/stage definitions in `scripts/ci.py`.
+the same matrix/stage definitions in `scripts/ci.py`. The manual `go-release.yml`
+calls Full for the release commit before publishing; see
+[GitHub release](../packaging.md#github-release).
 
 | Configuration | Go | PR/Fast | Main | Full |
 | --- | --- | --- | --- | --- |
@@ -389,6 +391,19 @@ above remain historical; regenerate this table when implementation changes.
 | `tlv/writer/tree.h` | 4 | 0 | 10 |
 | `tlv/writer/writer.h` | 9 | 0 | 12 |
 
+### Core v0.8.0 pin (#31)
+
+The first Go release moves `core-source.json` from
+`cb3caed5b09706ce11ecfae839397fd4f99d0025` to Core `v0.8.0`,
+`345c77acb29266036df5f27d04ce315bb61853cc`, and records the release version in
+the lock and in the completeness baseline. The report with `--base` against the
+previous binding revision adds and removes no symbols. Public headers, the Query
+conformance runner and corpus are unchanged between both commits. Core's native
+changes are internal Query layout accessors with an unchanged image format, API
+and ABI. The per-header table above therefore applies unchanged to this pin:
+166 referenced, zero missing and 131 excluded generic symbols; Builtins remains
+12 referenced and 279 missing. The diagnostic snapshot check reports no drift.
+
 ## Quality gate and evidence
 
 Configure branch protection to require the PR workflow's **Go quality gate**
@@ -413,7 +428,8 @@ retains its own Core receipt, rather than relying only on the helper's last
 versions, commands, durations, log hashes, configuration and Core input/native
 digests. `go-quality-<tier>-<attempt>` contains the successful aggregate summary.
 Setup failures may have no record; that missing evidence still fails the gate.
-These are CI execution records, not signed release attestations.
+These are CI execution records, not signed release attestations; the release
+workflow revalidates Full records and attests a manifest that contains them.
 
 ## Documentation updates
 
@@ -442,7 +458,7 @@ linked Core version. `docs-examples.json` supplies the Go quick-start tab from
 the same checkout; its version must match `BindingVersion`. No runtime
 compatibility result for the portal-selected Core is implied by that catalog.
 
-Go currently has no release workflow or independent versioned documentation
+Go has a manual release workflow but no independent versioned documentation
 snapshot. Merge Go changes first, then review and merge the exact Go SHA into
 the portal manifest and validate the locked build. Local preview permits dirty
 sources but cannot authorize publication. Hosted notification, portal CI,

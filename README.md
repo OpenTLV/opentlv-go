@@ -36,8 +36,10 @@ in the [field composition guide](docs/guides/go.md#generic-fields-and-compositio
 and demonstrated by `python3 scripts/go.py -- run ./examples/formats`.
 
 Import `github.com/OpenTLV/opentlv-go` as package `opentlv`. The binding has its own
-source version, `opentlv.BindingVersion` (`0.1.0-dev`); `opentlv.Version()` continues
-to report the linked Core version. No public module release is claimed.
+source version, `opentlv.BindingVersion` (`0.1.0`); `opentlv.Version()` continues
+to report the linked Core version. The first release, `v0.1.0`, builds against
+Core `v0.8.0` and is published by the manual
+[Go Release workflow](docs/packaging.md#github-release) after Main and Full CI.
 See [packaging and versioning](docs/packaging.md) for external consumption,
 independent tags, native requirements and migration deviations.
 

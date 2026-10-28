@@ -217,8 +217,8 @@
       "source": "bindings/go/opentlv.go",
       "destination": "opentlv.go",
       "sha256": "3bd80a66dad05c064865cd417f7c19abdace4f1d08b715c1db8283c134af2e23",
-      "adapted_sha256": "12f23c2ce3f9b09cc101fc8c256f096b1ad98ba75620d691ede3c0f78d6962c6",
-      "adaptation": "Use the canonical standalone Go module path (Go #4). Add independent BindingVersion without changing Core-reporting Version()."
+      "adapted_sha256": "92f74b36622ceec1680e0ab23363ce5a4dcbab4e151d849640944806abc872ff",
+      "adaptation": "Use the canonical standalone Go module path (Go #4). Add independent BindingVersion, released as 0.1.0 (Go #31), without changing Core-reporting Version()."
     },
     {
       "source": "bindings/go/program.go",
@@ -371,8 +371,8 @@
       "source": "docs/guides/go.md",
       "destination": "docs/guides/go.md",
       "sha256": "9a9c879db14757924104127e819e7013188bca9c0c2c9c2ced0b87eaaf2847de",
-      "adapted_sha256": "ba206777022723ffd5673910d868bdb90e414b2090c9c5901c3f117029d6f6c6",
-      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation. Go #20: generic Schema-aware and structured codecs, scalar constraints, wire generation and owned API documentation. Go #21: reviewed generic Core completeness, Definition registry, checked diagnostic coordinates and public ownership documentation."
+      "adapted_sha256": "9424f82c7a3a548f5c484d344256426da6d12bf587a8930bbafd56f913e84466",
+      "adaptation": "Rewrite relocated example and Core concept links; use the standalone build helper for setup. Correct the pre-commit CRLF adapted hash to the Git-committed LF bytes required by .gitattributes (Go #3); no content change. Use the canonical standalone Go module path (Go #4). Document standalone packaging, external consumption and version identity. Update the consumer-test link after relocation to the module root (Go #5). Issue #6: own the standalone quick start, API/example index and current Core contract links for portal assembly. Go #17: add generic field/format composition, copied native configuration ownership and corresponding public documentation. Go #18: complete generic streaming APIs, public contracts and documentation while preserving original source provenance. Go #19: complete Document/Query operations and structural schemas, ownership contracts and public documentation. Go #20: generic Schema-aware and structured codecs, scalar constraints, wire generation and owned API documentation. Go #21: reviewed generic Core completeness, Definition registry, checked diagnostic coordinates and public ownership documentation. Go #31: document selecting the first release, v0.1.0, against Core v0.8.0."
     }
   ],
   "standalone_files": [

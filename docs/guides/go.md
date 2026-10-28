@@ -15,7 +15,8 @@ for a complete runnable program.
 
 For external projects, see [module packaging](../packaging.md#external-consumption).
 `opentlv.BindingVersion` identifies the binding source; `opentlv.Version()` reports
-the linked Core library. The binding is currently unreleased.
+the linked Core library. Select a release with
+`go get github.com/OpenTLV/opentlv-go@v0.1.0`; it builds against Core `v0.8.0`.
 
 Use Go 1.22 or newer, cgo enabled, a C compiler supported by cgo, and matching
 OpenTLV headers and a compiled library. Build or install the C library separately;

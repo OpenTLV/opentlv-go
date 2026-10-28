@@ -17,6 +17,7 @@ path = [
     "THIRD_PARTY.md",
     "ci/api-completeness.json",
     "ci/api-coverage.json",
+    "ci/release-notes.md",
     "core-source.json",
     "docs-examples.json",
     "docs/development/ci.md",

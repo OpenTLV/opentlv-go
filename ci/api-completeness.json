@@ -3,8 +3,8 @@
   "inventory": {
     "core": {
       "repository": "https://github.com/OpenTLV/opentlv.git",
-      "version": null,
-      "commit": "cb3caed5b09706ce11ecfae839397fd4f99d0025"
+      "version": "0.8.0",
+      "commit": "345c77acb29266036df5f27d04ce315bb61853cc"
     },
     "references": [
       "internal/capi/*.go",

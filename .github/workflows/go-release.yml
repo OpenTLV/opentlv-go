@@ -1,0 +1,130 @@
+# SPDX-License-Identifier: MIT
+# Copyright (c) 2026 Marek Cingel
+name: Go Release
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Unused Go module tag matching BindingVersion and ci/release-notes.md (v0.1.0)
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: go-release
+  cancel-in-progress: false
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: python3 -B scripts/release.py prepare
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-request-${{ github.run_attempt }}
+          path: build/request.json
+          if-no-files-found: error
+  full:
+    needs: prepare
+    uses: ./.github/workflows/go-full.yml
+    permissions:
+      contents: read
+  assemble:
+    needs: [prepare, full]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-request-${{ github.run_attempt }}
+          path: build/evidence
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-quality-full-${{ github.run_attempt }}
+          path: build/evidence
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: go-build-full-*-${{ github.run_attempt }}
+          path: build/evidence/builds
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B scripts/release.py assemble
+      - uses: actions/attest-build-provenance@v3
+        with:
+          subject-path: build/release/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-release-${{ github.run_attempt }}
+          path: build/release/*
+          if-no-files-found: error
+  publish:
+    needs: [full, assemble]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+      attestations: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-release-${{ github.run_attempt }}
+          path: build/release
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-quality-full-${{ github.run_attempt }}
+          path: build/evidence
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: go-build-full-*-${{ github.run_attempt }}
+          path: build/evidence/builds
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 -B scripts/release.py publish
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-published-${{ github.run_attempt }}
+          path: build/published.json
+          if-no-files-found: error
+  module:
+    needs: publish
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          cache: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: go-published-${{ github.run_attempt }}
+          path: build
+      - name: Verify the public module proxy and checksum database
+        run: python3 -B scripts/release.py module
+      - uses: actions/upload-artifact@v4
+        with:
+          name: go-module-${{ github.run_attempt }}
+          path: build/module.json
+          if-no-files-found: error

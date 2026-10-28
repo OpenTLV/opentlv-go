@@ -57,7 +57,9 @@ Existing Core Go CI covers Linux amd64 default/minimal static builds; documented
 Windows GCC/MinGW and shared-library modes have distinct validation coverage in
 the Core baseline record. No pure-Go fallback is introduced.
 
-`core-source.json` pins the same baseline Core for standalone source builds.
+`core-source.json` pinned the same baseline Core for standalone source builds
+during migration; the first Go release moves it to Core `v0.8.0` (#31, see
+[packaging](docs/packaging.md#core-compatibility)).
 `scripts/go.py` builds it and supplies matching cgo flags without a workspace.
 Its explicit `--core-source` option records local Core identity and dirty state;
 default selection never discovers a sibling. Static/shared and default/minimal

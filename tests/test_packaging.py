@@ -59,6 +59,17 @@ class PackagingTests(unittest.TestCase):
             with self.subTest(version=invalid), self.assertRaisesRegex(ValueError, "Invalid binding version"):
                 packaging.metadata(self.root)
 
+    def test_changelog_is_unreleased_or_closed_under_the_binding_version(self):
+        path = self.root / "CHANGELOG.md"
+        original = path.read_text()
+        version = packaging.metadata(self.root)
+        path.write_text(original.replace("## [Unreleased]", f"## [{version}] - 2026-10-28", 1))
+        self.assertEqual(packaging.metadata(self.root), version)
+        for heading in ("## [0.0.1] - 2026-10-28", f"## [{version}]", "## Unreleased"):
+            path.write_text(original.replace("## [Unreleased]", heading, 1))
+            with self.subTest(heading=heading), self.assertRaisesRegex(ValueError, "Missing changelog"):
+                packaging.metadata(self.root)
+
     def test_license_requires_original_attribution_and_permission(self):
         path = self.root / "LICENSE"
         original = path.read_text()

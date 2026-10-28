@@ -38,8 +38,10 @@ def metadata(root=ROOT):
         "MIT License", "Copyright (c) 2026 Marek Cingel",
         "Permission is hereby granted, free of charge", "THE SOFTWARE IS PROVIDED")),
         "Missing MIT license or original attribution")
-    require("## [Unreleased]" in (root / "CHANGELOG.md").read_text(encoding="utf-8"),
-            "Missing changelog")
+    # Development keeps Unreleased; a release closes it under the binding version.
+    changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    heading = r"^## \[(Unreleased|" + re.escape(version) + r"\] - \d{4}-\d{2}-\d{2}$)"
+    require(re.search(heading, changelog, re.M), "Missing changelog")
     return version
 
 

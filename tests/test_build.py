@@ -26,7 +26,8 @@ class BuildTests(unittest.TestCase):
     def test_lock_rejects_moving_pin_and_foreign_repository(self):
         lock = build.load_lock()
         for field, value in (("commit", "main"), ("commit", "a" * 39),
-                             ("repository", "https://other.example/core.git"), ("schema", 2)):
+                             ("repository", "https://other.example/core.git"), ("schema", 2),
+                             ("version", None), ("version", "v0.8.0"), ("version", "0.8")):
             with self.subTest(field=field, value=value):
                 changed = dict(lock, **{field: value})
                 (self.root / "core-source.json").write_text(json.dumps(changed))
