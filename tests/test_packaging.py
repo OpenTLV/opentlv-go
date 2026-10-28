@@ -60,13 +60,15 @@ class PackagingTests(unittest.TestCase):
                 packaging.metadata(self.root)
 
     def test_changelog_is_unreleased_or_closed_under_the_binding_version(self):
+        # Independent of whether the real changelog is currently open or closed.
         path = self.root / "CHANGELOG.md"
-        original = path.read_text()
         version = packaging.metadata(self.root)
-        path.write_text(original.replace("## [Unreleased]", f"## [{version}] - 2026-10-28", 1))
-        self.assertEqual(packaging.metadata(self.root), version)
+        for heading in ("## [Unreleased]", f"## [{version}] - 2026-10-28"):
+            path.write_text(f"# Changelog\n\n{heading}\n\n### Added\n\n- Entry.\n")
+            with self.subTest(heading=heading):
+                self.assertEqual(packaging.metadata(self.root), version)
         for heading in ("## [0.0.1] - 2026-10-28", f"## [{version}]", "## Unreleased"):
-            path.write_text(original.replace("## [Unreleased]", heading, 1))
+            path.write_text(f"# Changelog\n\n{heading}\n\n### Added\n\n- Entry.\n")
             with self.subTest(heading=heading), self.assertRaisesRegex(ValueError, "Missing changelog"):
                 packaging.metadata(self.root)
 

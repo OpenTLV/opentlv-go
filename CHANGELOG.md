@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [0.1.0] - 2026-10-28
 
 ### Changed
 
@@ -10,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 
+- Close the changelog for the `0.1.0` release and keep the changelog regression tests independent of whether it is open under `Unreleased` or closed under the release version, so package and release checks still pass after closing it. (#31)
 - Keep license and CI definition bytes identical in Windows and Unix checkouts so the Full quality gate can verify all six native configurations without weakening hash checks. (#7)
 
 ### Added
